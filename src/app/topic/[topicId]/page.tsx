@@ -72,7 +72,11 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
                     <Loader2 className="h-5 w-5 animate-spin" /> <span>Generating mnemonic text...</span>
                 </div>
             )}
-            {currentTopicMnemonic.text && <p className="text-foreground/90 italic">{currentTopicMnemonic.text}</p>}
+            {currentTopicMnemonic.text && (
+              <div className="text-foreground/90 whitespace-pre-wrap bg-muted/20 p-3 rounded-md shadow-inner font-mono text-sm">
+                {currentTopicMnemonic.text}
+              </div>
+            )}
             
             {currentTopicMnemonic.imageLoading && (
                 <div className="flex items-center space-x-2 text-muted-foreground">
@@ -135,7 +139,11 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
                                   <Loader2 className="h-3 w-3 animate-spin" /> <span>Generating text...</span>
                               </div>
                           )}
-                          {currentSubtopicMnemonic.text && <p className="text-foreground/80 italic text-sm">{currentSubtopicMnemonic.text}</p>}
+                          {currentSubtopicMnemonic.text && (
+                            <div className="text-foreground/80 whitespace-pre-wrap text-sm bg-muted/10 p-2 rounded-md font-mono">
+                              {currentSubtopicMnemonic.text}
+                            </div>
+                          )}
                           
                           {currentSubtopicMnemonic.imageLoading && (
                               <div className="flex items-center space-x-1 text-muted-foreground text-xs">
