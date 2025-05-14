@@ -4,7 +4,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo, Suspense } from 'react';
 import type { Topic, Question, SubTopic } from '@/lib/azure-data';
-import { getTopicById, getSubTopicById } from '@/lib/azure-data';
+import { getTopicById } from '@/lib/azure-data'; // Removed getSubTopicById as it's not used here directly
 import { QuestionDisplay } from '@/components/azure-ace/QuestionDisplay';
 import { FeedbackDisplay } from '@/components/azure-ace/FeedbackDisplay';
 import { Button } from '@/components/ui/button';
@@ -13,17 +13,23 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { generateMnemonic, type GenerateMnemonicOutput } from '@/ai/flows/generate-mnemonic-flow';
-import { generateImage, type GenerateImageOutput } from '@/ai/flows/generate-image-flow';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ArrowLeft, ArrowRight, CheckSquare, Home, Lightbulb, Image as ImageIcon, Loader2, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckSquare, Home, Lightbulb, Loader2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image'; // For Next.js optimized images
+// Image component is no longer needed for generated mnemonics
+// import Image from 'next/image'; 
 
-// StudyGuideDisplay Component (moved inline for simplicity in this example, could be a separate file)
+interface MnemonicDataState {
+  text?: string;
+  textLoading?: boolean;
+  error?: string;
+}
+
+// StudyGuideDisplay Component
 interface StudyGuideDisplayProps {
   topic: Topic;
   onGenerateMnemonic: (context: string, type: 'topic' | 'subtopic', id: string) => void;
-  mnemonicData: Record<string, { text?: string; image?: string; textLoading?: boolean; imageLoading?: boolean; error?: string }>;
+  mnemonicData: Record<string, MnemonicDataState>;
 }
 
 function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGuideDisplayProps) {
@@ -50,11 +56,11 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
           <CardHeader>
             <CardTitle className="text-lg flex items-center">
               <Lightbulb className="h-5 w-5 mr-2 text-yellow-500" />
-              Visual Mnemonic Aid
+              Textual Mnemonic Aid
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {topic.mnemonicSuggestion && !currentTopicMnemonic.text && (
+            {topic.mnemonicSuggestion && !currentTopicMnemonic.text && !currentTopicMnemonic.textLoading && (
               <Alert variant="default" className="bg-accent/10 border-accent/30">
                 <Sparkles className="h-4 w-4 text-accent" />
                 <AlertTitle>Mnemonic Idea</AlertTitle>
@@ -78,24 +84,14 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
               </div>
             )}
             
-            {currentTopicMnemonic.imageLoading && (
-                <div className="flex items-center space-x-2 text-muted-foreground">
-                    <Loader2 className="h-5 w-5 animate-spin" /> <span>Generating image...</span>
-                </div>
-            )}
-            {currentTopicMnemonic.image && (
-              <div className="mt-2 border rounded-md overflow-hidden aspect-video relative bg-muted/50">
-                <Image src={currentTopicMnemonic.image} alt="Generated Mnemonic" layout="fill" objectFit="contain" data-ai-hint="abstract concept" />
-              </div>
-            )}
             {!currentTopicMnemonic.text && !currentTopicMnemonic.textLoading && (
               <Button 
                 onClick={() => onGenerateMnemonic(`${topic.name}: ${topic.studyGuide}`, 'topic', topic.id)}
-                disabled={currentTopicMnemonic.textLoading || currentTopicMnemonic.imageLoading}
+                disabled={currentTopicMnemonic.textLoading}
                 size="sm"
                 className="bg-primary hover:bg-primary/90"
               >
-                <Sparkles className="mr-2 h-4 w-4" /> Generate Visual Mnemonic
+                <Sparkles className="mr-2 h-4 w-4" /> Generate Textual Mnemonic
               </Button>
             )}
           </CardContent>
@@ -122,7 +118,7 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
                            </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2 pb-3">
-                          {subTopic.mnemonicSuggestion && !currentSubtopicMnemonic.text && (
+                          {subTopic.mnemonicSuggestion && !currentSubtopicMnemonic.text && !currentSubtopicMnemonic.textLoading &&(
                             <Alert variant="default" className="text-xs bg-accent/10 border-accent/30">
                                <Sparkles className="h-3 w-3 text-accent" />
                                <AlertDescription className="ml-0 pl-0">{subTopic.mnemonicSuggestion}</AlertDescription>
@@ -145,20 +141,10 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
                             </div>
                           )}
                           
-                          {currentSubtopicMnemonic.imageLoading && (
-                              <div className="flex items-center space-x-1 text-muted-foreground text-xs">
-                                  <Loader2 className="h-3 w-3 animate-spin" /> <span>Generating image...</span>
-                              </div>
-                          )}
-                          {currentSubtopicMnemonic.image && (
-                            <div className="mt-1 border rounded-md overflow-hidden aspect-video relative bg-muted/40">
-                              <Image src={currentSubtopicMnemonic.image} alt={`Mnemonic for ${subTopic.name}`} layout="fill" objectFit="contain" data-ai-hint="concept illustration" />
-                            </div>
-                          )}
                           {!currentSubtopicMnemonic.text && !currentSubtopicMnemonic.textLoading && (
                             <Button 
                               onClick={() => onGenerateMnemonic(`${subTopic.name}: ${subTopic.studyGuide}`, 'subtopic', subTopic.id)}
-                              disabled={currentSubtopicMnemonic.textLoading || currentSubtopicMnemonic.imageLoading}
+                              disabled={currentSubtopicMnemonic.textLoading}
                               size="xs"
                               variant="outline"
                               className="text-xs"
@@ -200,6 +186,15 @@ function QuizDisplay({ topic, onQuizFinished }: QuizDisplayProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [score, setScore] = useState(0);
 
+  // Reset state when topic changes (e.g., on restart)
+  useEffect(() => {
+    setCurrentQuestionIndex(0);
+    setSelectedOption(null);
+    setIsSubmitted(false);
+    setScore(0);
+  }, [topic]);
+
+
   const currentQuestion = topic.questions[currentQuestionIndex];
 
   const handleOptionSelect = (optionIndex: number) => {
@@ -227,15 +222,27 @@ function QuizDisplay({ topic, onQuizFinished }: QuizDisplayProps) {
   };
   
   const progressPercentage = useMemo(() => {
-    return ((currentQuestionIndex + (isSubmitted ? 1 : 0)) / topic.questions.length) * 100;
+    // Ensure currentQuestionIndex does not exceed array bounds if questions array is empty
+    if (topic.questions.length === 0) return 0;
+    const questionsCompleted = isSubmitted ? currentQuestionIndex + 1 : currentQuestionIndex;
+    return (questionsCompleted / topic.questions.length) * 100;
   }, [currentQuestionIndex, isSubmitted, topic.questions.length]);
+
+  if (topic.questions.length === 0) {
+    return (
+      <Alert>
+        <AlertTitle>No Questions Available</AlertTitle>
+        <AlertDescription>This topic currently does not have any quiz questions.</AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center space-y-8 w-full max-w-2xl mx-auto">
        <div className="w-full">
         <Progress value={progressPercentage} className="h-3" />
         <p className="text-sm text-muted-foreground text-right mt-1">
-          {isSubmitted ? currentQuestionIndex + 1 : currentQuestionIndex} / {topic.questions.length} questions
+           {isSubmitted ? currentQuestionIndex + 1 : currentQuestionIndex} / {topic.questions.length} questions
         </p>
       </div>
 
@@ -285,9 +292,9 @@ export default function TopicPage() {
 
   const [topic, setTopic] = useState<Topic | null>(null);
   const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [quizTabActive, setQuizTabActive] = useState(false);
-  const [mnemonicData, setMnemonicData] = useState<Record<string, { text?: string; image?: string; textLoading?: boolean; imageLoading?: boolean; error?: string }>>({});
-
+  const [activeTab, setActiveTab] = useState<'study' | 'quiz'>('study');
+  const [mnemonicData, setMnemonicData] = useState<Record<string, MnemonicDataState>>({});
+  const [quizKey, setQuizKey] = useState(0); // Used to force re-mount of QuizDisplay
 
   useEffect(() => {
     if (topicId) {
@@ -295,8 +302,9 @@ export default function TopicPage() {
       if (foundTopic) {
         setTopic(foundTopic);
         setQuizScore(null); 
-        setQuizTabActive(false);
+        setActiveTab('study');
         setMnemonicData({});
+        setQuizKey(prevKey => prevKey + 1); // Reset quiz on topic change
       } else {
         router.push('/');
       }
@@ -305,53 +313,48 @@ export default function TopicPage() {
 
   const handleGenerateMnemonic = async (context: string, type: 'topic' | 'subtopic', id: string) => {
     const key = `${type}-${id}`;
-    setMnemonicData(prev => ({ ...prev, [key]: { textLoading: true, imageLoading: false } }));
+    setMnemonicData(prev => ({ ...prev, [key]: { textLoading: true } }));
 
     try {
       const mnemonicResult: GenerateMnemonicOutput = await generateMnemonic({ context });
-      setMnemonicData(prev => ({ ...prev, [key]: { ...prev[key], text: mnemonicResult.mnemonicText, textLoading: false, imageLoading: true } }));
-      
-      try {
-        const imageResult: GenerateImageOutput = await generateImage({ prompt: mnemonicResult.imagePrompt });
-        setMnemonicData(prev => ({ ...prev, [key]: { ...prev[key], image: imageResult.imageDataUri, imageLoading: false } }));
-      } catch (imageError) {
-        console.error("Image generation error:", imageError);
-        setMnemonicData(prev => ({ ...prev, [key]: { ...prev[key], imageLoading: false, error: `Failed to generate image: ${imageError instanceof Error ? imageError.message : String(imageError)}` } }));
-      }
-
+      setMnemonicData(prev => ({ ...prev, [key]: { text: mnemonicResult.mnemonicText, textLoading: false } }));
     } catch (mnemonicError) {
       console.error("Mnemonic generation error:", mnemonicError);
-      setMnemonicData(prev => ({ ...prev, [key]: { textLoading: false, imageLoading: false, error: `Failed to generate mnemonic: ${mnemonicError instanceof Error ? mnemonicError.message : String(mnemonicError)}` } }));
+      setMnemonicData(prev => ({ ...prev, [key]: { textLoading: false, error: `Failed to generate mnemonic: ${mnemonicError instanceof Error ? mnemonicError.message : String(mnemonicError)}` } }));
     }
   };
 
   const handleQuizFinished = (finalScore: number) => {
     setQuizScore(finalScore);
-    setQuizTabActive(true); // Keep quiz tab active to show results
+    // No need to switch tab, results are shown above tabs now.
   };
 
   const handleRestartQuiz = () => {
     setQuizScore(null);
-    // To re-init QuizDisplay, we can change its key or reset its internal state
-    // For simplicity, changing tab might re-trigger or we might need explicit reset in QuizDisplay
-    // For now, just clearing score. QuizDisplay will restart due to its own state logic if re-rendered.
-    // A more robust way would be to pass a 'key' prop to QuizDisplay that changes on restart.
-    if (topic) { // Re-set topic to force QuizDisplay re-render with initial state (if key prop not used)
-      const currentTopic = getTopicById(topic.id); // get fresh topic data
-      setTopic(null); // Temp set to null
-      setTimeout(() => setTopic(currentTopic), 0); // Then re-set to trigger re-mount of children
-    }
+    setQuizKey(prevKey => prevKey + 1); // Increment key to force QuizDisplay re-mount
+    setActiveTab('quiz'); // Switch to quiz tab
   };
+  
+  const handleTabChange = (value: string) => {
+    const newTab = value as 'study' | 'quiz';
+    setActiveTab(newTab);
+    if (newTab === 'quiz' && quizScore !== null) {
+      // If switching to quiz tab and results were shown, restart the quiz
+      handleRestartQuiz();
+    }
+  }
+
 
   if (!topic) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-200px)]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mr-2" />
         <p className="text-xl text-muted-foreground">Loading topic...</p>
       </div>
     );
   }
 
-  if (quizScore !== null && quizTabActive) {
+  if (quizScore !== null && activeTab === 'quiz') { // Only show results if quiz tab is active
     return (
       <div className="flex flex-col items-center justify-center text-center py-12">
         <Card className="w-full max-w-md p-8 shadow-xl">
@@ -385,24 +388,42 @@ export default function TopicPage() {
   return (
     <div className="flex flex-col items-center space-y-6 py-8">
       <h1 className="text-3xl md:text-4xl font-bold text-center text-primary">{topic.name}</h1>
-      <Tabs defaultValue="study" className="w-full max-w-4xl px-2">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full max-w-4xl px-2">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="study" onClick={() => setQuizTabActive(false)}>Study Material</TabsTrigger>
-          <TabsTrigger value="quiz" onClick={() => { setQuizTabActive(true); if (quizScore !== null) setQuizScore(null); /* Reset score if switching to quiz */ }}>Quiz</TabsTrigger>
+          <TabsTrigger value="study">Study Material</TabsTrigger>
+          <TabsTrigger value="quiz">Quiz</TabsTrigger>
         </TabsList>
         <TabsContent value="study" className="mt-6">
-          <Suspense fallback={<p>Loading study guide...</p>}>
+          <Suspense fallback={
+            <div className="flex justify-center items-center h-40">
+              <Loader2 className="h-6 w-6 animate-spin text-primary mr-2" /> 
+              <span>Loading study guide...</span>
+            </div>
+          }>
             <StudyGuideDisplay topic={topic} onGenerateMnemonic={handleGenerateMnemonic} mnemonicData={mnemonicData} />
           </Suspense>
         </TabsContent>
         <TabsContent value="quiz" className="mt-6">
+          {/* Render QuizDisplay only if quizScore is null (i.e., quiz is active or needs to be started) */}
+          {/* The results are handled by the block above the tabs */}
           {quizScore === null ? (
-             <Suspense fallback={<p>Loading quiz...</p>}>
-              <QuizDisplay topic={topic} onQuizFinished={handleQuizFinished} />
+             <Suspense fallback={
+                <div className="flex justify-center items-center h-40">
+                  <Loader2 className="h-6 w-6 animate-spin text-primary mr-2" /> 
+                  <span>Loading quiz...</span>
+                </div>
+             }>
+              <QuizDisplay key={quizKey} topic={topic} onQuizFinished={handleQuizFinished} />
              </Suspense>
           ) : (
-            // This state should be handled by the main component's quizScore !== null check
-            <p>Quiz finished. Results are shown above the tabs.</p>
+            // This content is shown if quiz is finished but user switches away from results view
+            // This typically shouldn't be seen due to quizScore !== null check above.
+            <div className="text-center p-8">
+                <p className="text-lg text-muted-foreground">Quiz already completed. Results are shown above.</p>
+                <Button onClick={handleRestartQuiz} variant="outline" className="mt-4">
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Restart Quiz
+                </Button>
+            </div>
           )}
         </TabsContent>
       </Tabs>
