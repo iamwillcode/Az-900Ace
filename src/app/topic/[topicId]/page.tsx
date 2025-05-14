@@ -3,8 +3,8 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo, Suspense } from 'react';
-import type { Topic, Question, SubTopic } from '@/lib/azure-data';
-import { getTopicById } from '@/lib/azure-data'; // Removed getSubTopicById as it's not used here directly
+import type { Topic } from '@/lib/azure-data';
+import { getTopicById } from '@/lib/azure-data';
 import { QuestionDisplay } from '@/components/azure-ace/QuestionDisplay';
 import { FeedbackDisplay } from '@/components/azure-ace/FeedbackDisplay';
 import { Button } from '@/components/ui/button';
@@ -14,10 +14,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { generateMnemonic, type GenerateMnemonicOutput } from '@/ai/flows/generate-mnemonic-flow';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ArrowLeft, ArrowRight, CheckSquare, Home, Lightbulb, Loader2, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckSquare, Home, Lightbulb, Loader2, Sparkles, Star, Medal, Target, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
-// Image component is no longer needed for generated mnemonics
-// import Image from 'next/image'; 
+import { useGamificationStats, type GamificationStats } from '@/hooks/useGamificationStats';
+import { useToast } from "@/hooks/use-toast";
+import type { Badge } from '@/lib/gamification';
+
 
 interface MnemonicDataState {
   text?: string;
@@ -25,7 +27,6 @@ interface MnemonicDataState {
   error?: string;
 }
 
-// StudyGuideDisplay Component
 interface StudyGuideDisplayProps {
   topic: Topic;
   onGenerateMnemonic: (context: string, type: 'topic' | 'subtopic', id: string) => void;
@@ -173,11 +174,9 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
   );
 }
 
-
-// QuizDisplay Component (existing quiz logic)
 interface QuizDisplayProps {
   topic: Topic;
-  onQuizFinished: (finalScore: number) => void;
+  onQuizFinished: (finalScore: number, correctAnswersCount: number) => void;
 }
 
 function QuizDisplay({ topic, onQuizFinished }: QuizDisplayProps) {
@@ -185,15 +184,15 @@ function QuizDisplay({ topic, onQuizFinished }: QuizDisplayProps) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [score, setScore] = useState(0);
+  const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
 
-  // Reset state when topic changes (e.g., on restart)
   useEffect(() => {
     setCurrentQuestionIndex(0);
     setSelectedOption(null);
     setIsSubmitted(false);
     setScore(0);
+    setCorrectAnswersCount(0);
   }, [topic]);
-
 
   const currentQuestion = topic.questions[currentQuestionIndex];
 
@@ -208,6 +207,7 @@ function QuizDisplay({ topic, onQuizFinished }: QuizDisplayProps) {
     setIsSubmitted(true);
     if (selectedOption === currentQuestion.correctAnswerIndex) {
       setScore(score + 1);
+      setCorrectAnswersCount(prev => prev + 1);
     }
   };
 
@@ -217,12 +217,11 @@ function QuizDisplay({ topic, onQuizFinished }: QuizDisplayProps) {
       setSelectedOption(null);
       setIsSubmitted(false);
     } else {
-      onQuizFinished(score);
+      onQuizFinished(score, correctAnswersCount);
     }
   };
   
   const progressPercentage = useMemo(() => {
-    // Ensure currentQuestionIndex does not exceed array bounds if questions array is empty
     if (topic.questions.length === 0) return 0;
     const questionsCompleted = isSubmitted ? currentQuestionIndex + 1 : currentQuestionIndex;
     return (questionsCompleted / topic.questions.length) * 100;
@@ -284,17 +283,18 @@ function QuizDisplay({ topic, onQuizFinished }: QuizDisplayProps) {
   );
 }
 
-
 export default function TopicPage() {
   const params = useParams();
   const router = useRouter();
   const topicId = params.topicId as string;
+  const { toast } = useToast();
+  const { awardPoints, checkAndAwardNewBadges, recordQuizCompleted } = useGamificationStats();
 
   const [topic, setTopic] = useState<Topic | null>(null);
   const [quizScore, setQuizScore] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'study' | 'quiz'>('study');
   const [mnemonicData, setMnemonicData] = useState<Record<string, MnemonicDataState>>({});
-  const [quizKey, setQuizKey] = useState(0); // Used to force re-mount of QuizDisplay
+  const [quizKey, setQuizKey] = useState(0); 
 
   useEffect(() => {
     if (topicId) {
@@ -304,7 +304,7 @@ export default function TopicPage() {
         setQuizScore(null); 
         setActiveTab('study');
         setMnemonicData({});
-        setQuizKey(prevKey => prevKey + 1); // Reset quiz on topic change
+        setQuizKey(prevKey => prevKey + 1); 
       } else {
         router.push('/');
       }
@@ -324,26 +324,44 @@ export default function TopicPage() {
     }
   };
 
-  const handleQuizFinished = (finalScore: number) => {
+  const handleQuizFinished = (finalScore: number, correctAnswers: number) => {
     setQuizScore(finalScore);
-    // No need to switch tab, results are shown above tabs now.
+    recordQuizCompleted(); // Record that a quiz was completed
+
+    const pointsEarned = awardPoints(correctAnswers);
+    toast({
+      title: "Quiz Complete!",
+      description: `You earned ${pointsEarned} points. Your score: ${finalScore}/${topic?.questions.length || 0}`,
+      action: <Star className="text-yellow-500" />,
+    });
+    
+    // Check for new badges
+    const newlyAwardedBadges = checkAndAwardNewBadges(finalScore, topic?.questions.length);
+    newlyAwardedBadges.forEach(badge => {
+      toast({
+        title: "Badge Unlocked!",
+        description: `You earned the "${badge.name}" badge!`,
+        action: <badge.icon className="text-accent" />,
+      });
+    });
+
+    // Dispatch a custom event to notify Navbar or other components about the update
+    window.dispatchEvent(new CustomEvent('gamificationUpdate'));
   };
 
   const handleRestartQuiz = () => {
     setQuizScore(null);
-    setQuizKey(prevKey => prevKey + 1); // Increment key to force QuizDisplay re-mount
-    setActiveTab('quiz'); // Switch to quiz tab
+    setQuizKey(prevKey => prevKey + 1); 
+    setActiveTab('quiz'); 
   };
   
   const handleTabChange = (value: string) => {
     const newTab = value as 'study' | 'quiz';
     setActiveTab(newTab);
     if (newTab === 'quiz' && quizScore !== null) {
-      // If switching to quiz tab and results were shown, restart the quiz
       handleRestartQuiz();
     }
   }
-
 
   if (!topic) {
     return (
@@ -354,7 +372,7 @@ export default function TopicPage() {
     );
   }
 
-  if (quizScore !== null && activeTab === 'quiz') { // Only show results if quiz tab is active
+  if (quizScore !== null && activeTab === 'quiz') { 
     return (
       <div className="flex flex-col items-center justify-center text-center py-12">
         <Card className="w-full max-w-md p-8 shadow-xl">
@@ -404,8 +422,6 @@ export default function TopicPage() {
           </Suspense>
         </TabsContent>
         <TabsContent value="quiz" className="mt-6">
-          {/* Render QuizDisplay only if quizScore is null (i.e., quiz is active or needs to be started) */}
-          {/* The results are handled by the block above the tabs */}
           {quizScore === null ? (
              <Suspense fallback={
                 <div className="flex justify-center items-center h-40">
@@ -416,10 +432,9 @@ export default function TopicPage() {
               <QuizDisplay key={quizKey} topic={topic} onQuizFinished={handleQuizFinished} />
              </Suspense>
           ) : (
-            // This content is shown if quiz is finished but user switches away from results view
-            // This typically shouldn't be seen due to quizScore !== null check above.
             <div className="text-center p-8">
                 <p className="text-lg text-muted-foreground">Quiz already completed. Results are shown above.</p>
+                 <p className="text-xl font-semibold">Your Score: <span className="text-accent">{quizScore}</span> / {topic.questions.length}</p>
                 <Button onClick={handleRestartQuiz} variant="outline" className="mt-4">
                     <ArrowLeft className="mr-2 h-4 w-4" /> Restart Quiz
                 </Button>
@@ -430,4 +445,3 @@ export default function TopicPage() {
     </div>
   );
 }
-
