@@ -1,6 +1,6 @@
 
 import type { LucideIcon } from 'lucide-react';
-import { Cloud, Layers, ShieldCheck, DollarSign, BrainCircuit, Zap, Server, Database, Network, ListTree } from 'lucide-react';
+import { Cloud, Layers, ShieldCheck, DollarSign, BrainCircuit, Zap, Server, Database, Network, ListTree, KeyRound, Settings, ClipboardList, Users, Palette } from 'lucide-react';
 
 export interface Question {
   id: string;
@@ -22,7 +22,7 @@ export interface Topic {
   name: string;
   description: string;
   icon?: LucideIcon;
-  studyGuide: string; // Concise breakdown for quick understanding
+  studyGuide: string; // Concise breakdown for quick understanding for the main topic
   mnemonicSuggestion?: string; // Textual idea for a mnemonic for the main topic
   subTopics?: SubTopic[];
   questions: Question[];
@@ -31,62 +31,326 @@ export interface Topic {
 export const topics: Topic[] = [
   {
     id: 'cloud-concepts',
-    name: 'Cloud Concepts',
-    description: 'Understand core cloud computing concepts, models, and benefits.',
+    name: 'Cloud Concepts (25-30%)',
+    description: 'Understand core cloud computing concepts, models, benefits, and service types.',
     icon: Cloud,
     studyGuide: `
-**Core Idea:** Cloud computing is about accessing computing resources (servers, storage, software) over the internet ("the cloud") instead of owning and managing physical infrastructure.
-
-**Key Benefits:**
-*   **Cost Savings (CapEx to OpEx):** Pay only for what you use, reducing upfront hardware costs.
-*   **Scalability:** Easily increase or decrease resources based on demand.
-    *   *Elasticity:* Automatic scaling.
-    *   *Scalability:* Manual/planned scaling.
-*   **Reliability & Availability:** Cloud providers offer high uptime and data redundancy.
-*   **Global Reach:** Deploy applications closer to users worldwide.
-*   **Security:** Often more robust security than individual organizations can manage.
-*   **Agility:** Rapidly provision resources and deploy applications.
-
-**Service Models:**
-*   **IaaS (Infrastructure as a Service):** Basic building blocks. You manage OS, middleware, apps. (e.g., Azure VMs, Storage, Networking)
-    *   *Analogy:* Renting the land and building materials.
-*   **PaaS (Platform as a Service):** Platform for developing/deploying apps without managing infrastructure. You manage apps & data. (e.g., Azure App Service, Azure SQL Database)
-    *   *Analogy:* Renting a workshop with tools provided.
-*   **SaaS (Software as a Service):** Ready-to-use software. Provider manages everything. (e.g., Microsoft 365, Gmail)
-    *   *Analogy:* Renting a fully furnished and serviced house.
-
-**Deployment Models:**
-*   **Public Cloud:** Resources owned and operated by a third-party provider (e.g., Azure, AWS, GCP).
-*   **Private Cloud:** Resources used exclusively by a single organization. Can be on-premises or hosted.
-*   **Hybrid Cloud:** Combines public and private clouds, allowing data and apps to be shared between them.
+This section covers the fundamental ideas behind cloud computing. You'll learn what the cloud is, why it's beneficial, the different ways services are offered (IaaS, PaaS, SaaS), and how cloud resources can be deployed (public, private, hybrid). Understanding these basics is crucial for grasping more advanced Azure topics.
+Key areas include:
+*   Defining cloud computing and its core characteristics.
+*   The shared responsibility model: who manages what.
+*   Cloud models (Public, Private, Hybrid) and their use cases.
+*   The consumption-based model and cloud pricing.
+*   Benefits like high availability, scalability, reliability, security, and manageability.
+*   Cloud service types (IaaS, PaaS, SaaS) and their appropriate use cases.
 `,
-    mnemonicSuggestion: "Imagine a fluffy cloud (representing the internet) holding various tools (IaaS - hammer, PaaS - workbench, SaaS - finished product) that businesses can easily rent and scale.",
+    mnemonicSuggestion: "Cloud Concepts: Think of a C.L.O.U.D. - Computing, Leased, On-demand, Universally accessible, Dynamically scalable. It offers S.M.A.R.T benefits - Scalable, Manageable, Available, Reliable, Economical (pay-as-you-go), Secure & Types (IaaS, PaaS, SaaS).",
     subTopics: [
       {
-        id: 'cc-st-ha',
-        name: 'High Availability vs. Fault Tolerance vs. Disaster Recovery',
+        id: 'cc-define-cloud-computing',
+        name: 'Define cloud computing',
         studyGuide: `
-**High Availability (HA):** Aims to ensure an agreed level of operational performance, usually uptime, for a higher than normal period. Focuses on preventing downtime.
-    *   *Example:* Multiple instances of an application running, so if one fails, others take over.
-**Fault Tolerance (FT):** The ability of a system to continue operating without interruption when one or more of its components fail. More robust than HA.
-    *   *Example:* Redundant hardware components (power supplies, disks) that automatically take over.
-**Disaster Recovery (DR):** The ability to recover from a disaster and restore business operations. Focuses on recovery after a major outage.
-    *   *Example:* Backups in a different geographical region that can be restored if the primary region fails.
+**Definition:** Cloud computing is the on-demand delivery of IT resources over the Internet with pay-as-you-go pricing. Instead of buying, owning, and maintaining physical data centers and servers, you can access technology services, such as computing power, storage, and databases, on an as-needed basis from a cloud provider like Microsoft Azure.
+
+**Key Characteristics:**
+*   **On-demand self-service:** Provision resources automatically without human intervention.
+*   **Broad network access:** Services are available over the network and accessed through standard mechanisms.
+*   **Resource pooling:** Provider's resources are pooled to serve multiple consumers, with resources dynamically assigned.
+*   **Rapid elasticity/scalability:** Resources can be elastically provisioned and released, in some cases automatically, to scale rapidly outward and inward commensurate with demand.
+*   **Measured service:** Resource usage is monitored, controlled, and reported, providing transparency.
+
+**Use Case Scenario:** A retail company experiences huge traffic spikes during holiday seasons. Instead of overprovisioning physical servers year-round (CapEx), they use cloud computing. They can dynamically scale their web servers and databases in the cloud to handle the peak load and scale back down afterwards, paying only for the resources consumed during the spike (OpEx).
         `,
-        mnemonicSuggestion: "HA: A trapeze artist with a safety net (backup). FT: A trapeze artist with two identical ropes, if one snaps, the other holds. DR: The entire circus tent burns down, but they have a plan to rebuild it quickly in another town."
+        mnemonicSuggestion: "Cloud = R.O.O.M.S: Rent Over Own, On-demand, Online, Metered, Scalable. Your IT resources available like a hotel room."
       },
       {
-        id: 'cc-st-capex-opex',
-        name: 'CapEx vs. OpEx',
+        id: 'cc-shared-responsibility',
+        name: 'Describe the shared responsibility model',
         studyGuide: `
-**Capital Expenditure (CapEx):** Spending money on physical infrastructure upfront. Costs are fixed and have a long-term value.
-    *   *Cloud context:* Less CapEx as you don't buy servers.
-    *   *Example:* Buying servers, storage, networking equipment for an on-premises data center.
-**Operational Expenditure (OpEx):** Spending money on services or products as you use them. Pay-as-you-go.
-    *   *Cloud context:* More OpEx as you pay for cloud services consumed.
-    *   *Example:* Monthly bill for Azure services, electricity, IT staff salaries.
+**Concept:** The shared responsibility model defines the division of security responsibilities between the cloud provider (e.g., Microsoft Azure) and you, the customer. The level of responsibility varies depending on the cloud service model (IaaS, PaaS, SaaS).
+
+*   **Provider's Responsibility (Security *of* the Cloud):** Physical security of datacenters, network infrastructure, and the hypervisor layer that runs virtual machines.
+*   **Customer's Responsibility (Security *in* the Cloud):** Data, endpoints, account management, access management, application security, network controls configured by the customer.
+
+**Breakdown by Service Model:**
+*   **IaaS:** Provider manages physical infrastructure. Customer manages OS, networking, applications, data, identity & access. (Most customer responsibility)
+*   **PaaS:** Provider manages OS, middleware, runtime. Customer manages applications, data, identity & access.
+*   **SaaS:** Provider manages almost everything. Customer manages data (often), user access, and specific application configurations. (Least customer responsibility)
+
+**Use Case Scenario:** A company uses Azure VMs (IaaS) to host a custom application. Azure is responsible for the physical servers, storage, and networking hardware, and the hypervisor. The company is responsible for patching the VM's operating system, installing antivirus, configuring network security groups (NSGs), securing the application code, and managing user access to the VM and application.
         `,
-        mnemonicSuggestion: "CapEx: Buying a whole Cow (big upfront cost). OpEx: Buying Milk cartons as needed (pay-as-you-go)."
+        mnemonicSuggestion: "Shared Responsibility: Provider secures the 'Ground & Building' (physical, host). You secure 'Your Apartment & Belongings' (OS, apps, data, access). More 'aaS' (PaaS, SaaS) means provider does more."
+      },
+      {
+        id: 'cc-cloud-models',
+        name: 'Define cloud models, including public, private, and hybrid',
+        studyGuide: `
+**Public Cloud:**
+*   **Definition:** Computing services offered by third-party providers over the public Internet, making them available to anyone who wants to use or purchase them. Resources are owned and operated by the cloud provider (e.g., Microsoft Azure, AWS, GCP).
+*   **Benefits:** Scalability, pay-as-you-go, no CapEx for hardware, high reliability.
+*   **Use Case Scenario:** A startup developing a new web application wants to reach a global audience quickly without investing in physical infrastructure. They deploy their app on a public cloud like Azure, leveraging its scalability and global presence.
+
+**Private Cloud:**
+*   **Definition:** Computing resources used exclusively by a single business or organization. A private cloud can be physically located on the company’s on-premises datacenter, or it can be hosted by a third-party service provider.
+*   **Benefits:** Enhanced security, more control, compliance with specific regulations.
+*   **Use Case Scenario:** A government agency with highly sensitive data and strict regulatory requirements builds a private cloud in its own datacenter to maintain full control over the infrastructure and data.
+
+**Hybrid Cloud:**
+*   **Definition:** Combines public and private clouds, bound together by technology that allows data and applications to be shared between them. This gives businesses greater flexibility and more data deployment options.
+*   **Benefits:** Flexibility, leverage existing investments, scalability of public cloud for non-sensitive workloads.
+*   **Use Case Scenario:** A large enterprise has an on-premises private cloud for its core, sensitive applications. They use a public cloud like Azure for development/testing environments, disaster recovery, or to handle seasonal bursts in web traffic for their public-facing website, connecting it securely to their private cloud.
+        `,
+        mnemonicSuggestion: "Models: Public (Open Park - for everyone), Private (Your House - only you), Hybrid (House with a gate to the Park - best of both)."
+      },
+      {
+        id: 'cc-usecases-cloud-models',
+        name: 'Identify appropriate use cases for each cloud model',
+        studyGuide: `
+**Public Cloud Use Cases:**
+*   Websites and web applications with variable traffic.
+*   Development and test environments.
+*   Disaster recovery for on-premises workloads.
+*   Big data analytics and batch processing.
+*   Applications requiring global reach.
+*   *Scenario Example:* A media streaming service uses the public cloud to host its video content and scale its streaming servers globally to handle millions of concurrent users during peak events.
+
+**Private Cloud Use Cases:**
+*   Applications with strict security and data privacy requirements (e.g., healthcare, finance).
+*   Workloads with specific regulatory compliance needs.
+*   Organizations with significant existing infrastructure investments they want to leverage.
+*   Business-critical applications requiring maximum control and customization.
+*   *Scenario Example:* A financial institution processes sensitive customer transactions in its private cloud to meet stringent regulatory demands and maintain tight control over data security.
+
+**Hybrid Cloud Use Cases:**
+*   Gradual cloud migration: Moving workloads to the cloud in phases.
+*   Disaster recovery: Using the public cloud as a DR site for on-premises applications.
+*   Cloud bursting: Scaling on-premises applications to the public cloud during peak demand.
+*   Development and testing in the public cloud while keeping production on-premises.
+*   Applications with components in both public and private clouds (e.g., web front-end in public, database in private).
+*   *Scenario Example:* A retail company runs its core inventory system in a private cloud but uses the public cloud to host its e-commerce website, scaling it out during holiday sales and connecting it securely to the inventory system.
+        `,
+        mnemonicSuggestion: "Public: Global, variable needs. Private: Control, sensitive data. Hybrid: Mix-and-match, gradual moves."
+      },
+      {
+        id: 'cc-consumption-based',
+        name: 'Describe the consumption-based model',
+        studyGuide: `
+**Concept:** A pricing model where you only pay for the IT resources you actually use. There are no upfront costs for hardware or software licenses in many cases; instead, you are billed based on your consumption, similar to how you pay for utilities like electricity or water.
+
+**Benefits:**
+*   **No upfront costs:** Avoid large capital expenditures (CapEx).
+*   **Pay for what you use:** Reduces waste from overprovisioning.
+*   **Scalability matched with cost:** Costs scale up or down with your usage.
+*   **Improved budgeting:** Better predictability for operational expenses (OpEx).
+
+**Use Case Scenario:** A small e-commerce business uses Azure App Service to host its online store. During a flash sale, traffic increases tenfold. With the consumption-based model, their App Service plan automatically scales out to handle the load, and they only pay for the increased compute resources during the sale period. After the sale, resources scale back down, and so do their costs.
+        `,
+        mnemonicSuggestion: "Consumption = Utility Bill: Only pay for the 'cloud water' you use. No fixed pipe cost, just usage."
+      },
+      {
+        id: 'cc-cloud-pricing-models',
+        name: 'Compare cloud pricing models',
+        studyGuide: `
+Cloud pricing is generally consumption-based, but Azure offers various models to optimize costs:
+
+*   **Pay-as-you-go:** Default model. Pay for what you use, billed per second/minute/hour. Maximum flexibility, no long-term commitment.
+    *   *Use Case:* Unpredictable workloads, short-term projects, initial development.
+*   **Reservations (Reserved Instances/Capacity):** Commit to using specific services (like VMs, SQL Database) for a 1-year or 3-year term in exchange for significant discounts (up to 72%) compared to pay-as-you-go.
+    *   *Use Case:* Stable, predictable workloads where you know your long-term resource needs.
+*   **Spot Pricing (Spot VMs):** Access unused Azure compute capacity at very deep discounts (up to 90%). Workloads can be interrupted if Azure needs the capacity back.
+    *   *Use Case:* Fault-tolerant, interruptible workloads like batch processing, rendering, or dev/test environments where interruptions are acceptable.
+*   **Azure Hybrid Benefit:** Use existing on-premises Windows Server and SQL Server licenses with Software Assurance to get discounted rates for Azure VMs and Azure SQL.
+    *   *Use Case:* Organizations with existing Microsoft licenses looking to migrate to Azure cost-effectively.
+*   **Dev/Test Pricing:** Discounted rates on Azure services for development and testing purposes, often available with Visual Studio subscriptions.
+    *   *Use Case:* Non-production environments, individual developer experimentation.
+
+**Use Case Scenario:** A company has a core application server that runs 24/7 with consistent load. They purchase an Azure Reserved VM Instance for 3 years to significantly reduce its running cost. For their nightly data processing jobs, which can be restarted if interrupted, they use Spot VMs to save money. Their development team uses Dev/Test pricing for their sandbox environments.
+        `,
+        mnemonicSuggestion: "Pricing: Pay-As-You-Go (Taxi), Reservations (Leased Car - cheaper long term), Spot (Last-minute cheap flight - might get bumped), Hybrid (Use your old car parts for a discount on new car)."
+      },
+      {
+        id: 'cc-serverless',
+        name: 'Describe serverless',
+        studyGuide: `
+**Concept:** Serverless computing is a cloud execution model where the cloud provider dynamically manages the allocation and provisioning of servers. You write and deploy code, and the cloud provider runs the server and manages the infrastructure for you. You don't need to worry about server maintenance, patching, or scaling the underlying infrastructure.
+
+**Key Characteristics:**
+*   **No server management:** Abstracted away from the developer.
+*   **Event-driven:** Code typically runs in response to events or triggers (e.g., HTTP request, new file in storage, message in a queue).
+*   **Pay-per-execution/duration:** Only pay when your code is running.
+*   **Automatic scaling:** Scales automatically based on demand.
+
+**Azure Serverless Offerings:**
+*   **Azure Functions:** Event-driven code (FaaS - Function as a Service).
+*   **Azure Logic Apps:** Workflow automation service with visual designer and connectors.
+*   **Azure Event Grid:** Event routing service.
+
+**Use Case Scenario:** A company wants to process images uploaded by users to their website (e.g., create thumbnails). They use Azure Functions. An Azure Function is triggered whenever a new image is uploaded to Azure Blob Storage. The function code resizes the image and saves the thumbnail back to Blob Storage. They only pay for the function execution time when an image is processed, and it scales automatically if many users upload images simultaneously.
+        `,
+        mnemonicSuggestion: "Serverless = 'No-Server' (for you to manage). Your code is a 'Function' that 'Magically' runs when needed. Think of a vending machine: you don't manage it, just use it and pay per item."
+      },
+      {
+        id: 'cc-benefits-ha-scalability',
+        name: 'Describe the benefits of high availability and scalability in the cloud',
+        studyGuide: `
+**High Availability (HA):**
+*   **Definition:** The ability of a system to remain operational and accessible for a high percentage of time, minimizing downtime. Achieved through redundancy and failover mechanisms.
+*   **Benefits:**
+    *   **Increased Uptime:** Applications and services are more consistently available to users.
+    *   **Improved User Experience:** Less frustration from service interruptions.
+    *   **Business Continuity:** Critical operations can continue even if some components fail.
+    *   **Reduced Revenue Loss:** Minimized financial impact from downtime.
+*   **Use Case Scenario:** An online banking application needs to be available 24/7. By deploying it across multiple Azure Availability Zones (HA), if one datacenter has an issue, traffic automatically fails over to another, ensuring customers can always access their accounts.
+
+**Scalability:**
+*   **Definition:** The ability of a system to handle increasing amounts of load by adding resources (scale-out/horizontal scaling) or by increasing the capacity of existing resources (scale-up/vertical scaling). Cloud platforms offer *elasticity*, which is the ability to scale automatically.
+*   **Benefits:**
+    *   **Performance:** Maintain good performance even under heavy load.
+    *   **Cost Efficiency:** Pay only for resources needed; scale down when load decreases.
+    *   **Adaptability:** Quickly respond to changing business demands or traffic patterns.
+*   **Use Case Scenario:** An e-learning platform experiences low traffic during nights and high traffic during exam periods. Cloud scalability allows them to automatically add more web server instances during peak exam times to ensure smooth performance for students and then scale back down during off-peak hours to save costs.
+        `,
+        mnemonicSuggestion: "HA: Always Awake (like a 24/7 store). Scalability: Stretch Armstrong (grows big or small as needed). Both mean Happy Users & Healthy Business."
+      },
+      {
+        id: 'cc-benefits-reliability-predictability',
+        name: 'Describe the benefits of reliability and predictability in the cloud',
+        studyGuide: `
+**Reliability:**
+*   **Definition:** The ability of a system to perform its intended function correctly and consistently over a specified period, recovering from failures and ensuring data integrity.
+*   **Benefits:**
+    *   **Data Integrity:** Reduced risk of data loss or corruption.
+    *   **Consistent Performance:** Services operate as expected without frequent errors.
+    *   **Trust and Confidence:** Users and businesses trust the system to work correctly.
+    *   **Reduced Maintenance:** Cloud providers handle much of the infrastructure maintenance that contributes to reliability.
+*   **Use Case Scenario:** A healthcare application stores patient records. Cloud reliability, through features like redundant storage and automated backups, ensures that patient data is safe, accurate, and consistently accessible to authorized medical staff.
+
+**Predictability:**
+*   **Definition:** Refers to the consistency in performance and cost of cloud services.
+*   **Performance Predictability:** Services perform consistently within defined SLAs, allowing businesses to plan application performance.
+*   **Cost Predictability:** While consumption-based, tools like budgets, cost alerts, and reserved instances help in forecasting and managing cloud spending.
+*   **Benefits:**
+    *   **Better Planning:** Easier to forecast resource needs and budgets.
+    *   **Consistent User Experience:** Users experience stable application performance.
+    *   **Reduced Surprises:** Fewer unexpected cost overruns or performance bottlenecks.
+    *   **SLAs:** Service Level Agreements provide formal commitments on performance and availability.
+*   **Use Case Scenario:** A financial analytics company runs complex simulations. Performance predictability from Azure's high-performance computing (HPC) instances allows them to estimate job completion times accurately. Cost predictability, using Azure Reservations for their baseline compute needs, helps them manage their budget effectively.
+        `,
+        mnemonicSuggestion: "Reliability: Your 'Trusty Old Car' (always starts, never breaks down). Predictability: Knowing 'Gas Mileage & Service Costs' upfront (no surprises in performance or bills)."
+      },
+      {
+        id: 'cc-benefits-security-governance',
+        name: 'Describe the benefits of security and governance in the cloud',
+        studyGuide: `
+**Security:**
+*   **Definition:** Protecting data, applications, and infrastructure from unauthorized access, use, disclosure, alteration, or destruction. Cloud providers invest heavily in security.
+*   **Benefits:**
+    *   **Advanced Security Tools:** Access to sophisticated tools (e.g., threat detection, identity management, encryption) often beyond the reach of individual organizations.
+    *   **Compliance Certifications:** Providers adhere to numerous global and industry-specific compliance standards (e.g., ISO 27001, HIPAA, GDPR).
+    *   **Physical Security:** Secure datacenters with restricted access.
+    *   **Expertise:** Access to a large pool of security professionals employed by the cloud provider.
+    *   **Shared Responsibility Model:** Clearly defined security roles.
+*   **Use Case Scenario:** A retail company stores customer credit card data. By using Azure, they benefit from Azure's PCI DSS compliance, advanced threat protection services like Microsoft Defender for Cloud, and tools like Azure Key Vault to securely manage encryption keys, helping them protect sensitive data and meet regulatory requirements.
+
+**Governance:**
+*   **Definition:** Establishing policies, processes, and controls to manage and monitor cloud resources effectively, ensuring compliance, cost control, and operational consistency.
+*   **Benefits:**
+    *   **Compliance Adherence:** Enforce policies to meet internal and external regulatory requirements.
+    *   **Cost Management:** Control spending through budgets, tagging, and cost allocation.
+    *   **Resource Consistency:** Standardize deployments and configurations using templates and policies.
+    *   **Risk Management:** Identify and mitigate risks associated with cloud usage.
+    *   **Accountability:** Clearly define roles and responsibilities for managing cloud resources.
+*   **Use Case Scenario:** A large enterprise with multiple departments using Azure wants to ensure all new virtual machines are tagged with a 'CostCenter' and 'Environment' tag, and that no VMs are deployed outside of approved regions. They use Azure Policy to enforce these rules automatically and Azure Management Groups to organize subscriptions and apply policies hierarchically.
+        `,
+        mnemonicSuggestion: "Security: Fort Knox in the Cloud (strong defenses, expert guards). Governance: Rulebook & Manager for the Cloud (policies, cost control, order)."
+      },
+      {
+        id: 'cc-benefits-manageability',
+        name: 'Describe the benefits of manageability in the cloud',
+        studyGuide: `
+**Manageability:**
+*   **Definition:** The ease with which cloud resources can be provisioned, monitored, maintained, and controlled. Cloud platforms provide tools and services to simplify management tasks.
+*   **Benefits:**
+    *   **Simplified Provisioning:** Quickly deploy and configure resources using portals, CLI, or Infrastructure as Code.
+    *   **Centralized Control:** Manage resources across different services and regions from a single interface (e.g., Azure portal).
+    *   **Automation:** Automate routine tasks like patching, backups, and scaling.
+    *   **Monitoring and Diagnostics:** Tools to monitor performance, health, and usage of resources, and to diagnose issues.
+    *   **Reduced Operational Overhead:** Cloud provider handles underlying infrastructure maintenance, freeing up IT staff to focus on strategic initiatives.
+*   **Use Case Scenario:** An IT team manages hundreds of web applications for different clients. Using Azure App Service (PaaS), they can easily deploy new apps, configure auto-scaling, set up automated backups, and monitor application performance through Azure Monitor, all from the Azure portal. This significantly reduces the manual effort compared to managing individual servers for each app.
+        `,
+        mnemonicSuggestion: "Manageability: Cloud with a 'Remote Control' & 'Auto-Pilot'. Easy to set up, monitor, and automate tasks, freeing you up."
+      },
+      {
+        id: 'cc-iaas',
+        name: 'Describe infrastructure as a service (IaaS)',
+        studyGuide: `
+**IaaS (Infrastructure as a Service):**
+*   **Definition:** Provides the basic building blocks for cloud IT. It typically includes access to networking features, computers (virtual or on dedicated hardware), and data storage space. IaaS gives you the highest level of flexibility and management control over your IT resources, most similar to existing IT resources.
+*   **You Manage:** Operating System, Middleware, Applications, Data, Runtime, Identity & Access.
+*   **Provider Manages:** Physical Servers, Storage Hardware, Networking Hardware, Virtualization Layer (Hypervisor).
+*   **Azure Examples:** Azure Virtual Machines, Azure Storage (Blob, Disk, Files), Azure Virtual Network.
+*   **Analogy:** Renting the land and raw building materials. You decide what kind of house to build and how to furnish it.
+*   **Use Case Scenario:** A company wants to migrate an existing on-premises application that requires a specific operating system version and custom software installations. They use Azure Virtual Machines (IaaS) to create VMs with the exact OS and configurations they need, giving them full control similar to their on-premises environment but with cloud benefits like scalability and pay-as-you-go.
+        `,
+        mnemonicSuggestion: "IaaS: 'I' build the 'OS & Apps' on 'Azure's Servers'. Most control, like renting an empty plot of land to build your own house."
+      },
+      {
+        id: 'cc-paas',
+        name: 'Describe platform as a service (PaaS)',
+        studyGuide: `
+**PaaS (Platform as a Service):**
+*   **Definition:** Removes the need for organizations to manage the underlying infrastructure (usually hardware and operating systems) and allows you to focus on the deployment and management of your applications. PaaS provides an environment for building, testing, deploying, managing, and updating software applications.
+*   **You Manage:** Applications, Data, Identity & Access.
+*   **Provider Manages:** Operating System, Middleware, Runtime, Physical Servers, Storage Hardware, Networking Hardware, Virtualization.
+*   **Azure Examples:** Azure App Service (Web Apps, API Apps), Azure SQL Database, Azure Functions (can also be FaaS), Azure Cosmos DB.
+*   **Analogy:** Renting a workshop with all the tools and machinery provided. You bring your raw materials (code/data) and build your product.
+*   **Use Case Scenario:** A development team wants to rapidly build and deploy a new web application without worrying about server patching, OS updates, or load balancer configuration. They use Azure App Service (PaaS). They simply deploy their code, and Azure handles the infrastructure, auto-scaling, and maintenance, allowing them to focus on features.
+        `,
+        mnemonicSuggestion: "PaaS: 'Platform' for 'Apps', Azure manages 'OS & Servers'. Like renting a fully equipped workshop to build your software."
+      },
+      {
+        id: 'cc-saas',
+        name: 'Describe software as a service (SaaS)',
+        studyGuide: `
+**SaaS (Software as a Service):**
+*   **Definition:** Provides you with a completed product that is run and managed by the service provider. In most cases, people referring to SaaS are referring to end-user applications. With a SaaS offering, you do not have to think about how the service is maintained or how the underlying infrastructure is managed; you only need to think about how you will use that particular piece of software.
+*   **You Manage:** Typically just user access and specific application configurations/data (varies by service).
+*   **Provider Manages:** Everything else (Applications, Data (mostly), Runtime, Middleware, OS, Servers, Storage, Networking, Virtualization).
+*   **Azure Examples (Microsoft SaaS):** Microsoft 365 (Outlook, SharePoint, Teams), Dynamics 365, GitHub. (Azure itself is a platform, but Microsoft offers SaaS solutions often built on Azure).
+*   **Analogy:** Renting a fully furnished and serviced apartment. You just move in and use it; all maintenance and utilities are handled.
+*   **Use Case Scenario:** A company needs an email and collaboration solution for its employees. Instead of setting up and managing their own email servers and document sharing platforms, they subscribe to Microsoft 365 (SaaS). Employees can access email, calendars, and file storage online, and Microsoft handles all the backend infrastructure, software updates, and maintenance.
+        `,
+        mnemonicSuggestion: "SaaS: 'Software' ready-to-use, 'As-a-Service'. Like renting a fully furnished house, just use it."
+      },
+      {
+        id: 'cc-use-cases-iaas-paas-saas',
+        name: 'Identify appropriate use cases for each cloud service type (IaaS, PaaS, and SaaS)',
+        studyGuide: `
+**IaaS Use Cases:**
+*   **Lift-and-shift migrations:** Moving existing on-premises applications to the cloud with minimal changes.
+*   **Testing and development:** Quickly setting up and tearing down dev/test environments.
+*   **Storage, backup, and recovery:** Storing large datasets, implementing backup solutions.
+*   **High-performance computing (HPC):** Running computationally intensive workloads.
+*   **Workloads requiring full control:** When you need specific OS versions or custom configurations.
+*   *Scenario Example:* A company wants to migrate a legacy application running on an older version of Windows Server to Azure without rewriting it. They choose Azure VMs (IaaS) to replicate the environment.
+
+**PaaS Use Cases:**
+*   **Application development and deployment:** Streamlining the development lifecycle for web and mobile apps.
+*   **Analytics or business intelligence:** Using tools to analyze data without managing the underlying infrastructure.
+*   **APIs and microservices:** Building and hosting APIs.
+*   **Serverless architectures:** Building event-driven applications with services like Azure Functions.
+*   **Databases:** Using managed database services without worrying about patching or backups.
+*   *Scenario Example:* A startup is building a new mobile app backend. They use Azure App Service (PaaS) for the API and Azure SQL Database (PaaS) for data storage to accelerate development and reduce operational overhead.
+
+**SaaS Use Cases:**
+*   **Email and calendaring:** Solutions like Microsoft Outlook (part of Microsoft 365).
+*   **Customer Relationship Management (CRM):** Systems like Dynamics 365 Sales.
+*   **Enterprise Resource Planning (ERP):** Systems like Dynamics 365 Finance.
+*   **Collaboration and file sharing:** Tools like Microsoft Teams and SharePoint.
+*   **Productivity applications:** Office suites like Microsoft 365 Apps.
+*   *Scenario Example:* A small business needs a professional email system and document collaboration tools. They subscribe to Microsoft 365 (SaaS) to get these features without needing to manage any servers.
+        `,
+        mnemonicSuggestion: "IaaS: Lift & Shift, Full Control. PaaS: Build & Deploy Apps Fast. SaaS: Ready-Made Software, Just Use."
       }
     ],
     questions: [
@@ -119,40 +383,627 @@ export const topics: Topic[] = [
     ],
   },
   {
-    id: 'core-azure-services',
-    name: 'Core Azure Services',
-    description: 'Explore essential Azure services for compute, storage, networking, and databases.',
-    icon: Layers,
+    id: 'azure-architecture-services',
+    name: 'Azure Architecture and Services (35-40%)',
+    description: 'Understand Azure\'s core architectural components, compute, networking, and storage services.',
+    icon: ListTree,
     studyGuide: `
-**Compute Services:** Run applications and workloads.
-*   **Azure Virtual Machines (VMs):** IaaS. Linux & Windows. Full control.
-*   **Azure App Service:** PaaS. Web apps, mobile backends, APIs. Auto-scaling, patching.
-*   **Azure Functions:** Serverless (FaaS). Event-driven code execution. Pay per execution.
-*   **Azure Kubernetes Service (AKS):** Managed Kubernetes for container orchestration.
-*   **Azure Container Instances (ACI):** Run Docker containers without managing servers.
-
-**Storage Services:** Store and manage data.
-*   **Blob Storage:** Unstructured data (objects, files). Tiers: Hot, Cool, Archive.
-*   **Disk Storage:** Persistent disks for VMs (SSD, HDD).
-*   **File Storage:** Managed file shares (SMB protocol).
-*   **Queue Storage:** Asynchronous messaging between application components.
-*   **Table Storage:** NoSQL key-value store for semi-structured data.
-
-**Networking Services:** Connect and manage network resources.
-*   **Virtual Network (VNet):** Isolated network in Azure.
-*   **Load Balancer:** Distribute traffic across multiple VMs/services.
-*   **VPN Gateway:** Securely connect on-premises networks to Azure.
-*   **Application Gateway:** Web traffic load balancer (Layer 7) with WAF.
-*   **Content Delivery Network (CDN):** Cache content closer to users.
-
-**Database Services:**
-*   **Azure SQL Database:** Managed relational SQL database (PaaS).
-*   **Azure Cosmos DB:** Globally distributed, multi-model NoSQL database.
-*   **Azure Database for MySQL/PostgreSQL/MariaDB:** Managed open-source databases (PaaS).
+This section dives into the building blocks of Azure. You'll learn about how Azure is structured globally (regions, availability zones), how resources are organized (resource groups, subscriptions, management groups), and explore key services for running your applications (compute), connecting them (networking), and storing data (storage). This includes understanding migration tools and options.
+Key areas include:
+*   Azure's global infrastructure: regions, availability zones, datacenters.
+*   Resource organization: resource groups, subscriptions, management groups.
+*   Compute services: VMs, Scale Sets, App Service, Containers, Functions.
+*   Networking services: VNets, Subnets, DNS, VPN Gateway, ExpressRoute, Load Balancers.
+*   Storage services: Blob, Disk, Files, Tables, Queues; tiers, redundancy, migration.
 `,
-    mnemonicSuggestion: "Think of Azure as a giant digital city. Compute services are different types of buildings (VMs-houses, AppService-apartments, Functions-kiosks). Storage services are warehouses (Blob-general, File-office files). Networking provides roads (VNet, Load Balancer). Databases are libraries (SQL-structured, CosmosDB-global knowledge).",
-    questions: [
+    mnemonicSuggestion: "Azure Architecture: Global (Regions, Zones), Organized (Groups, Subs), Powered by (Compute, Network, Storage). G.O.P. C.N.S.",
+    subTopics: [
       {
+        id: 'aas-regions-pairs-sovereign',
+        name: 'Describe Azure regions, region pairs, and sovereign regions',
+        studyGuide: `
+**Azure Regions:**
+*   **Definition:** A geographical area on the planet containing at least one, but potentially multiple, datacenters that are networked together with a low-latency network. Azure has a vast global network of regions.
+*   **Purpose:** Allows you to deploy resources closer to your users to reduce latency, meet data residency requirements, and provide disaster recovery options.
+*   **Use Case Scenario:** A company based in Germany wants to host an application for its European customers. They choose the "Germany West Central" Azure region to ensure low latency for local users and comply with EU data residency laws.
+
+**Region Pairs:**
+*   **Definition:** Each Azure region is paired with another region within the same geography (e.g., US, Europe, Asia) but typically at least 300 miles away. This pairing facilitates disaster recovery.
+*   **Benefits:**
+    *   **Sequential Updates:** Azure systematically updates one region in each pair at a time, minimizing the risk of both regions being down during maintenance.
+    *   **Data Residency:** For most services that support region pairs, data replication for disaster recovery stays within the same geopolitical boundary (except for Brazil South).
+    *   **Prioritized Recovery:** In the event of a broad outage, one region out of every pair is prioritized for recovery.
+*   **Use Case Scenario:** A business deploys its critical database in the "East US 2" region. They configure geo-replication to its paired region, "Central US," for disaster recovery. If a major disaster hits East US 2, they can fail over to Central US.
+
+**Sovereign Regions (e.g., Azure Government, Azure China):**
+*   **Definition:** Instances of Azure that are physically and logically isolated from the public Azure cloud, designed to meet specific compliance, security, and data residency requirements for governments or specific countries.
+*   **Characteristics:** Operated by local partners or government-cleared personnel, adhere to strict regulatory frameworks.
+*   **Use Case Scenario:** A U.S. federal agency needs to store sensitive government data. They use "Azure Government," a sovereign region that meets U.S. government compliance standards like FedRAMP High and is operated by screened U.S. persons.
+        `,
+        mnemonicSuggestion: "Regions: Dots on map. Pairs: Two dots tied with string (for backup). Sovereign: Special dot with a flag (government/country specific)."
+      },
+      {
+        id: 'aas-availability-zones',
+        name: 'Describe availability zones',
+        studyGuide: `
+**Availability Zones (AZs):**
+*   **Definition:** Physically separate datacenters within an Azure region. Each AZ has independent power, cooling, and networking. They are close enough for low-latency replication but far enough apart to be isolated from localized failures.
+*   **Purpose:** Provide high availability and fault tolerance for applications and data within a region. If one zone goes down, resources in other zones remain unaffected.
+*   **Resiliency:** Protects applications from datacenter-level failures.
+*   **SLAs:** Using AZs for services like VMs can provide higher SLAs (e.g., 99.99% for VMs spread across AZs).
+*   **Not all regions have AZs**, but support is expanding.
+*   **Use Case Scenario:** An e-commerce company wants to ensure its critical online store remains operational even if one Azure datacenter in their chosen region fails. They deploy their web servers and databases across three Availability Zones within that region. If one zone experiences an outage, the other two zones continue to serve traffic, ensuring high availability.
+        `,
+        mnemonicSuggestion: "Availability Zones: 3 separate 'Safe Houses' (datacenters) in one 'City' (region). If one floods, others are fine."
+      },
+      {
+        id: 'aas-datacenters',
+        name: 'Describe Azure datacenters',
+        studyGuide: `
+**Azure Datacenters:**
+*   **Definition:** Physical facilities that house thousands of servers, networking equipment, and storage systems. These are the core buildings where Azure cloud services run.
+*   **Global Infrastructure:** Microsoft has a massive global network of datacenters, grouped into Azure regions and Availability Zones.
+*   **Security:** Datacenters have extensive physical security measures, including multi-layered access controls, surveillance, and 24/7 security personnel.
+*   **Resiliency:** Designed with redundant power, cooling, and networking to ensure high availability.
+*   **Sustainability:** Microsoft is committed to powering its datacenters with renewable energy and improving efficiency.
+*   **Customer Access:** Customers do not typically have physical access to Azure datacenters; management is done remotely via Azure portal or APIs.
+*   **Use Case Scenario:** When a user provisions an Azure Virtual Machine, that VM is physically running on servers within one of Microsoft's secure datacenters located in the Azure region selected by the user. The datacenter provides the necessary power, cooling, and network connectivity for that VM to operate.
+        `,
+        mnemonicSuggestion: "Datacenters: The actual 'Buildings' full of 'Computers' that make up Azure. Super secure and powerful."
+      },
+      {
+        id: 'aas-resources-groups',
+        name: 'Describe Azure resources and resource groups',
+        studyGuide: `
+**Azure Resources:**
+*   **Definition:** A manageable item that is available through Azure. Examples include virtual machines, storage accounts, web apps, databases, and virtual networks. Resources are instances of Azure services that you create.
+*   **Characteristics:** Each resource has a type, location, and unique ID. They are deployed and managed within resource groups.
+*   **Use Case Scenario:** To host a website, you might create several Azure resources: an Azure App Service Plan (resource), an Azure App Service Web App (resource), and an Azure SQL Database (resource).
+
+**Resource Groups:**
+*   **Definition:** A container that holds related resources for an Azure solution. The resource group can include all the resources for the solution, or only those resources that you want to manage as a group.
+*   **Key Features:**
+    *   **Lifecycle Management:** Resources in a group share the same lifecycle; deploying, updating, and deleting a resource group will affect all resources within it.
+    *   **Organization:** Group related resources for a project, application, or environment (e.g., "WebApp-Prod-RG", "Database-Dev-RG").
+    *   **Deployment Scope:** Often used as a scope for deployments using ARM templates.
+    *   **Access Control:** Apply Azure Role-Based Access Control (RBAC) at the resource group level to manage permissions.
+    *   **Billing/Tagging:** Group resources for cost tracking and apply tags.
+    *   **Location:** A resource group has a location, which is where its metadata is stored. Resources within a group can be in different regions.
+*   **Use Case Scenario:** A development team is building a new application consisting of a web app, a database, and a storage account. They create a resource group named "ProjectAlpha-Dev-RG". All these related resources are created within this resource group. When the development phase is over, they can easily delete the entire resource group to remove all associated resources.
+        `,
+        mnemonicSuggestion: "Resources: 'Bricks & Mortar' (VMs, DBs). Resource Groups: 'Containers' or 'Folders' to organize your bricks for a project. One RG, one lifecycle."
+      },
+      {
+        id: 'aas-subscriptions',
+        name: 'Describe subscriptions',
+        studyGuide: `
+**Azure Subscriptions:**
+*   **Definition:** An Azure subscription is a logical container that provides access to Azure products and services. It's linked to an Azure account and serves as a billing unit and an access control boundary.
+*   **Purpose:**
+    *   **Billing Boundary:** Each subscription has its own billing report and invoice. Costs incurred by resources within a subscription are billed to that subscription.
+    *   **Access Control Boundary:** You can apply access policies (RBAC) at the subscription level to control who can create and manage resources.
+    *   **Scale Limits:** Subscriptions have some default limits (quotas) on the number of resources that can be created (e.g., number of VMs per region). These can often be increased.
+*   **Types:** Common types include Free, Pay-As-You-Go, Enterprise Agreement, CSP (Cloud Solution Provider).
+*   **Multiple Subscriptions:** Organizations often use multiple subscriptions to separate environments (dev, test, prod), departments, projects, or billing responsibilities.
+*   **Use Case Scenario:** A company decides to separate its production environment from its development and testing environments for better cost tracking and access control. They create three Azure subscriptions: "ProdSubscription," "DevSubscription," and "TestSubscription." Each department or project might also get its own subscription under an Enterprise Agreement for chargeback purposes.
+        `,
+        mnemonicSuggestion: "Subscription: Your 'Credit Card' & 'Key' to Azure. Defines billing and who gets in. One project/department, often one subscription."
+      },
+      {
+        id: 'aas-management-groups',
+        name: 'Describe management groups',
+        studyGuide: `
+**Azure Management Groups:**
+*   **Definition:** Containers that help you manage access, policy, and compliance across multiple Azure subscriptions. Management groups provide a level of scope above subscriptions.
+*   **Hierarchy:** You can create a hierarchy of management groups to organize your subscriptions effectively, reflecting your organization's structure. The root management group is at the top.
+*   **Purpose:**
+    *   **Policy Application:** Apply Azure Policies at a management group level, and those policies will be inherited by all subscriptions within that group.
+    *   **Access Management:** Assign Azure Roles (RBAC) at the management group level, granting permissions across multiple subscriptions.
+    *   **Cost Management:** View aggregated costs across subscriptions within a management group.
+    *   **Organizational Alignment:** Structure your Azure environment to match your company's departmental or geographical layout.
+*   **Use Case Scenario:** A multinational corporation has numerous Azure subscriptions for different departments (HR, Finance, IT) and geographical regions (North America, Europe, Asia). They create management groups for "North America," "Europe," and "Asia." Under "North America," they might have further management groups for "US-HR" and "US-Finance." They apply a corporate-wide security policy at the root management group, which automatically applies to all subscriptions, ensuring consistent governance.
+        `,
+        mnemonicSuggestion: "Management Groups: 'Big Folders' for 'Subscription Folders'. Organize your entire company's Azure use, apply rules from the top down."
+      },
+      {
+        id: 'aas-hierarchy-rg-subs-mg',
+        name: 'Describe the hierarchy of resource groups, subscriptions, and management groups',
+        studyGuide: `
+The Azure resource hierarchy provides a structured way to organize, manage, and govern resources:
+
+1.  **Management Groups (Top Level):**
+    *   Provide a scope for applying governance controls (policies, RBAC) across multiple subscriptions.
+    *   Can be nested to create a hierarchy reflecting an organization's structure.
+    *   A single root management group exists for each Azure AD tenant.
+
+2.  **Subscriptions (Middle Level):**
+    *   Contained within management groups (or directly under the root if no custom MGs are used).
+    *   Act as a unit of billing and access control.
+    *   Resources are deployed into subscriptions.
+    *   Subject to policies and RBAC inherited from parent management groups.
+
+3.  **Resource Groups (Bottom Level):**
+    *   Contained within subscriptions.
+    *   Hold related resources for an application or project.
+    *   Resources within a resource group share a lifecycle.
+    *   Subject to policies and RBAC inherited from parent subscriptions and management groups.
+    *   RBAC and policies can also be applied directly at the resource group level.
+
+4.  **Resources (Individual Items):**
+    *   Deployed within resource groups.
+    *   The actual instances of Azure services (VMs, storage accounts, etc.).
+    *   Inherit policies and RBAC from their parent resource group, subscription, and management group.
+    *   RBAC can also be applied directly at the resource level for granular control.
+
+**Flow of Governance:**
+Management Groups -> Subscriptions -> Resource Groups -> Resources
+
+**Use Case Scenario:**
+*   **Root Management Group:** ACME Corp applies a global policy that all resources must have a 'CostCenter' tag.
+*   **Management Group "Production":** All production subscriptions are under this MG. It has stricter access controls.
+*   **Subscription "Prod-WebApp-Sub":** A subscription for production web applications.
+*   **Resource Group "Prod-ECommerce-RG":** Contains all resources (App Service, SQL DB, Storage) for the e-commerce platform. This RG gets a specific budget alert.
+*   **Resource (e.g., SQL Database):** Inherits tagging policy from root MG, access controls from "Production" MG and "Prod-WebApp-Sub", and budget scope from "Prod-ECommerce-RG".
+
+        `,
+        mnemonicSuggestion: "Hierarchy: Company (MG) -> Departments (Subs) -> Projects (RGs) -> Tools (Resources). Rules flow downhill."
+      },
+      {
+        id: 'aas-compare-compute-types',
+        name: 'Compare compute types, including containers, virtual machines, and functions',
+        studyGuide: `
+**Virtual Machines (VMs) - IaaS:**
+*   **Definition:** Emulate a physical computer, providing an operating system, storage, and networking capabilities that you manage.
+*   **Control:** Highest level of control over the OS and software stack.
+*   **Use Cases:** Lift-and-shift migrations, applications requiring specific OS configurations, stateful applications, traditional N-tier apps.
+*   **Management:** You manage OS patching, security, software installation.
+*   *Analogy:* Renting an empty house; you furnish and maintain everything inside.
+
+**Containers (e.g., Docker on Azure Kubernetes Service (AKS), Azure Container Instances (ACI)) - PaaS/IaaS features:**
+*   **Definition:** Package an application and its dependencies together in an isolated unit. Containers run on a shared OS kernel but are isolated from each other.
+*   **Control:** Control over application dependencies and runtime environment, less OS management than VMs.
+*   **Use Cases:** Microservices, web applications, consistent environments across dev/test/prod, CI/CD pipelines, applications needing portability.
+*   **Management:** Orchestrators like AKS manage container deployment, scaling, and networking. ACI is for simpler, single container deployments.
+*   *Analogy:* Renting a pre-fabricated room (container) that you can easily move between different buildings (hosts/clusters).
+
+**Functions (Serverless/FaaS - e.g., Azure Functions) - PaaS:**
+*   **Definition:** Event-driven, short-lived pieces of code that run in response to triggers (HTTP, queue, timer, etc.).
+*   **Control:** Least infrastructure control; focus solely on code. Provider manages servers and scaling.
+*   **Use Cases:** Simple APIs, background tasks, data processing, IoT event handling, micro-billing tasks.
+*   **Management:** No server management; auto-scaling; pay-per-execution.
+*   *Analogy:* Using a specific tool from a shared workshop (e.g., a specialized saw) only when you need it, and only paying for the time you use that tool.
+
+**Comparison Table:**
+
+| Feature        | Virtual Machines (VMs) | Containers               | Functions (Serverless)   |
+|----------------|------------------------|--------------------------|--------------------------|
+| Abstraction    | Hardware               | Operating System         | Code/Function            |
+| Control        | High                   | Medium                   | Low                      |
+| Management     | OS, Apps, Middleware   | Apps, Dependencies       | Code only                |
+| Startup Time   | Minutes                | Seconds                  | Milliseconds             |
+| Scalability    | Manual/Auto (Scale Sets)| Auto (Orchestrator)    | Auto (Provider-managed)  |
+| Cost Model     | Per hour/second        | Per hour/second (host)   | Per execution/duration   |
+| State          | Stateful/Stateless     | Typically Stateless      | Typically Stateless      |
+
+**Use Case Scenario:** A company is building a new application suite.
+*   A legacy database server is migrated to an **Azure VM** for maximum compatibility.
+*   The new microservices for the application backend are developed as **containers** and deployed on **AKS** for scalability and resilience.
+*   A small task to send a welcome email when a new user signs up is implemented as an **Azure Function**, triggered by a database event.
+        `,
+        mnemonicSuggestion: "Compute: VMs (Your full custom computer), Containers (Portable app boxes), Functions (Quick code snippets for specific jobs)."
+      },
+      {
+        id: 'aas-vm-options',
+        name: 'Describe virtual machine options, including Azure virtual machines, Azure Virtual Machine Scale Sets, availability sets, and Azure Virtual Desktop',
+        studyGuide: `
+**Azure Virtual Machines (VMs):**
+*   **Definition:** IaaS offering that provides on-demand, scalable computing resources with usage-based pricing. You can choose various OS (Windows, Linux), sizes (CPU, RAM, Storage), and series (general purpose, compute-optimized, memory-optimized, etc.).
+*   **Use Case Scenario:** Hosting a traditional web server, running a line-of-business application, or creating a development/test environment.
+
+**Azure Virtual Machine Scale Sets (VMSS):**
+*   **Definition:** Allows you to create and manage a group of load-balanced VMs. The number of VM instances can automatically increase or decrease in response to demand or a defined schedule.
+*   **Benefits:** High availability, application resiliency, large-scale services, simplified management of multiple VMs.
+*   **Use Case Scenario:** An e-commerce website needs to handle fluctuating traffic. VMSS automatically scales out the number of web server VMs during peak shopping hours and scales them in during off-peak times to save costs while maintaining performance.
+
+**Availability Sets:**
+*   **Definition:** A logical grouping capability to ensure that the VM resources you place within it are isolated from each other when they are deployed within an Azure datacenter. Protects against hardware failures and software updates within a single datacenter.
+*   **How it works:** Spreads your VMs across multiple fault domains (share common power source and network switch) and update domains (can be rebooted at the same time).
+*   **SLA:** Provides a 99.95% SLA if you have two or more VMs in an Availability Set.
+*   **Limitation:** Protects within a single datacenter, not against entire datacenter/region failure (for that, use Availability Zones).
+*   **Use Case Scenario:** A company deploys two domain controller VMs for redundancy within a single Azure region. Placing them in an Availability Set ensures that if one fault domain has a hardware failure or one update domain is rebooted, the other domain controller remains available.
+
+**Azure Virtual Desktop (AVD):**
+*   **Definition:** A desktop and application virtualization service that runs on the cloud. It delivers a complete Windows 10/11 or Windows Server desktop experience, or individual applications, to users on virtually any device.
+*   **Benefits:** Centralized management, security, remote access, multi-session Windows, cost savings (pooled resources).
+*   **Use Case Scenario:** A company needs to provide secure remote access to corporate applications and desktops for its employees working from home or using personal devices. AVD allows them to deliver a managed Windows environment without needing VPNs for each app or managing individual physical desktops.
+        `,
+        mnemonicSuggestion: "VMs: Your server. VMSS: Army of cloned VMs. Availability Sets: VMs in different 'racks' in one building (prevents one rack failure taking all). AVD: Windows desktop from the cloud."
+      },
+      {
+        id: 'aas-vm-resources-required',
+        name: 'Describe the resources required for virtual machines',
+        studyGuide: `
+When you create an Azure Virtual Machine, several associated resources are typically created or required:
+
+*   **Compute Resources:**
+    *   **VM itself:** The compute instance with a specific size (CPU, memory, temporary storage).
+*   **Storage Resources:**
+    *   **OS Disk:** A managed disk that stores the operating system.
+    *   **Data Disk(s) (Optional):** Managed disks for persistent application data.
+    *   **Temporary Disk:** Local, non-persistent storage on the physical host, good for temporary files, page files. Data is lost on reboot/migration.
+    *   **Storage Account (for diagnostics - optional):** To store boot diagnostics logs and screenshots.
+*   **Networking Resources:**
+    *   **Virtual Network (VNet):** The VM must be deployed into a VNet.
+    *   **Subnet:** The VM is placed within a specific subnet of the VNet.
+    *   **Network Interface Card (NIC):** Enables the VM to communicate with the VNet. A VM has at least one NIC.
+    *   **Public IP Address (Optional):** To allow inbound internet traffic to the VM (e.g., for RDP/SSH or web server).
+    *   **Network Security Group (NSG):** Filters inbound and outbound network traffic to/from the VM's NIC or subnet.
+*   **Other Resources (often implicitly created or associated):**
+    *   **Resource Group:** The VM and its related resources are contained within a resource group.
+    *   **(If using Availability Sets/Zones):** The Availability Set or Zone configuration.
+
+**Use Case Scenario:** You want to create a Windows Server VM to host a small database.
+1.  You select a **VM size** (e.g., Standard_DS2_v2).
+2.  An **OS disk** is automatically created.
+3.  You add a **Data Disk** for database files.
+4.  The VM is placed in a **Resource Group**.
+5.  It requires a **VNet** and **Subnet**.
+6.  A **NIC** is created and attached.
+7.  You assign a **Public IP** to access it remotely.
+8.  An **NSG** is configured to allow RDP and SQL traffic.
+        `,
+        mnemonicSuggestion: "VM needs: Brain (CPU/Mem), Bones (OS/Data Disks), Nerves (NIC/VNet/IP), Skin (NSG), and a Home (Resource Group)."
+      },
+      {
+        id: 'aas-app-hosting-options',
+        name: 'Describe application hosting options, including web apps, containers, and virtual machines',
+        studyGuide: `
+Azure offers various ways to host your applications, each suited for different needs:
+
+**Azure Virtual Machines (VMs) - IaaS:**
+*   **Description:** Full control over the OS and environment.
+*   **Best for:**
+    *   Migrating existing on-premises applications ("lift-and-shift") with minimal changes.
+    *   Applications requiring specific OS configurations or custom software installations.
+    *   Applications that need direct access to underlying hardware features.
+    *   Stateful applications that are difficult to containerize.
+*   **Management:** You manage the OS, patching, scaling (can use VMSS), load balancing, security configurations.
+*   **Use Case Scenario:** Hosting a legacy Windows application that cannot be easily refactored for PaaS or containers.
+
+**Containers (Azure Kubernetes Service - AKS, Azure Container Instances - ACI, Azure App Service for Containers) - PaaS features:**
+*   **Description:** Package applications and dependencies for consistency and portability.
+*   **Best for:**
+    *   Microservices architectures.
+    *   Applications requiring consistent dev/test/prod environments.
+    *   CI/CD and DevOps practices.
+    *   Scalable web applications and APIs.
+    *   Workloads needing rapid deployment and scaling.
+*   **Management:** AKS for orchestration (complex), ACI for single containers (simple), App Service for easy web app container hosting. Less OS management than VMs.
+*   **Use Case Scenario:** A team developing a new set of microservices for an e-commerce platform uses AKS to deploy, manage, and scale their containerized services.
+
+**Azure App Service (Web Apps, API Apps) - PaaS:**
+*   **Description:** Fully managed platform for building, deploying, and scaling web apps, mobile backends, and RESTful APIs.
+*   **Best for:**
+    *   Rapid development and deployment of web applications and APIs.
+    *   Applications built with common frameworks (.NET, Java, Node.js, Python, PHP).
+    *   Integrating with other Azure services easily.
+    *   Automated scaling, patching, and CI/CD integration.
+    *   When you want to focus on code, not infrastructure.
+*   **Management:** Azure manages the OS, web servers, load balancers, and patching. You manage your code and data.
+*   **Use Case Scenario:** A startup builds a new SaaS web application. They use Azure App Service to quickly deploy their .NET Core application, enabling auto-scaling and integrated deployment slots for testing new features.
+
+**Comparison:**
+*   **Control:** VMs (Most) > Containers > App Service (Least infrastructure control)
+*   **Management Overhead:** VMs (Most) > Containers > App Service (Least)
+*   **Speed of Deployment:** App Service (Fastest) > Containers > VMs (Slowest)
+
+        `,
+        mnemonicSuggestion: "Hosting: VMs (Your custom house), Containers (Standardized, portable rooms), App Service (Hotel - fully managed for web apps)."
+      },
+      {
+        id: 'aas-virtual-networking',
+        name: 'Describe virtual networking, including the purpose of Azure virtual networks, Azure virtual subnets, peering, Azure DNS, Azure VPN Gateway, and ExpressRoute',
+        studyGuide: `
+**Azure Virtual Network (VNet):**
+*   **Purpose:** Your own isolated network in Azure. Enables Azure resources (like VMs) to securely communicate with each other, the internet, and on-premises networks.
+*   **Key Features:** IP address space, subnets, routing, network security.
+*   **Use Case Scenario:** Creating a private network space in Azure to deploy your application servers and databases, isolating them from public internet traffic by default.
+
+**Azure Virtual Subnets:**
+*   **Purpose:** Segments a VNet's IP address range into smaller, manageable parts. Allows you to group related resources within a VNet (e.g., web tier, app tier, data tier).
+*   **Key Features:** Apply NSGs to subnets, define route tables.
+*   **Use Case Scenario:** In a VNet for a 3-tier application, you create a "WebSubnet" for web servers, an "AppSubnet" for application servers, and a "DataSubnet" for database servers, applying different NSG rules to each.
+
+**Peering (VNet Peering):**
+*   **Purpose:** Connects two Azure VNets seamlessly, allowing resources in either VNet to communicate with each other as if they were in the same network. Traffic between peered VNets uses the Microsoft backbone network (private).
+*   **Types:** Regional Peering (VNets in same region), Global Peering (VNets in different regions).
+*   **Use Case Scenario:** A company has one VNet for shared services (like domain controllers) and another VNet for a specific project. VNet peering allows the project VNet to access the shared services securely and privately.
+
+**Azure DNS:**
+*   **Purpose:** A hosting service for DNS domains, providing name resolution using Microsoft Azure infrastructure. You can manage your DNS records for your domains (e.g., \`www.contoso.com\`).
+*   **Types:**
+    *   **Public DNS Zones:** For internet-facing domain resolution.
+    *   **Private DNS Zones:** For name resolution within a VNet (or across peered VNets) without needing custom DNS servers.
+*   **Use Case Scenario:** Hosting the DNS records for your company's public website (\`yourcompany.com\`). Or, using Azure Private DNS to resolve names of VMs within your VNet by their hostname (e.g., \`webvm1.internal.contoso.com\`).
+
+**Azure VPN Gateway:**
+*   **Purpose:** Sends encrypted traffic between an Azure VNet and an on-premises location over the public internet (Site-to-Site VPN), or between a VNet and individual client computers (Point-to-Site VPN).
+*   **Use Case Scenario:** Securely connecting your company's on-premises office network to your Azure VNet so that on-premises users can access Azure resources, effectively extending your on-premises network to the cloud.
+
+**Azure ExpressRoute:**
+*   **Purpose:** Extends your on-premises networks into the Microsoft cloud over a private, dedicated connection facilitated by a connectivity provider. Does NOT go over the public internet.
+*   **Benefits:** Higher bandwidth, lower latency, more reliability, and better security compared to VPN Gateway. More expensive.
+*   **Use Case Scenario:** A large enterprise needs a high-speed, reliable, and private connection between its on-premises datacenter and Azure for migrating large databases, frequent large data transfers, or latency-sensitive hybrid applications.
+        `,
+        mnemonicSuggestion: "VNet (Your private Azure land). Subnets (Fenced areas in land). Peering (Bridge between lands). DNS (Address book). VPN (Secure tunnel over internet). ExpressRoute (Private highway to Azure)."
+      },
+      {
+        id: 'aas-public-private-endpoints',
+        name: 'Define public and private endpoints',
+        studyGuide: `
+**Public Endpoints (Public IP Addresses):**
+*   **Definition:** An IP address that is accessible from the public internet. When an Azure service (like a VM, Load Balancer, or PaaS service) is assigned a public IP address, it can be reached from anywhere on the internet (subject to NSGs/firewalls).
+*   **Purpose:** To make services available to external users or systems over the internet.
+*   **Use Case Scenario:**
+    *   A web server VM needs a public IP so users can access the website.
+    *   An Azure SQL Database configured with a public endpoint can be accessed from an on-premises application development tool (with firewall rules allowing the connection).
+
+**Private Endpoints (using Azure Private Link):**
+*   **Definition:** A network interface that uses a private IP address from your Virtual Network (VNet) to connect privately and securely to Azure PaaS services (like Azure Storage, Azure SQL Database, Azure Cosmos DB) or to your own services powered by Azure Private Link.
+*   **Purpose:**
+    *   Access PaaS services without exposing them to the public internet.
+    *   Eliminate data exfiltration risks by ensuring traffic to PaaS services stays within your VNet and the Microsoft backbone.
+    *   Simplify network architecture by avoiding complex firewall rules for PaaS services.
+*   **How it works:** The PaaS service effectively gets an IP address within your VNet, making it appear as if it's part of your private network.
+*   **Use Case Scenario:** A company has an Azure SQL Database. Instead of accessing it over its public endpoint, they create a private endpoint for it within their VNet. Applications running on VMs within that VNet can now connect to the SQL Database using its private IP address, and all traffic remains on the Microsoft private network, enhancing security. This also means they can block all public access to the SQL Database.
+        `,
+        mnemonicSuggestion: "Public Endpoint: 'Front Door' to the internet. Private Endpoint: 'Secret Back Door' directly into your private Azure network for PaaS services."
+      },
+      {
+        id: 'aas-compare-storage-services',
+        name: 'Compare Azure Storage services',
+        studyGuide: `
+Azure Storage offers several types of services for different data needs:
+
+*   **Azure Blob Storage:**
+    *   **Type:** Object storage (unstructured data).
+    *   **Use Cases:** Storing documents, images, videos, backups, data lakes, static website hosting.
+    *   **Structure:** Containers hold blobs (files).
+    *   **Access Tiers:** Hot, Cool, Cold, Archive (for cost optimization).
+*   **Azure Disk Storage:**
+    *   **Type:** Block storage (persistent disks for VMs).
+    *   **Use Cases:** OS disks and data disks for Azure Virtual Machines.
+    *   **Performance Tiers:** Standard HDD, Standard SSD, Premium SSD, Ultra Disk.
+*   **Azure Files:**
+    *   **Type:** Managed file shares in the cloud.
+    *   **Access Protocols:** SMB (Server Message Block), NFS (Network File System).
+    *   **Use Cases:** Replacing on-premises file servers, "lift and shift" applications needing file shares, shared application settings, diagnostics data.
+    *   **Synchronization:** Can be synced with on-premises Windows Servers using Azure File Sync.
+*   **Azure Queue Storage:**
+    *   **Type:** Message queuing service.
+    *   **Use Cases:** Decoupling application components, asynchronous message processing, scheduling background tasks.
+    *   **Structure:** Stores large numbers of messages.
+*   **Azure Table Storage:**
+    *   **Type:** NoSQL key-attribute store (schemaless).
+    *   **Use Cases:** Storing structured NoSQL data like user data for web applications, address books, device information.
+    *   **Scalability:** Highly scalable for simple datasets.
+
+**Comparison Table:**
+
+| Service         | Type            | Primary Use                               | Key Features                        |
+|-----------------|-----------------|-------------------------------------------|-------------------------------------|
+| Blob Storage    | Object          | Unstructured data, backups, data lakes    | Tiers, static web hosting           |
+| Disk Storage    | Block           | VM OS and data disks                      | Performance tiers, managed/unmanaged|
+| Files           | File Share      | Replacing file servers, shared access     | SMB/NFS, Azure File Sync          |
+| Queue Storage   | Message Queue   | Asynchronous tasks, decoupling apps       | Scalable messaging                  |
+| Table Storage   | NoSQL Key-Value | Structured NoSQL data, simple datasets    | Schemaless, fast key-based access   |
+
+**Use Case Scenario:** A company develops a web application.
+*   User profile pictures and uploaded documents are stored in **Azure Blob Storage**.
+*   The application's web servers run on VMs using **Azure Disk Storage** for their OS and application files.
+*   Shared configuration files used by multiple instances of the web app are stored on **Azure Files**.
+*   Order processing tasks are sent to **Azure Queue Storage** to be handled by backend workers asynchronously.
+*   User session data (non-relational) is stored in **Azure Table Storage** for quick lookups.
+        `,
+        mnemonicSuggestion: "Storage: Blobs (Buckets for any 'stuff'), Disks (Hard drives for VMs), Files (Shared folders like on your PC), Queues (Waiting lines for messages), Tables (Simple NoSQL spreadsheets)."
+      },
+      {
+        id: 'aas-storage-tiers',
+        name: 'Describe storage tiers',
+        studyGuide: `
+Azure Blob Storage and Azure Files (Premium tier) offer different access tiers to help optimize storage costs based on how frequently data is accessed:
+
+**Azure Blob Storage Tiers:**
+
+*   **Hot Tier:**
+    *   **Purpose:** For frequently accessed data.
+    *   **Cost:** Highest storage cost, lowest access cost.
+    *   **Latency:** Low (milliseconds).
+    *   **Use Case Scenario:** Actively used application data, images and videos frequently served by a website.
+
+*   **Cool Tier:**
+    *   **Purpose:** For infrequently accessed data that needs to be stored for at least 30 days.
+    *   **Cost:** Lower storage cost than Hot, higher access cost than Hot.
+    *   **Latency:** Low (milliseconds), same as Hot.
+    *   **Use Case Scenario:** Short-term backups, older project files, disaster recovery datasets that are rarely accessed but need to be readily available.
+
+*   **Cold Tier (Preview for Blob Storage):**
+    *   **Purpose:** For rarely accessed data stored for at least 90 days, where slightly higher retrieval times are acceptable.
+    *   **Cost:** Lower storage costs than Cool, higher access costs than Cool.
+    *   **Latency:** Can be slightly higher than Hot/Cool.
+    *   **Use Case Scenario:** Long-term document archives, older media content not frequently viewed.
+
+*   **Archive Tier:**
+    *   **Purpose:** For rarely accessed data that can tolerate several hours of retrieval latency, stored for at least 180 days.
+    *   **Cost:** Lowest storage cost, highest access cost.
+    *   **Latency:** High (can take hours to "rehydrate" data to Hot or Cool tier before access).
+    *   **Use Case Scenario:** Long-term backups, raw data that must be kept for compliance reasons but is almost never accessed (e.g., medical records after many years, financial audit logs).
+
+**Azure Files Tiers (for Premium file shares - SSD based):**
+*   While Azure Files Standard uses HDD and doesn't have explicit "Hot/Cool" tiers like Blob, Premium Files (SSD) are optimized for performance. The concept of tiering is more pronounced in Blob Storage for cost optimization based on access frequency. Lifecycle management policies can move Blob data between tiers automatically.
+
+**Use Case Scenario:** A company stores video surveillance footage.
+*   The most recent 7 days of footage (frequently reviewed) are stored in the **Hot tier**.
+*   Footage from 8 to 90 days old (infrequently reviewed) is moved to the **Cool tier**.
+*   Footage older than 90 days (rarely reviewed, kept for compliance) is moved to the **Archive tier**. This significantly reduces storage costs.
+        `,
+        mnemonicSuggestion: "Tiers: Hot (Espresso - quick, pricey for daily), Cool (Fridge - still quick, cheaper for weekly), Cold (Pantry - good for monthly items), Archive (Deep Freeze - very cheap, slow to thaw)."
+      },
+      {
+        id: 'aas-redundancy-options',
+        name: 'Describe redundancy options',
+        studyGuide: `
+Azure Storage offers several redundancy options to protect your data from hardware failures, and regional or zonal outages:
+
+**Replication within a Primary Region:**
+
+*   **Locally-Redundant Storage (LRS):**
+    *   **How it works:** Replicates your data three times synchronously within a single physical location (datacenter) in the primary region.
+    *   **Protection:** Protects against server rack and drive failures.
+    *   **Availability:** Lowest cost option, but does not protect against a datacenter-level outage.
+    *   **Use Case Scenario:** Non-critical data, dev/test data, or data that can be easily reconstructed.
+
+*   **Zone-Redundant Storage (ZRS):**
+    *   **How it works:** Replicates your data synchronously across three Azure Availability Zones within the primary region.
+    *   **Protection:** Protects against datacenter-level (zone) failures within a region.
+    *   **Availability:** Higher availability than LRS within a region.
+    *   **Use Case Scenario:** Mission-critical applications requiring high availability within a region, where data residency within the region is important.
+
+**Replication to a Secondary Region (Geo-Redundancy):**
+
+*   **Geo-Redundant Storage (GRS):**
+    *   **How it works:** Replicates your data synchronously three times within a single physical location in the primary region (like LRS), and then asynchronously replicates your data to a secondary region (region pair) hundreds of miles away. In the secondary region, data is replicated three times using LRS.
+    *   **Protection:** Protects against regional outages.
+    *   **Access:** Data in the secondary region is not directly readable unless a failover to the secondary region occurs.
+    *   **Use Case Scenario:** Critical data requiring protection against regional disasters.
+
+*   **Read-Access Geo-Redundant Storage (RA-GRS):**
+    *   **How it works:** Same as GRS (data replicated to a secondary region), but provides read-only access to the data in the secondary region, even if the primary region is operational.
+    *   **Protection:** Protects against regional outages.
+    *   **Access:** Allows read access from the secondary region for higher application availability or for read-heavy workloads.
+    *   **Use Case Scenario:** Applications that need to continue serving read requests from a secondary region if the primary region becomes unavailable, or for offloading read traffic.
+
+*   **Geo-Zone-Redundant Storage (GZRS):**
+    *   **How it works:** Combines ZRS in the primary region (synchronous replication across 3 AZs) with asynchronous replication to a secondary region (where data is LRS replicated).
+    *   **Protection:** Provides high availability within the primary region (protection against zone failures) AND protection against regional outages.
+    *   **Use Case Scenario:** Highest level of durability and availability for critical data requiring both zonal and regional protection.
+
+*   **Read-Access Geo-Zone-Redundant Storage (RA-GZRS):**
+    *   **How it works:** Same as GZRS, but provides read-only access to data in the secondary region.
+    *   **Use Case Scenario:** Maximum availability and durability, with the ability to read from the secondary region.
+
+**Use Case Scenario:** A financial institution stores critical transaction logs. They choose **GZRS** to ensure the data is protected against individual datacenter failures within their primary region and also against a complete regional disaster, providing the highest level of durability.
+        `,
+        mnemonicSuggestion: "Redundancy: LRS (3 copies, 1 building), ZRS (3 copies, 3 buildings in 1 city), GRS (LRS + 3 copies in another city), RA-GRS (GRS + read from other city), GZRS (ZRS + 3 copies in another city)."
+      },
+      {
+        id: 'aas-storage-account-options',
+        name: 'Describe storage account options and storage types',
+        studyGuide: `
+**Azure Storage Account:**
+*   **Definition:** A container that groups a set of Azure Storage services (Blob, File, Queue, Table, Disk). It provides a unique namespace for your Azure Storage data that's accessible from anywhere in the world over HTTP or HTTPS.
+*   **Key Settings When Creating a Storage Account:**
+    *   **Subscription:** The subscription it belongs to.
+    *   **Resource Group:** The resource group it's part of.
+    *   **Account Name:** Globally unique name (forms part of the service URL).
+    *   **Location (Region):** Where the account will be created.
+    *   **Performance Tier:**
+        *   **Standard:** Backed by magnetic drives (HDD). Suitable for bulk storage, infrequently accessed data. Lower cost. Supports Blob, File, Queue, Table.
+        *   **Premium:** Backed by solid-state drives (SSD). For I/O-intensive applications requiring low latency. Higher cost. Supports Block Blobs, Page Blobs (used for Disks), and Files (Azure Files Premium).
+    *   **Account Kind (Type):**
+        *   **General-purpose v2 (GPv2):** Most common. Supports all storage services (Blob, File, Queue, Table, Disk). Recommended for most scenarios.
+        *   **General-purpose v1 (GPv1):** Older type, supports all services. Consider upgrading to GPv2.
+        *   **BlockBlobStorage:** Premium performance for block blobs and append blobs. High transaction rates, low latency. (Only supports Block Blobs and Append Blobs).
+        *   **FileStorage:** Premium performance for Azure Files shares only.
+        *   **BlobStorage:** Legacy account type for blobs only (Hot/Cool tiers). Use GPv2 instead.
+    *   **Redundancy:** LRS, ZRS, GRS, RA-GRS, GZRS, RA-GZRS (as discussed previously).
+    *   **Access Tier (for GPv2 and BlobStorage accounts):** Default tier (Hot or Cool) for new blobs.
+
+**Storage Types within a Storage Account (primarily for GPv2):**
+*   **Blob Storage:** For unstructured data.
+    *   *Block Blobs:* Optimized for streaming and storing text/binary data (documents, images, videos).
+    *   *Append Blobs:* Optimized for append operations (logging).
+    *   *Page Blobs:* Optimized for random read/write operations (used for Azure VM disks).
+*   **Azure Files:** For managed file shares.
+*   **Azure Queues:** For messaging.
+*   **Azure Tables:** For NoSQL key-value data.
+*   **(Azure Disks are managed separately but conceptually use page blobs in storage accounts or more often, are unmanaged/managed disks directly.)**
+
+**Use Case Scenario:** A company needs to store application backups (infrequently accessed but need to be durable) and also host small, frequently accessed configuration files via SMB. They create a **General-purpose v2 (GPv2)** storage account in the "East US" region with **Standard performance** and **GRS redundancy**. Within this account, they create a Blob container for backups (setting blobs to Cool tier) and an Azure Files share for configuration files.
+        `,
+        mnemonicSuggestion: "Storage Account: Your 'Master Key & Address' for all storage. Options: Performance (Fast SSD/Slow HDD), Kind (GPv2 is king), Redundancy (How many copies, where)."
+      },
+      {
+        id: 'aas-moving-files-options',
+        name: 'Identify options for moving files, including AzCopy, Azure Storage Explorer, and Azure File Sync',
+        studyGuide: `
+Azure provides several tools and services for moving files to and from Azure Storage:
+
+*   **AzCopy:**
+    *   **Definition:** A command-line utility designed for copying data to/from Azure Blob, File, and Table storage with optimal performance.
+    *   **Features:** High-performance parallel uploads/downloads, resumable operations, synchronization capabilities.
+    *   **Use Cases:** Transferring large files or large numbers of files, scripting data transfers, migrating data from on-premises to Azure Storage, backup/restore.
+    *   **Scenario Example:** An administrator needs to upload 1TB of historical archive data from an on-premises server to Azure Blob Storage. They use AzCopy for its speed and ability to resume if the transfer is interrupted.
+
+*   **Azure Storage Explorer:**
+    *   **Definition:** A standalone desktop application (Windows, macOS, Linux) that provides a graphical user interface (GUI) for managing Azure Storage resources.
+    *   **Features:** Browse, upload, download, delete, and manage blobs, files, queues, tables, and Cosmos DB entities. Connect to multiple subscriptions and storage accounts.
+    *   **Use Cases:** Ad-hoc file management, visually inspecting storage contents, uploading/downloading smaller sets of files, managing access permissions.
+    *   **Scenario Example:** A developer needs to quickly upload a few configuration files to an Azure Files share and then verify their contents. They use Azure Storage Explorer for its easy-to-use graphical interface.
+
+*   **Azure File Sync:**
+    *   **Definition:** A service that centralizes your organization's file shares in Azure Files, while keeping the flexibility, performance, and compatibility of an on-premises file server. It transforms Windows Server into a quick cache of your Azure file share.
+    *   **Features:** Cloud tiering (cache frequently accessed files locally, tier less used files to Azure), multi-site sync, fast disaster recovery.
+    *   **Use Cases:** Hybrid cloud file sharing, replacing or extending on-premises file servers, consolidating distributed file shares, enabling remote access to on-premises file data via Azure Files.
+    *   **Scenario Example:** A company has multiple branch offices, each with its own Windows file server. They implement Azure File Sync to synchronize all branch office file servers with a central Azure Files share. This allows users in any branch to access the same set of files, and infrequently accessed files are tiered to the cloud to save local storage space.
+
+**Other methods:**
+*   **Azure portal:** For simple, ad-hoc uploads/downloads of individual files.
+*   **SDKs and REST APIs:** For programmatic data transfer within applications.
+*   **Azure Data Factory:** For complex data movement and transformation pipelines.
+
+        `,
+        mnemonicSuggestion: "Moving Files: AzCopy (Fast command-line mover), Storage Explorer (Visual file manager), File Sync (Keeps on-prem & cloud folders in sync)."
+      },
+      {
+        id: 'aas-migration-options',
+        name: 'Describe migration options, including Azure Migrate and Azure Data Box',
+        studyGuide: `
+Azure provides tools and services to help migrate on-premises workloads and data to Azure:
+
+*   **Azure Migrate:**
+    *   **Definition:** A centralized hub of tools and services for discovering, assessing, and migrating on-premises servers, infrastructure, applications, and data to Azure.
+    *   **Key Features:**
+        *   **Discovery and Assessment:** Identifies on-premises VMs (Hyper-V, VMware), physical servers, databases, and web apps. Assesses their suitability for Azure and provides cost estimates.
+        *   **Migration Tools Integration:** Integrates with various migration tools:
+            *   **Azure Migrate: Server Migration:** For migrating VMs and physical servers.
+            *   **Azure Database Migration Service (DMS):** For migrating on-premises databases to Azure database services.
+            *   **Web App Migration Assistant:** For migrating .NET and PHP web apps to Azure App Service.
+            *   **Data Migration Assistant (DMA):** For assessing database compatibility and migrating schema/data.
+    *   **Use Cases:** Planning and executing migrations of various on-premises workloads to Azure, from individual servers to entire datacenters.
+    *   **Scenario Example:** A company plans to migrate its on-premises VMware environment to Azure. They use Azure Migrate to discover all their VMs, assess their Azure readiness, get sizing recommendations for Azure VMs, and then use the integrated Server Migration tool to perform the actual migration with minimal downtime.
+
+*   **Azure Data Box family:**
+    *   **Definition:** A family of physical devices that Microsoft ships to you to enable fast, easy, and reliable offline transfer of large amounts of data to Azure when online transfer over the network is too slow, unreliable, or expensive.
+    *   **Devices:**
+        *   **Data Box Disk:** SSD disks (up to ~35TB usable) for small to medium datasets.
+        *   **Data Box:** Ruggedized, server-sized appliance (up to ~80TB usable) for medium to large datasets.
+        *   **Data Box Heavy:** Large, ruggedized appliance on wheels (up to ~800TB usable) for very large datasets (petabyte scale).
+        *   **Data Box Gateway (Online):** A virtual appliance for online data transfer with local caching.
+    *   **Process:** Order device -> Microsoft ships it -> Load data onto device -> Ship device back to Microsoft -> Microsoft uploads data to your Azure Storage account.
+    *   **Use Cases:** Migrating terabytes or petabytes of data to Azure, initial bulk data transfer for backups or archives, situations with limited network bandwidth.
+    *   **Scenario Example:** A media company has 100TB of video archive data stored on-premises that they want to move to Azure Blob Storage for long-term archiving. Uploading this over their internet connection would take weeks. They order an Azure Data Box, load the video files onto it, and ship it back to Microsoft for quick ingestion into Azure.
+
+**Choosing between Online (Azure Migrate tools) and Offline (Data Box):**
+*   Consider data size, available network bandwidth, time constraints, and cost.
+*   For smaller datasets or good bandwidth, online migration is often suitable.
+*   For very large datasets or poor bandwidth, offline migration with Data Box is more efficient.
+        `,
+        mnemonicSuggestion: "Migration: Azure Migrate (The 'Planner & Mover' toolkit for online shifts). Data Box (The 'Shipping Container' for huge offline data moves)."
+      }
+    ],
+    questions: [
+       {
         id: 'cas-q1',
         text: 'Which Azure service is used to build, deploy, and scale web apps and APIs without managing the underlying infrastructure?',
         options: ['Azure Virtual Machines', 'Azure App Service', 'Azure Functions', 'Azure Kubernetes Service'],
@@ -171,109 +1022,687 @@ export const topics: Topic[] = [
         correctAnswerIndex: 1,
         feedback: 'Azure Blob Storage is optimized for storing massive amounts of unstructured data, such as text or binary data (objects).',
       },
-      {
-        id: 'cas-q3',
-        text: 'You need to run a small piece of code in response to an HTTP request, and you want to pay only when the code executes. Which Azure compute service is most suitable?',
-        options: ['Azure Virtual Machines', 'Azure App Service', 'Azure Functions', 'Azure Kubernetes Service'],
-        correctAnswerIndex: 2,
-        feedback: 'Azure Functions is a serverless compute service (FaaS) that allows you to run event-triggered code without managing infrastructure, and you pay per execution.',
-      },
+       {
+        id: 'aas-q3',
+        text: 'Which Azure networking service provides a dedicated private connection between your on-premises network and Azure?',
+        options: ['Azure VPN Gateway', 'Azure ExpressRoute', 'Azure Virtual Network Peering', 'Azure DNS'],
+        correctAnswerIndex: 1,
+        feedback: 'Azure ExpressRoute provides a private, dedicated, high-bandwidth connection between your on-premises environment and Azure, not going over the public internet.',
+      }
     ],
   },
   {
-    id: 'security-compliance',
-    name: 'Security, Privacy, Compliance & Trust',
-    description: 'Learn about Azure security features, compliance offerings, and data privacy.',
+    id: 'azure-identity-access-security',
+    name: 'Azure Identity, Access, and Security (25-30%)',
+    description: 'Learn about directory services, authentication, external identities, access control, and security models in Azure.',
     icon: ShieldCheck,
     studyGuide: `
-**Core Security Concepts:**
-*   **Defense in Depth:** Multiple layers of security controls.
-*   **Shared Responsibility Model:** Azure manages cloud infrastructure security; you manage security of your data and applications *in* the cloud.
-*   **Zero Trust:** Assume breach; verify explicitly; use least privilege access.
-
-**Key Azure Security Services:**
-*   **Azure Active Directory (Azure AD):** Identity and access management (IAM). Authentication (who you are), Authorization (what you can do).
-    *   *Features:* Multi-Factor Authentication (MFA), Conditional Access, Single Sign-On (SSO).
-*   **Azure Security Center (Microsoft Defender for Cloud):** Unified security management. Provides recommendations, threat detection, and vulnerability assessment.
-*   **Azure Key Vault:** Securely store and manage secrets, keys, and certificates.
-*   **Azure Sentinel:** Cloud-native SIEM (Security Information and Event Management) and SOAR (Security Orchestration, Automation, and Response).
-*   **Network Security Groups (NSGs):** Filter network traffic to/from Azure resources in a VNet. (Stateful firewall)
-*   **Azure Firewall:** Managed, cloud-based network security service. Protects VNet resources. (Stateful, with threat intelligence)
-*   **Web Application Firewall (WAF):** Protects web apps from common exploits (e.g., SQL injection, XSS). Available with Application Gateway, Front Door.
-*   **Azure DDoS Protection:** Protects against Distributed Denial of Service attacks.
-
-**Compliance & Trust:**
-*   **Azure Policy:** Enforce organizational standards and assess compliance.
-*   **Azure Blueprints:** Define and deploy compliant environments.
-*   **Compliance Manager (in Microsoft Purview):** Assess and manage compliance with regulations (e.g., GDPR, HIPAA, ISO 27001).
-*   **Trust Center:** Information about Microsoft's security, privacy, and compliance practices.
-*   **Service Trust Portal:** Access audit reports and compliance documentation.
-
-**Data Privacy:**
-*   Data residency options (choose where data is stored).
-*   Encryption: At rest (e.g., Azure Storage Service Encryption) and in transit (e.g., TLS/SSL).
+This section focuses on how Azure manages identities, controls access to resources, and implements security. You'll explore Microsoft Entra ID (formerly Azure AD), different authentication methods, how to manage external user access, role-based access control (RBAC), and key security concepts like Zero Trust and defense-in-depth. Understanding these is vital for securing your Azure environment.
+Key areas include:
+*   Microsoft Entra ID and its features.
+*   Authentication methods: SSO, MFA, passwordless.
+*   External identities: B2B, B2C.
+*   Conditional Access policies.
+*   Azure RBAC for granular permissions.
+*   Security principles: Zero Trust, Defense-in-Depth.
+*   Microsoft Defender for Cloud.
 `,
-    mnemonicSuggestion: "Imagine a castle (Azure). Azure AD is the gatekeeper checking IDs. Security Center is the watchtower spotting threats. Key Vault is the treasure chest for secrets. NSGs are walls around districts. Azure Firewall is the main castle wall. WAF protects the castle's main entrance (web apps). Policies are the castle rules.",
+    mnemonicSuggestion: "Identity & Security: Who are you (Entra ID, Auth)? What can you do (RBAC, Conditional Access)? How are we safe (Zero Trust, Defense-in-Depth, Defender)?",
+    subTopics: [
+      {
+        id: 'aias-directory-services',
+        name: 'Describe directory services in Azure, including Microsoft Entra ID and Microsoft Entra Domain Services',
+        studyGuide: `
+**Microsoft Entra ID (formerly Azure Active Directory / Azure AD):**
+*   **Definition:** Microsoft’s cloud-based identity and access management (IAM) service. It helps employees sign in and access resources in:
+    *   External resources, such as Microsoft 365, the Azure portal, and thousands of other SaaS applications.
+    *   Internal resources, such as apps on your corporate network and intranet, along with any cloud apps developed by your own organization.
+*   **Key Features:** User and group management, Single Sign-On (SSO), Multi-Factor Authentication (MFA), Conditional Access, application integration, B2B and B2C identity services.
+*   **Primary Use:** Identity management for cloud applications and users. It is NOT a replacement for on-premises Active Directory Domain Services (AD DS) for domain joining traditional servers.
+*   **Use Case Scenario:** A company uses Microsoft 365 for email and collaboration. Microsoft Entra ID manages the user identities, allowing employees to log in once (SSO) to access Outlook, SharePoint, Teams, and other integrated SaaS apps like Salesforce, all with MFA enforced for better security.
+
+**Microsoft Entra Domain Services (formerly Azure AD Domain Services):**
+*   **Definition:** Provides managed domain services such as domain join, Group Policy, LDAP, and Kerberos/NTLM authentication that is fully compatible with Windows Server Active Directory. You use these domain services without deploying, managing, and patching domain controllers (DCs) in the cloud.
+*   **Key Features:** Managed domain controllers, domain join for Azure VMs, Group Policy support (limited), LDAP/Kerberos/NTLM.
+*   **Primary Use:** "Lift-and-shift" scenarios for applications that rely on traditional domain services (like domain join, LDAP bind, Kerberos authentication) but you want to run them on Azure VMs without managing your own DCs in Azure. It synchronizes identities from a Microsoft Entra ID tenant (which can itself be synchronized from on-premises AD DS).
+*   **Use Case Scenario:** A company migrates an old on-premises application to Azure VMs. This application requires VMs to be domain-joined for Kerberos authentication. Instead of deploying and managing their own Domain Controller VMs in Azure, they use Microsoft Entra Domain Services. This provides the necessary domain services, and user identities can be synchronized from their existing Microsoft Entra ID.
+
+**Key Difference:**
+*   **Microsoft Entra ID:** Identity for the cloud (SaaS apps, Azure resources).
+*   **Microsoft Entra Domain Services:** Traditional domain services (domain join, Kerberos) for Azure VMs, managed by Azure.
+        `,
+        mnemonicSuggestion: "Entra ID: 'Cloud Passport' for apps & users. Entra Domain Services: 'Managed AD' in cloud for old-school VM domain join."
+      },
+      {
+        id: 'aias-authentication-methods',
+        name: 'Describe authentication methods in Azure, including single sign-on (SSO), multi-factor authentication (MFA), and passwordless',
+        studyGuide: `
+Authentication is the process of verifying a user's identity. Microsoft Entra ID supports several methods:
+
+**Single Sign-On (SSO):**
+*   **Definition:** Allows users to sign in once with a single set of credentials and gain access to multiple applications and services without needing to re-enter credentials for each one.
+*   **Benefits:** Improved user experience (fewer passwords to remember), enhanced security (reduces password fatigue and risky password practices), simplified administration.
+*   **How it works (with Entra ID):** Entra ID acts as the central identity provider. When a user tries to access an integrated application, the application redirects the user to Entra ID for authentication. If already signed in, access is granted; otherwise, the user authenticates with Entra ID.
+*   **Use Case Scenario:** An employee logs into their Windows computer joined to Microsoft Entra ID. They can then open Outlook, SharePoint, and a custom company web app (all integrated with Entra ID) without being prompted for credentials again.
+
+**Multi-Factor Authentication (MFA):**
+*   **Definition:** A security process that requires users to provide two or more verification factors to gain access to a resource. It adds an extra layer of security beyond just a username and password.
+*   **Factors (Something you know, something you have, something you are):**
+    *   Knowledge factor: Password, PIN.
+    *   Possession factor: Authenticator app (e.g., Microsoft Authenticator) on a phone, hardware token, smart card.
+    *   Inherence factor: Biometrics (fingerprint, facial recognition).
+*   **Benefits:** Significantly increases security by making it much harder for attackers to compromise accounts even if they have the password.
+*   **Use Case Scenario:** When logging into the Azure portal or Microsoft 365, after entering their password, a user is prompted to approve a notification on their Microsoft Authenticator app or enter a code from the app. This ensures that even if an attacker has the user's password, they cannot log in without access to the user's phone.
+
+**Passwordless Authentication:**
+*   **Definition:** Methods that allow users to sign in without using a traditional password.
+*   **Examples with Entra ID:**
+    *   **Microsoft Authenticator app (phone sign-in):** User enters username, gets a notification on their phone, matches a number, and then uses biometrics or PIN on the phone.
+    *   **FIDO2 Security Keys:** Hardware security keys (USB, NFC) that provide strong, phishing-resistant authentication.
+    *   **Windows Hello for Business:** Biometric (face, fingerprint) or PIN sign-in on Windows devices.
+*   **Benefits:** Enhanced security (phishing resistant, eliminates weak/stolen passwords), improved user experience (easier than remembering complex passwords).
+*   **Use Case Scenario:** A company implements passwordless sign-in using the Microsoft Authenticator app. Employees use their username and then biometrics on their phone to access company resources, eliminating the need for passwords entirely for many scenarios.
+        `,
+        mnemonicSuggestion: "Auth: SSO (One key, many doors). MFA (Key + Secret Handshake). Passwordless (Face/Fingerprint instead of Key)."
+      },
+      {
+        id: 'aias-external-identities',
+        name: 'Describe external identities in Azure, including business-to-business (B2B) and business-to-customer (B2C)',
+        studyGuide: `
+Microsoft Entra External Identities allow organizations to securely interact with users outside their organization.
+
+**Microsoft Entra B2B (Business-to-Business) collaboration:**
+*   **Definition:** Enables you to invite guest users (partners, vendors, contractors) from other organizations to collaborate on your Azure resources, Microsoft 365 services, or other enterprise applications without creating new accounts for them in your directory.
+*   **How it works:** Guest users use their own existing work, school, or social identities (like Outlook.com, Gmail) to sign in. Your Entra ID manages their access to your resources.
+*   **Benefits:** Simplified collaboration, guest users manage their own credentials, centralized access control for guests.
+*   **Use Case Scenario:** Your company is working on a project with an external consulting firm. You use Entra B2B to invite the consultants (using their own company email addresses) to access a specific SharePoint site and an Azure DevOps project related to the engagement. The consultants authenticate with their own credentials, and you control their access level within your environment.
+
+**Azure AD B2C (Business-to-Consumer):**
+*   **Definition:** A customer identity and access management (CIAM) solution that enables you to build customer-facing applications where users can sign up, sign in, and manage their profiles using social identities (Facebook, Google, etc.), enterprise identities, or local accounts (email/username and password specific to your app).
+*   **Key Features:** Customizable user interface, user self-service (sign-up, password reset), integration with various identity providers, scales to millions of users.
+*   **Purpose:** To manage identities for consumer-facing applications, not for internal employee access or collaboration with partners. It's a separate service from your employee Microsoft Entra ID tenant.
+*   **Use Case Scenario:** A retail company develops a new e-commerce mobile app. They use Azure AD B2C to allow customers to sign up using their Facebook or Google accounts, or by creating a new account with an email and password. B2C handles the user registration, login, and profile management, allowing the company to focus on the app's core functionality.
+
+**Key Difference:**
+*   **B2B:** For collaboration with external partners/vendors using *their* existing identities to access *your* corporate resources.
+*   **B2C:** For managing customer identities for *your* public-facing applications, allowing customers to use social/local accounts.
+        `,
+        mnemonicSuggestion: "External ID: B2B (Guest Pass for Business Partners). B2C (Customer Login for your Public App)."
+      },
+      {
+        id: 'aias-conditional-access',
+        name: 'Describe Microsoft Entra Conditional Access',
+        studyGuide: `
+**Microsoft Entra Conditional Access:**
+*   **Definition:** A feature of Microsoft Entra ID (typically Premium P1 or P2) that acts as a policy engine. It brings signals together, to make decisions, and enforce organizational policies. Conditional Access policies are "if-then" statements: if a user wants to access a resource, then they must complete an action.
+*   **Signals (Conditions - "If"):**
+    *   **User or group membership:** Specific users, groups, or roles.
+    *   **Location:** IP address ranges (e.g., trusted corporate network, specific countries).
+    *   **Device:** Device platform (Windows, iOS, Android), compliance status (is it managed and healthy?).
+    *   **Application:** The cloud app being accessed (e.g., SharePoint, Salesforce).
+    *   **Real-time and calculated risk detection:** Identity protection signals (e.g., leaked credentials, sign-in from anonymous IP).
+*   **Decisions (Access Controls - "Then"):**
+    *   **Grant access:**
+        *   Require Multi-Factor Authentication (MFA).
+        *   Require device to be marked as compliant.
+        *   Require Hybrid Azure AD joined device.
+        *   Require approved client app.
+        *   Require app protection policy (for mobile apps).
+    *   **Block access.**
+*   **Purpose:** To enforce the right access controls under the right conditions, enhancing security and enabling Zero Trust principles.
+*   **Use Case Scenario:** A company wants to enhance security for accessing Microsoft SharePoint Online. They create a Conditional Access policy:
+    *   **IF** a user is trying to access SharePoint Online
+    *   **AND** they are signing in from an untrusted network (outside the corporate office IP range)
+    *   **THEN** grant access only if they complete Multi-Factor Authentication.
+    *   Additionally, **IF** a user is identified as "high risk" by Identity Protection, **THEN** block access or force a password reset.
+        `,
+        mnemonicSuggestion: "Conditional Access: 'Security Bouncer' for Cloud Apps. IF (who, where, what device, risk), THEN (allow, block, or require MFA)."
+      },
+      {
+        id: 'aias-rbac',
+        name: 'Describe Azure role-based access control (RBAC)',
+        studyGuide: `
+**Azure Role-Based Access Control (RBAC):**
+*   **Definition:** A system that provides fine-grained access management for Azure resources. Using RBAC, you grant users, groups, service principals, or managed identities only the permissions they need to perform their jobs (principle of least privilege).
+*   **Core Components:**
+    *   **Security Principal:** An object that represents a user, group, service principal (application identity), or managed identity that is requesting access to Azure resources.
+    *   **Role Definition (Role):** A collection of permissions. It lists the operations that can be performed, such as read, write, and delete. Azure has many built-in roles (e.g., Owner, Contributor, Reader, Virtual Machine Contributor) and you can create custom roles.
+    *   **Scope:** The set of resources that the access applies to. Scopes can be defined at different levels: Management Group, Subscription, Resource Group, or individual Resource.
+*   **Role Assignment:** The process of attaching a role definition to a security principal at a particular scope to grant access.
+*   **Inheritance:** Permissions are inherited. If you assign a role at a parent scope (e.g., Subscription), those permissions are inherited by child scopes (e.g., Resource Groups and Resources within that subscription).
+*   **Use Case Scenario:** A company has a development team that needs to create and manage Virtual Machines in a specific resource group ("Dev-VM-RG") but should not have access to other resources or billing information.
+    *   **Security Principal:** The "DevTeam" Microsoft Entra group.
+    *   **Role Definition:** The built-in "Virtual Machine Contributor" role (allows managing VMs but not the VNet or storage account access keys).
+    *   **Scope:** The "Dev-VM-RG" resource group.
+    *   By assigning the "Virtual Machine Contributor" role to the "DevTeam" group at the "Dev-VM-RG" scope, developers can manage VMs within that RG only, adhering to the principle of least privilege.
+        `,
+        mnemonicSuggestion: "RBAC: Who (User/Group) gets What Permissions (Role like Owner/Reader) on Which Resources (Scope like Subscription/RG)."
+      },
+      {
+        id: 'aias-zero-trust',
+        name: 'Describe the concept of Zero Trust',
+        studyGuide: `
+**Zero Trust:**
+*   **Definition:** A security model based on the principle of "never trust, always verify." It assumes that breaches are inevitable and that attackers may already be present within the network perimeter. Instead of assuming everything behind the corporate firewall is safe, Zero Trust requires verification for every access request, regardless of where it originates.
+*   **Core Pillars/Principles:**
+    1.  **Verify Explicitly:** Always authenticate and authorize based on all available data points, including user identity, location, device health, service or workload, data classification, and anomalies.
+    2.  **Use Least Privileged Access:** Limit user access with just-in-time and just-enough-access (JIT/JEA), risk-based adaptive policies, and data protection to help secure both data and productivity.
+    3.  **Assume Breach:** Minimize blast radius and segment access. Verify end-to-end encryption and use analytics to get visibility, drive threat detection, and improve defenses.
+*   **Implementation in Azure:** Achieved through a combination of services and strategies:
+    *   **Identities:** Strong authentication (MFA, passwordless), Conditional Access.
+    *   **Endpoints (Devices):** Device compliance, endpoint detection and response (EDR).
+    *   **Applications:** Secure access gateways, app protection policies.
+    *   **Network:** Network segmentation (VNets, subnets, NSGs, Azure Firewall), microsegmentation.
+    *   **Infrastructure:** JIT VM access, policy enforcement.
+    *   **Data:** Data classification, encryption, access controls.
+*   **Use Case Scenario:** An employee tries to access a sensitive internal application from their personal laptop while connected to a public Wi-Fi.
+    *   **Verify Explicitly:** Microsoft Entra ID checks their identity, requires MFA. Conditional Access policies evaluate device compliance (personal laptop might be non-compliant or require specific checks) and network location.
+    *   **Least Privilege:** Even if authenticated, their access to the application might be limited (e.g., read-only) or require additional approvals if the device is deemed risky.
+    *   **Assume Breach:** The application itself is microsegmented, and network traffic is monitored for anomalies. Data accessed might be encrypted.
+        `,
+        mnemonicSuggestion: "Zero Trust: 'Trust No One, Check Everyone, Every Time.' Verify, Least Privilege, Assume Breach. Like a super strict security checkpoint."
+      },
+      {
+        id: 'aias-defense-in-depth',
+        name: 'Describe the purpose of the defense-in-depth model',
+        studyGuide: `
+**Defense-in-Depth:**
+*   **Definition:** A security strategy that employs multiple layers of security controls to protect assets. The idea is that if one layer of security is breached, subsequent layers are in place to prevent further exposure and stop or slow down an attack. It's a layered approach to security.
+*   **Purpose:** To provide redundancy in security. No single security measure is foolproof, so by layering defenses, you increase the overall security posture and reduce the likelihood of a successful attack.
+*   **Layers can include (examples):**
+    1.  **Data:** Encryption at rest and in transit, data classification, access controls.
+    2.  **Applications:** Secure coding practices, web application firewalls (WAF), vulnerability scanning.
+    3.  **Compute (Hosts):** Endpoint protection, patching, JIT VM access, host-based firewalls.
+    4.  **Network:** Network segmentation (VNets, subnets), Network Security Groups (NSGs), Azure Firewall, DDoS protection, intrusion detection/prevention systems (IDS/IPS).
+    5.  **Perimeter:** Firewalls, VPNs. (In cloud, this is often about network boundaries and identity).
+    6.  **Identity and Access:** Strong authentication (MFA), Conditional Access, RBAC, privileged identity management (PIM).
+    7.  **Physical Security:** Secure datacenters, access controls, surveillance (handled by Azure for its infrastructure).
+*   **Use Case Scenario:** Securing a web application hosted in Azure:
+    *   **Data:** Customer database is encrypted using Transparent Data Encryption (TDE).
+    *   **Application:** A Web Application Firewall (WAF) protects against common web exploits.
+    *   **Compute:** VMs hosting the app are regularly patched, have endpoint security, and NSGs restrict traffic.
+    *   **Network:** The VMs are in a VNet with specific subnets. Azure Firewall inspects traffic.
+    *   **Identity:** Administrators use MFA and Conditional Access to manage resources. RBAC limits developer access.
+    If an attacker bypasses the WAF (one layer), the NSG on the VM (another layer) might still block them. If they compromise a VM, strong identity controls (another layer) might prevent lateral movement.
+        `,
+        mnemonicSuggestion: "Defense-in-Depth: 'Castle Security' - Moat, Walls, Guards, Strong Doors, Treasure Chest. Many layers to break through."
+      },
+      {
+        id: 'aias-defender-for-cloud',
+        name: 'Describe the purpose of Microsoft Defender for Cloud',
+        studyGuide: `
+**Microsoft Defender for Cloud (formerly Azure Security Center and Azure Defender):**
+*   **Definition:** A cloud security posture management (CSPM) and cloud workload protection platform (CWPP) for all your Azure, on-premises, and multi-cloud (AWS, GCP) resources.
+*   **Purpose:**
+    1.  **Strengthen Security Posture (CSPM):**
+        *   Provides visibility into your security state.
+        *   Identifies misconfigurations and vulnerabilities.
+        *   Offers security recommendations based on industry standards and benchmarks (like Azure Security Benchmark).
+        *   Tracks compliance with regulatory standards.
+        *   Secure Score: A quantifiable measure of your security posture.
+    2.  **Protect Workloads (CWPP):**
+        *   Provides advanced threat detection and protection for various resource types, including:
+            *   Servers (VMs, on-premises servers)
+            *   Storage accounts
+            *   Databases (SQL, open-source DBs, Cosmos DB)
+            *   Containers (AKS, ACR)
+            *   App Service
+            *   Key Vault
+            *   And more...
+        *   Uses machine learning and behavioral analytics to detect threats.
+        *   Provides security alerts and incident investigation capabilities.
+*   **Tiers:**
+    *   **Free tier (Foundational CSPM):** Basic security recommendations, Secure Score, continuous assessment. Available by default.
+    *   **Paid Defender plans (Enable specific workload protections):** Adds advanced threat detection, vulnerability assessment for VMs, just-in-time VM access, adaptive application controls, and much more for specific resource types.
+*   **Use Case Scenario:** A company uses Azure for various workloads.
+    *   **CSPM:** Defender for Cloud continuously assesses their Azure environment, highlighting that some Network Security Groups are overly permissive and some VMs are missing security patches. It provides a Secure Score and actionable recommendations to fix these issues.
+    *   **CWPP:** They enable Microsoft Defender for Servers on their VMs. Defender for Cloud then monitors these VMs for suspicious activities like brute-force RDP attempts or malware execution, generating alerts if threats are detected. They also use Defender for SQL to detect anomalous database access patterns.
+        `,
+        mnemonicSuggestion: "Defender for Cloud: Your 'Cloud Security Doctor & Bodyguard'. Finds weaknesses (CSPM) and fights threats (CWPP) for Azure, on-prem, and other clouds."
+      }
+    ],
     questions: [
       {
         id: 'sct-q1',
         text: 'Which Azure service helps you manage and enforce policies for your Azure resources to ensure compliance with organizational standards?',
-        options: ['Azure Monitor', 'Microsoft Defender for Cloud (formerly Azure Security Center)', 'Azure Policy', 'Azure Active Directory'],
+        options: ['Azure Monitor', 'Microsoft Defender for Cloud (formerly Azure Security Center)', 'Azure Policy', 'Microsoft Entra ID'],
         correctAnswerIndex: 2,
         feedback: 'Azure Policy helps to enforce organizational standards and to assess compliance at-scale. It provides governance and resource consistency.',
       },
       {
         id: 'sct-q2',
-        text: 'What is the primary function of Azure Active Directory (Azure AD)?',
+        text: 'What is the primary function of Microsoft Entra ID (Azure AD)?',
         options: ['Network traffic filtering', 'Storing application secrets', 'Identity and access management', 'Monitoring application performance'],
         correctAnswerIndex: 2,
-        feedback: 'Azure Active Directory is Microsoft’s cloud-based identity and access management service, which helps your employees sign in and access resources.',
+        feedback: 'Microsoft Entra ID is Microsoft’s cloud-based identity and access management service, which helps your employees sign in and access resources.',
       },
       {
-        id: 'sct-q3',
-        text: 'Which security principle involves implementing multiple layers of security measures, assuming that any single layer might be breached?',
-        options: ['Least Privilege', 'Zero Trust', 'Defense in Depth', 'Shared Responsibility'],
+        id: 'aias-q3',
+        text: 'What Azure feature allows you to grant users only the permissions they need to perform their jobs for specific Azure resources?',
+        options: ['Microsoft Entra Conditional Access', 'Azure Policy', 'Azure Role-Based Access Control (RBAC)', 'Microsoft Defender for Cloud'],
         correctAnswerIndex: 2,
-        feedback: 'Defense in Depth is a strategy that employs a series of mechanisms to slow the advance of an attack aimed at acquiring unauthorized access to information.',
+        feedback: 'Azure Role-Based Access Control (RBAC) enables you to manage who has access to Azure resources, what they can do with those resources, and what areas they have access to, following the principle of least privilege.',
       },
     ],
   },
   {
-    id: 'pricing-support',
-    name: 'Azure Pricing and Support',
-    description: 'Understand Azure pricing models, cost management tools, and support options.',
-    icon: DollarSign,
+    id: 'azure-management-governance',
+    name: 'Azure Management and Governance (30-35%)',
+    description: 'Learn about cost management, governance tools, resource deployment, and monitoring in Azure.',
+    icon: ClipboardList,
     studyGuide: `
-**Azure Pricing Factors:**
-*   **Resource Type:** Different services have different pricing (e.g., VMs vs. Storage).
-*   **Service Tier/Performance:** Higher performance/more features = higher cost (e.g., Standard vs. Premium SSD).
-*   **Usage Meters:** How much you consume (e.g., compute hours, storage GB, data transfer).
-*   **Location (Region):** Prices vary by Azure region.
-*   **Billing Zones (for data transfer):** Data transfer between regions or out to the internet can incur costs.
-
-**Cost Management Tools:**
-*   **Azure Pricing Calculator:** Estimate costs *before* deployment.
-*   **Azure Cost Management + Billing:** Track spending, set budgets, get recommendations. Found in Azure portal.
-*   **Azure Advisor:** Provides recommendations for cost optimization, performance, security, and reliability.
-*   **Tags:** Label resources for cost tracking and organization.
-*   **Azure Reservations:** Pre-pay for 1 or 3 years for significant discounts on VMs, SQL Database, etc.
-*   **Azure Hybrid Benefit:** Use existing on-premises Windows Server/SQL Server licenses with Software Assurance for discounted rates on Azure.
-*   **Spot VMs:** Access unused Azure compute capacity at deep discounts (can be preempted).
-
-**Azure Support Plans:**
-*   **Basic:** Included for all Azure customers. Billing and subscription management support. No technical support.
-*   **Developer:** For trial and non-production. Business hours tech support via email.
-*   **Standard:** For production workloads. 24/7 tech support via phone/email. Faster response times.
-*   **Professional Direct (ProDirect):** Business-critical workloads. Fastest response times, architectural guidance, operational support.
-*   **Enterprise:** For strategic customers. Includes ProDirect benefits + dedicated Technical Account Manager (TAM).
-
-**Service Level Agreements (SLAs):**
-*   Microsoft's commitment for uptime and connectivity for individual Azure services.
-*   Usually expressed as a percentage (e.g., 99.9%).
-*   If SLA is not met, you may be eligible for service credits.
-*   SLAs can be combined (e.g., two VMs in different Availability Zones have a higher composite SLA).
+This section covers how to effectively manage and govern your Azure environment. You'll learn about tools for understanding and controlling costs, features for ensuring compliance and consistent configurations (like Azure Policy and resource locks), methods for deploying and managing resources (portal, CLI, IaC), and services for monitoring the health and performance of your Azure solutions.
+Key areas include:
+*   Azure cost factors and management tools (Pricing Calculator, Cost Management).
+*   Governance tools: Microsoft Purview, Azure Policy, Resource Locks.
+*   Resource management: Azure portal, Cloud Shell (CLI/PowerShell), Azure Arc, IaC (ARM templates).
+*   Monitoring tools: Azure Advisor, Service Health, Azure Monitor (Log Analytics, Alerts, Application Insights).
 `,
-    mnemonicSuggestion: "Pricing: A shopping cart (Calculator) filling up based on items (Resource Type), quantity (Usage), and store location (Region). Cost Management: A piggy bank with tools to monitor (Cost Management), get advice (Advisor), and save (Reservations). Support: Different levels of mechanics for your car (Basic - manual only, Developer - email mechanic, Standard - 24/7 roadside, ProDirect - personal F1 pit crew).",
+    mnemonicSuggestion: "Management & Governance: Control Costs (Calculator, Budgets), Stay Compliant (Policy, Locks), Deploy Smart (Portal, IaC), Keep Watch (Monitor, Advisor). C.C. D.S. K.W.",
+    subTopics: [
+      {
+        id: 'amg-factors-affect-costs',
+        name: 'Describe factors that can affect costs in Azure',
+        studyGuide: `
+Several factors influence the cost of your Azure services:
+
+*   **Resource Type:** Different services have different pricing structures (e.g., a high-performance VM costs more than a basic storage account).
+*   **Service Tier / Performance Level:** Many services offer different tiers (e.g., Standard vs. Premium SSDs, Basic vs. Standard vs. Premium App Service plans). Higher tiers with more features or better performance generally cost more.
+*   **Usage Meters (Consumption):** How much you use a service.
+    *   *Compute:* Billed per second/minute/hour of VM uptime.
+    *   *Storage:* Billed per GB of data stored, plus transaction costs.
+    *   *Networking:* Data egress (outbound data transfer from Azure regions) is often a significant cost factor. Inbound data is usually free. Data transfer within the same region or between Availability Zones can also have costs.
+*   **Location (Azure Region):** Prices for the same service can vary between Azure regions due to differences in local infrastructure costs, energy prices, and taxes.
+*   **Instance Size/Capacity:** For services like VMs or databases, larger sizes with more CPU, RAM, or IOPS cost more.
+*   **Number of Instances:** Running multiple instances of a service (e.g., for scalability or high availability) increases costs.
+*   **Software Licensing:** Some VM images include software licenses (e.g., Windows Server, SQL Server) which add to the cost. Azure Hybrid Benefit can reduce this.
+*   **Reserved Instances/Capacity:** Committing to 1-year or 3-year terms for certain services can significantly reduce costs compared to pay-as-you-go.
+*   **Azure Support Plan:** Different support plans (Basic, Developer, Standard, ProDirect) have different monthly costs.
+*   **Data Transfer (Bandwidth):**
+    *   **Inbound:** Generally free.
+    *   **Outbound (Egress):** Data leaving Azure datacenters to the internet or other regions is typically charged per GB. This can be a major cost.
+    *   **Within AZs/Regions:** Some inter-AZ or inter-region traffic might incur costs.
+*   **Billing Zones:** Data transfer costs can vary based on billing zones (geographic areas used for billing data transfer).
+
+**Use Case Scenario:** A company deploys a web application using Azure VMs.
+*   Choosing a **larger VM size** (more CPU/RAM) increases cost.
+*   Storing large amounts of images in **Azure Blob Storage** adds to cost based on GB stored.
+*   If the website serves many large file downloads to users globally, **outbound data transfer** costs will be significant.
+*   Deploying VMs in a more expensive **Azure region** will increase costs.
+*   Opting for **Premium SSDs** instead of Standard HDDs for VM disks increases storage costs but improves performance.
+        `,
+        mnemonicSuggestion: "Cost Factors: What (Resource Type), How Good (Tier/Size), How Much (Usage/Data), Where (Region), For How Long (Reservations)."
+      },
+      {
+        id: 'amg-pricing-tco-calculators',
+        name: 'Compare the pricing calculator and the Total Cost of Ownership (TCO) Calculator',
+        studyGuide: `
+Azure provides two key tools for estimating costs:
+
+**Azure Pricing Calculator:**
+*   **Purpose:** To estimate the **future costs** of specific Azure services you plan to deploy. It helps you configure and estimate costs for individual Azure products or a combination of products to build a solution.
+*   **How it works:** You select desired Azure services (VMs, storage, databases, etc.), configure their options (size, region, tier, quantity), and the calculator provides an estimated monthly or annual cost.
+*   **Output:** Provides an itemized cost breakdown for the selected Azure services.
+*   **Use Cases:**
+    *   Estimating costs for a new application before deployment.
+    *   Comparing costs of different Azure service configurations.
+    *   Budgeting for upcoming Azure projects.
+*   **Scenario Example:** A developer wants to estimate the monthly cost of running a D2s_v3 VM, a 100GB Premium SSD, and an Azure SQL Database (S0 tier) in the East US region. They use the Pricing Calculator to select these services, configure them, and get an estimated monthly bill.
+
+**Total Cost of Ownership (TCO) Calculator:**
+*   **Purpose:** To help you estimate the cost savings you can achieve by **migrating your existing on-premises workloads to Azure**. It compares the costs of running your workloads on-premises versus running them on Azure.
+*   **How it works:** You input details about your current on-premises infrastructure (servers, storage, networking, software licenses) and operational costs (electricity, IT labor, datacenter space). The TCO Calculator then estimates the equivalent costs in Azure and highlights potential savings over a period (e.g., 3 or 5 years).
+*   **Output:** Provides a detailed report comparing on-premises costs with Azure costs, showing potential savings in areas like hardware, software, electricity, IT labor, etc.
+*   **Use Cases:**
+    *   Building a business case for cloud migration.
+    *   Understanding the financial benefits of moving from CapEx (on-premises) to OpEx (cloud).
+    *   Identifying areas where Azure can reduce overall IT operational costs.
+*   **Scenario Example:** A company is considering migrating its on-premises datacenter (with 50 physical servers, SAN storage, and networking gear) to Azure. They use the TCO Calculator, inputting their current hardware costs, software licenses, electricity bills, and IT staff salaries. The calculator provides an estimate of what it would cost to run equivalent workloads in Azure, showing them potential savings over 5 years by avoiding hardware refreshes and reducing operational overhead.
+
+**Key Difference:**
+*   **Pricing Calculator:** Estimates costs *of Azure services*. Focuses on new deployments or specific Azure configurations.
+*   **TCO Calculator:** Estimates *savings by migrating to Azure*. Compares on-premises costs with Azure costs.
+        `,
+        mnemonicSuggestion: "Pricing Calc: 'Menu Prices' for Azure items. TCO Calc: 'Moving Cost Estimator' (On-Prem House vs. Azure Apartment costs)."
+      },
+      {
+        id: 'amg-cost-management-capabilities',
+        name: 'Describe cost management capabilities in Azure',
+        studyGuide: `
+**Azure Cost Management + Billing:**
+*   **Definition:** A suite of tools within the Azure portal that helps you understand, monitor, control, and optimize your Azure spending.
+*   **Key Capabilities:**
+    *   **Cost Analysis:** Analyze your Azure costs with various filters (by subscription, resource group, resource type, tag, location, etc.). View spending trends, identify top cost drivers.
+    *   **Budgets:** Create budgets for subscriptions, resource groups, or specific filters. Set thresholds and receive alerts when spending approaches or exceeds the budget.
+    *   **Alerts:** Configure cost alerts based on actual spending or forecasted spending against budgets, or when specific cost anomalies are detected.
+    *   **Recommendations (from Azure Advisor):** Integrates with Azure Advisor to provide cost optimization recommendations (e.g., right-sizing VMs, deleting idle resources, purchasing reservations).
+    *   **Exports:** Schedule regular exports of cost and usage data to an Azure Storage account for further analysis with tools like Power BI or for chargeback purposes.
+    *   **Cost Allocation (using Tags):** Use tags to categorize resources and then filter cost analysis by tags to track spending for specific projects, departments, or environments.
+    *   **Invoices and Payment:** View and download invoices, manage payment methods.
+    *   **APIs:** Programmatically access cost and usage data.
+*   **Purpose:** To provide visibility into Azure spending, enable proactive cost control, and help optimize cloud expenditure.
+*   **Use Case Scenario:** A company uses Azure Cost Management to:
+    *   Review its monthly Azure bill and understand which services are consuming the most budget using **Cost Analysis**.
+    *   Set a **Budget** for their development team's subscription and receive an **Alert** if spending exceeds 80% of the budget.
+    *   Implement **Tags** like "Project:Phoenix" and "Environment:Production" on all resources, then use these tags in Cost Analysis to track the specific costs of Project Phoenix in the production environment.
+    *   Follow **Recommendations** from Azure Advisor (via Cost Management) to resize underutilized VMs, saving money.
+        `,
+        mnemonicSuggestion: "Cost Management: Your 'Azure Wallet Manager'. See spending (Analysis), Set limits (Budgets, Alerts), Get saving tips (Recommendations), Organize bills (Tags)."
+      },
+      {
+        id: 'amg-purpose-of-tags',
+        name: 'Describe the purpose of tags',
+        studyGuide: `
+**Tags:**
+*   **Definition:** Metadata elements that you apply to your Azure resources. A tag consists of a name-value pair (e.g., \`Environment:Production\`, \`CostCenter:Marketing\`, \`Owner:JohnDoe\`).
+*   **Purpose:**
+    1.  **Resource Organization:** Logically organize resources across subscriptions, especially in complex environments.
+    2.  **Cost Management and Billing:** Track Azure costs by filtering and grouping resources based on tags. This is crucial for departmental chargebacks or project-based cost accounting.
+    3.  **Automation:** Use tags in automation scripts (e.g., to shut down all VMs tagged with \`Environment:Dev\` outside of business hours).
+    4.  **Security:** Identify resources based on their sensitivity level or compliance requirements (e.g., \`Compliance:PCI\`).
+    5.  **Operational Management:** Group resources for operational tasks, like identifying all resources related to a specific application for monitoring or patching.
+    6.  **Policy Enforcement:** Azure Policy can enforce tagging requirements (e.g., requiring all resources to have an \`Owner\` tag).
+*   **Characteristics:**
+    *   Applied to resource groups or individual resources.
+    *   Resources inherit tags from their resource group at creation time, but these can be overridden or added to.
+    *   A resource can have up to 50 tags.
+    *   Tag names are case-insensitive, but tag values are case-sensitive.
+*   **Use Case Scenario:** An enterprise uses tags extensively:
+    *   \`CostCenter:HR\`, \`CostCenter:Finance\` for billing.
+    *   \`Environment:Production\`, \`Environment:Development\`, \`Environment:Test\` to differentiate workloads and apply different policies or automation scripts.
+    *   \`ApplicationName:ERP_System\`, \`ApplicationName:CRM_Portal\` to group resources belonging to specific applications.
+    *   \`Owner:user@company.com\` to identify who is responsible for a resource.
+    *   \`ProjectID:AlphaUpgrade\` for temporary project resource tracking.
+    When the finance team reviews the Azure bill, they can use Azure Cost Management to filter costs by the \`CostCenter\` tag to see how much each department is spending.
+        `,
+        mnemonicSuggestion: "Tags: 'Sticky Notes' for Azure resources. Help Organize, Bill, Automate, Secure. Key:Value (Name:Description)."
+      },
+      {
+        id: 'amg-purview',
+        name: 'Describe the purpose of Microsoft Purview in Azure',
+        studyGuide: `
+**Microsoft Purview (formerly Azure Purview):**
+*   **Definition:** A unified data governance service that helps you manage and govern your on-premises, multicloud, and software-as-a-service (SaaS) data. It helps you discover, understand, and manage your data estate.
+*   **Purpose:**
+    1.  **Data Discovery and Classification:** Automatically scan and classify data across your entire data estate (Azure, on-premises, other clouds). Identify sensitive data (e.g., PII, financial data) using built-in and custom classifiers.
+    2.  **Data Catalog:** Create a business glossary and a searchable catalog of data assets, making it easier for data consumers (analysts, data scientists) to find and understand relevant data.
+    3.  **Data Lineage:** Visualize the lineage of data as it moves through various processes and systems (e.g., from source database, through ETL processes, to Power BI reports).
+    4.  **Data Governance Insights:** Provides an overview of your data estate, including sensitive data distribution, data duplication, and access patterns, helping to identify risks and improve governance.
+    5.  **Access Management (for data plane in some sources):** Can integrate to manage access to data.
+*   **Key Components:**
+    *   **Data Map:** The foundational platform that captures metadata about enterprise data.
+    *   **Data Catalog:** Enables users to search and browse for data assets.
+    *   **Data Estate Insights:** Provides reports on data governance posture.
+*   **Use Case Scenario:** A large financial institution has data stored in various Azure services (SQL Database, Blob Storage, Data Lake), on-premises servers, and some third-party cloud services.
+    *   They use Microsoft Purview to scan all these data sources, automatically **discover** what data they have, and **classify** sensitive information like credit card numbers and social security numbers.
+    *   Data analysts can use the Purview **Data Catalog** to search for relevant datasets for their reports, understand the data's meaning through the business glossary, and see its **lineage** to ensure they are using trusted data.
+    *   Compliance officers use Purview **Insights** to monitor where sensitive data resides and ensure appropriate controls are in place.
+        `,
+        mnemonicSuggestion: "Purview: 'Data Detective & Librarian'. Finds your data, labels it, catalogs it, and shows its history, so you know what you have and where."
+      },
+      {
+        id: 'amg-azure-policy',
+        name: 'Describe the purpose of Azure Policy',
+        studyGuide: `
+**Azure Policy:**
+*   **Definition:** A service in Azure that you use to create, assign, and manage policies. These policies enforce different rules and effects over your resources, so those resources stay compliant with your corporate standards and service level agreements (SLAs).
+*   **Purpose:**
+    *   **Enforce Standards:** Ensure resource configurations meet organizational requirements (e.g., requiring specific tags, restricting VM SKUs, ensuring encryption is enabled).
+    *   **Compliance:** Assess and maintain compliance with internal policies and external regulations.
+    *   **Cost Control:** Restrict deployment of expensive resource types or resources in non-approved regions.
+    *   **Security:** Enforce security best practices (e.g., ensuring NSGs are applied, disallowing public IPs on certain VMs).
+    *   **Remediation:** Can automatically remediate non-compliant resources or deploy resources to achieve compliance (e.g., automatically adding a required tag).
+*   **How it works:**
+    *   **Policy Definition:** Defines the conditions under which a policy is enforced and the effect that takes place (e.g., Deny, Audit, Append, DeployIfNotExists, Modify). Azure provides many built-in definitions.
+    *   **Initiative Definition (Policy Set):** A collection of policy definitions grouped together to achieve a larger goal (e.g., "Enable Monitoring in Azure Security Center").
+    *   **Assignment:** Policies or initiatives are assigned to a specific scope (Management Group, Subscription, or Resource Group).
+    *   **Evaluation:** Azure Policy evaluates resources at creation time and on an ongoing basis for compliance.
+*   **Use Case Scenario:** A company wants to ensure that all newly created Azure Storage accounts have "Secure transfer required" (HTTPS) enabled and are restricted to deployment only in the "North Europe" region.
+    *   They assign a built-in **policy definition** that audits storage accounts without secure transfer enabled.
+    *   They create a custom **policy definition** with a "Deny" effect to prevent storage account creation outside "North Europe."
+    *   These policies are assigned at the **Subscription scope**. If a user tries to create a storage account in "East US," the deployment will be denied. Existing storage accounts without secure transfer will be flagged as non-compliant.
+        `,
+        mnemonicSuggestion: "Azure Policy: 'Rule Enforcer' for Azure. Sets rules (no big VMs, tags required), checks compliance, and can fix or block bad stuff."
+      },
+      {
+        id: 'amg-resource-locks',
+        name: 'Describe the purpose of resource locks',
+        studyGuide: `
+**Resource Locks:**
+*   **Definition:** A feature in Azure that helps prevent accidental deletion or modification of critical Azure resources. Locks can be applied to subscriptions, resource groups, or individual resources.
+*   **Purpose:** To protect important resources from inadvertent changes or deletion by users, even those with Owner permissions (though Owners can still remove locks).
+*   **Types of Locks:**
+    1.  **CanNotDelete (Delete Lock):** Authorized users can still read and modify a resource, but they can't delete it.
+    2.  **ReadOnly Lock:** Authorized users can read a resource, but they can't delete or update it. Applying a ReadOnly lock is similar to restricting all authorized users to the permissions granted by the "Reader" role.
+*   **Inheritance:** Locks applied at a parent scope (e.g., Subscription or Resource Group) are inherited by child resources.
+*   **Management:** Locks must be removed before the locked resource can be deleted or modified (in the case of ReadOnly locks).
+*   **Use Case Scenario:** A company has a critical production database server hosted on an Azure VM within the "Prod-DB-RG" resource group. To prevent accidental deletion:
+    *   They apply a **CanNotDelete** lock to the "Prod-DB-RG" resource group. This prevents anyone from accidentally deleting the entire resource group and its contents.
+    *   They might also apply a **CanNotDelete** lock directly to the VM resource itself for an extra layer of protection.
+    *   For a very stable resource that should not change at all, like a historical data archive storage account, they might apply a **ReadOnly** lock.
+        `,
+        mnemonicSuggestion: "Resource Locks: 'Super Glue' for Azure resources. CanNotDelete (No deleting!). ReadOnly (Look, don't touch or delete!). Protects from accidents."
+      },
+      {
+        id: 'amg-azure-portal',
+        name: 'Describe the Azure portal',
+        studyGuide: `
+**Azure Portal (portal.azure.com):**
+*   **Definition:** A web-based, unified console that provides an alternative to command-line tools for building, managing, and monitoring everything from simple web apps to complex cloud deployments in Azure.
+*   **Key Features:**
+    *   **Graphical User Interface (GUI):** Allows users to interact with Azure services visually.
+    *   **Resource Management:** Create, configure, monitor, and delete Azure resources.
+    *   **Dashboards:** Customizable dashboards to display key information and metrics about your resources.
+    *   **Cost Management and Billing:** Access to Azure Cost Management + Billing tools.
+    *   **Monitoring and Diagnostics:** View performance metrics, logs, and alerts.
+    *   **Marketplace:** Discover and deploy solutions from Microsoft and third-party vendors.
+    *   **Access Control (IAM):** Manage users, groups, and role assignments (RBAC).
+    *   **Settings and Personalization:** Customize the portal experience.
+    *   **Integrated Cloud Shell:** Provides quick access to Azure CLI and PowerShell within the browser.
+*   **Purpose:** To provide a comprehensive and user-friendly interface for managing Azure resources, especially for users who prefer a visual approach or for tasks that are easier to perform through a GUI.
+*   **Use Case Scenario:**
+    *   A new Azure user wants to create their first Virtual Machine. They use the Azure portal's guided wizard to select the OS, size, region, and networking options.
+    *   An administrator wants to quickly check the status of their web applications and view recent alerts. They log into the Azure portal and view their customized dashboard.
+    *   A manager needs to review the monthly Azure spending. They navigate to the Cost Management + Billing section in the portal.
+        `,
+        mnemonicSuggestion: "Azure Portal: Your 'Web Cockpit' for Azure. Click, manage, monitor everything visually. Like a car dashboard."
+      },
+      {
+        id: 'amg-cloud-shell-cli-powershell',
+        name: 'Describe Azure Cloud Shell, including Azure Command-Line Interface (CLI) and Azure PowerShell',
+        studyGuide: `
+**Azure Cloud Shell:**
+*   **Definition:** An interactive, authenticated, browser-accessible shell for managing Azure resources. It provides the flexibility of choosing the shell experience that best suits the way you work, either Bash (with Azure CLI) or PowerShell (with Azure PowerShell module).
+*   **Key Features:**
+    *   **Browser-based:** Accessible from anywhere via the Azure portal or directly (shell.azure.com).
+    *   **Pre-configured:** Comes with popular command-line tools and language support pre-installed (Azure CLI, Azure PowerShell, Git, text editors like \`code\`, \`vim\`, \`nano\`).
+    *   **Authenticated:** Automatically authenticates with your Azure account.
+    *   **Persistent Storage:** Uses an Azure Files share in your subscription to persist files across sessions (your \`$HOME\` directory).
+    *   **Choice of Shell:** Switch between Bash and PowerShell environments.
+*   **Purpose:** To provide a convenient, ready-to-use command-line environment for managing Azure resources without needing to install tools locally.
+*   **Use Case Scenario:** An administrator needs to quickly run a script to create multiple storage accounts. They open Azure Cloud Shell from the Azure portal, choose their preferred shell (e.g., Bash with Azure CLI), and execute the script directly in the browser. Any scripts or files they create are saved to their linked Azure Files share for future use.
+
+**Azure Command-Line Interface (CLI):**
+*   **Definition:** A cross-platform (Windows, Linux, macOS) command-line tool for managing Azure resources. It uses a \`az\` command structure.
+*   **Key Features:** Scriptable, designed for automation, output often in JSON (good for querying with \`jq\`).
+*   **Shell Environment:** Primarily used in Bash or similar command-line shells.
+*   **Use Case Scenario:** A DevOps engineer wants to automate the deployment of an entire application environment (VMs, VNets, storage). They write a Bash script using Azure CLI commands to create and configure all the necessary resources.
+
+**Azure PowerShell:**
+*   **Definition:** A set of cmdlets for managing Azure resources directly from PowerShell. It uses a Verb-Noun command structure (e.g., \`Get-AzVM\`, \`New-AzResourceGroup\`).
+*   **Key Features:** Object-based (PowerShell cmdlets return objects), integrates well with existing PowerShell scripting and Windows environments.
+*   **Shell Environment:** Runs in PowerShell.
+*   **Use Case Scenario:** A Windows administrator who is proficient in PowerShell needs to manage Azure VMs and automate tasks like retrieving VM status or applying configurations. They use Azure PowerShell cmdlets within their PowerShell scripts.
+
+**Cloud Shell provides both Azure CLI (in Bash) and Azure PowerShell.** You can also install Azure CLI and Azure PowerShell locally on your computer.
+        `,
+        mnemonicSuggestion: "Cloud Shell: 'Command Prompt/Terminal' in your browser for Azure. CLI (\`az\` commands, Bash-like). PowerShell (\`Get-Az\`, Verb-Noun)."
+      },
+      {
+        id: 'amg-azure-arc',
+        name: 'Describe the purpose of Azure Arc',
+        studyGuide: `
+**Azure Arc:**
+*   **Definition:** A bridge that extends Azure management and services to any infrastructure, enabling you to manage resources located outside of Azure (on-premises, other clouds like AWS/GCP, or at the edge) as if they were running in Azure.
+*   **Purpose:** To provide a consistent management plane, governance, and Azure services for hybrid and multicloud environments.
+*   **Key Capabilities (Azure Arc-enabled...):**
+    *   **Servers:** Manage Windows and Linux servers hosted outside of Azure using Azure management tools like Azure Policy, Azure Monitor, Microsoft Defender for Cloud, Update Management.
+    *   **Kubernetes:** Connect and configure Kubernetes clusters (running anywhere) to Azure for GitOps-based configuration management, Azure Policy, Azure Monitor for containers.
+    *   **Data Services:** Run Azure data services like Azure SQL Managed Instance and Azure PostgreSQL Hyperscale on any Kubernetes infrastructure outside of Azure, providing Azure innovation and cloud benefits on your own hardware.
+    *   **VMware vSphere (Preview):** Manage VMware vSphere environments through Azure.
+    *   **System Center Virtual Machine Manager (SCVMM) (Preview):** Extend Azure management to SCVMM environments.
+*   **How it works:** You install an Azure Arc agent on your non-Azure machines or connect your Kubernetes clusters. These resources then project as Azure resources in the Azure portal, allowing you to use familiar Azure management tools.
+*   **Use Case Scenario:** A company has a hybrid environment with some servers running on-premises and others in Azure. They also have a Kubernetes cluster running in a different public cloud.
+    *   They use **Azure Arc-enabled servers** to manage their on-premises Windows and Linux servers through Azure. This allows them to apply Azure Policies for configuration consistency, monitor them with Azure Monitor, and secure them with Microsoft Defender for Cloud, all from the Azure portal.
+    *   They use **Azure Arc-enabled Kubernetes** to connect their Kubernetes cluster (running on AWS) to Azure, enabling them to deploy applications using GitOps and apply Azure Policy for Kubernetes to enforce cluster configurations.
+        `,
+        mnemonicSuggestion: "Azure Arc: 'Azure's Tentacles' reaching out to manage your servers, Kubernetes, and data services, no matter where they live (on-prem, other clouds)."
+      },
+      {
+        id: 'amg-iac',
+        name: 'Describe infrastructure as code (IaC)',
+        studyGuide: `
+**Infrastructure as Code (IaC):**
+*   **Definition:** The practice of managing and provisioning IT infrastructure (networks, virtual machines, load balancers, connection topology) through machine-readable definition files (code), rather than through physical hardware configuration or interactive configuration tools.
+*   **Core Principles:**
+    *   **Declarative or Imperative:**
+        *   *Declarative:* Define the desired end state, and the IaC tool figures out how to achieve it (e.g., ARM templates, Terraform).
+        *   *Imperative:* Define the specific sequence of commands to achieve the desired state (e.g., scripts using Azure CLI/PowerShell).
+    *   **Idempotency:** Applying the same configuration multiple times results in the same state (no unintended side effects).
+    *   **Version Control:** Infrastructure code is stored in version control systems (like Git), enabling history tracking, collaboration, and rollback.
+    *   **Automation:** Enables automated provisioning and management of infrastructure.
+*   **Benefits:**
+    *   **Speed and Agility:** Rapidly deploy and update infrastructure.
+    *   **Consistency and Standardization:** Reduces errors and configuration drift by defining infrastructure in a repeatable way.
+    *   **Version Control and Auditing:** Track changes, collaborate, and revert to previous states.
+    *   **Cost Savings:** Automate deployments, reduce manual effort, and optimize resource usage.
+    *   **Disaster Recovery:** Quickly redeploy infrastructure in a new region from code.
+    *   **Scalability:** Easily scale infrastructure up or down by modifying code.
+*   **Tools for Azure IaC:**
+    *   **Azure Resource Manager (ARM) templates:** Native Azure IaC, declarative JSON.
+    *   **Bicep:** A domain-specific language (DSL) that uses declarative syntax to deploy Azure resources. It transpiles to ARM JSON. Easier to read/write than ARM JSON.
+    *   **Terraform:** Popular open-source IaC tool, supports multiple cloud providers including Azure.
+    *   **Azure CLI / Azure PowerShell scripts:** Can be used for imperative IaC.
+*   **Use Case Scenario:** A DevOps team needs to deploy identical development, staging, and production environments for their application. They write an ARM template (or Bicep file) that defines all the necessary Azure resources (VMs, VNet, Load Balancer, Storage). They store this template in Git. When a new environment is needed, they deploy the template, ensuring each environment is configured identically and consistently. Updates to the infrastructure are made by modifying the template and redeploying.
+        `,
+        mnemonicSuggestion: "IaC: 'Blueprint' (code) for your Azure buildings (infra). Build, change, rebuild consistently & fast. Store blueprints in Git."
+      },
+      {
+        id: 'amg-arm-templates',
+        name: 'Describe Azure Resource Manager (ARM) and ARM templates',
+        studyGuide: `
+**Azure Resource Manager (ARM):**
+*   **Definition:** The deployment and management service for Azure. It provides a consistent management layer that enables you to create, update, and delete resources in your Azure subscription. All Azure interactions (portal, CLI, PowerShell, SDKs) go through ARM.
+*   **Key Features:**
+    *   **Declarative Syntax (via ARM templates):** You define the desired state of your resources.
+    *   **Idempotent Operations:** Re-deploying the same template results in the same state.
+    *   **Resource Grouping:** Manages resources as a group (Resource Groups).
+    *   **Role-Based Access Control (RBAC):** Integrated for secure access management.
+    *   **Tagging:** Supports tagging for organization and billing.
+    *   **Dependency Management:** Handles dependencies between resources during deployment.
+    *   **Extensibility:** Supports deploying a wide range of Azure services.
+*   **Purpose:** To provide a unified way to deploy, manage, and organize Azure resources.
+
+**ARM Templates:**
+*   **Definition:** JavaScript Object Notation (JSON) files that define the infrastructure and configuration for your Azure solution. They use a declarative syntax, meaning you describe what you want to deploy, not how to deploy it.
+*   **Key Sections in an ARM Template:**
+    *   \`$schema\`: Specifies the location of the JSON schema file that describes the version of the template language.
+    *   \`contentVersion\`: Version of the template (e.g., 1.0.0.0).
+    *   \`parameters\`: Values that are provided when deployment is executed to customize resource deployment (e.g., VM name, region).
+    *   \`variables\`: Values that are used as JSON fragments in the template to simplify template language expressions.
+    *   \`resources\`: Specifies the Azure resources to be deployed or updated (e.g., VMs, storage accounts, VNets).
+    *   \`outputs\`: Values that are returned after deployment (e.g., public IP address of a VM).
+*   **Benefits (as part of IaC):** Automation, consistency, repeatability, versioning, modularity (linked templates).
+*   **Bicep as an alternative:** Bicep is a domain-specific language (DSL) that provides a more concise and easier-to-read syntax for authoring Azure deployments. Bicep files are transpiled into ARM JSON templates.
+*   **Use Case Scenario:** A company wants to standardize the deployment of a 3-tier web application (web server, app server, database server VMs with specific network configurations). They create an ARM template that defines all these resources, their properties, and dependencies. This template can then be repeatedly deployed to create identical environments for development, testing, and production, ensuring consistency and reducing manual errors. Parameters are used to specify environment-specific names or sizes.
+        `,
+        mnemonicSuggestion: "ARM: The 'Brain & Engine' of Azure deployments. ARM Templates: The 'JSON Blueprints' you give to ARM to build your stuff."
+      },
+      {
+        id: 'amg-azure-advisor',
+        name: 'Describe the purpose of Azure Advisor',
+        studyGuide: `
+**Azure Advisor:**
+*   **Definition:** A personalized cloud consultant that helps you follow best practices to optimize your Azure deployments. It analyzes your resource configuration and usage telemetry and then recommends solutions that can help you improve the cost effectiveness, performance, reliability (formerly high availability), and security of your Azure resources.
+*   **Purpose:** To provide proactive, actionable, and personalized recommendations to optimize your Azure environment.
+*   **Recommendation Categories:**
+    1.  **Cost:** Identify opportunities to reduce Azure spending (e.g., right-size or shut down underutilized VMs, purchase reserved instances, delete idle resources).
+    2.  **Security (integrated with Microsoft Defender for Cloud):** Improve your security posture by implementing security recommendations (e.g., enable MFA, remediate vulnerabilities, apply NSGs).
+    3.  **Reliability (formerly High Availability):** Enhance the business continuity of your applications (e.g., configure backup for VMs, use Availability Zones, set up disaster recovery).
+    4.  **Performance:** Improve the speed and responsiveness of your applications (e.g., improve SQL Database performance, reduce network latency, use Premium Storage for I/O intensive workloads).
+    5.  **Operational Excellence:** Help you achieve process and workflow efficiency, resource manageability, and deployment best practices (e.g., use Azure Policy, implement tagging, use ARM templates).
+*   **Features:**
+    *   Personalized recommendations based on your specific Azure usage.
+    *   Actionable steps to implement recommendations.
+    *   Ability to postpone or dismiss recommendations.
+    *   Download recommendations as CSV or PDF.
+*   **Access:** Available in the Azure portal.
+*   **Use Case Scenario:** An Azure administrator regularly reviews Azure Advisor.
+    *   Advisor **Cost** recommendations suggest that two of their VMs are consistently underutilized and could be resized to a smaller, cheaper SKU, saving $50/month.
+    *   Advisor **Security** recommendations highlight that MFA is not enabled for some subscription owners.
+    *   Advisor **Reliability** recommendations point out that a critical VM does not have backup configured.
+    *   Advisor **Performance** recommendations suggest enabling caching for an App Service to improve load times.
+    The administrator can then take action on these recommendations to optimize their environment.
+        `,
+        mnemonicSuggestion: "Azure Advisor: Your 'Cloud GPS & Mechanic'. Gives tips to save money (Cost), boost speed (Performance), stay safe (Security), and keep running smoothly (Reliability, Ops Excellence)."
+      },
+      {
+        id: 'amg-service-health',
+        name: 'Describe Azure Service Health',
+        studyGuide: `
+**Azure Service Health:**
+*   **Definition:** A service in Azure that provides personalized information about how Azure service issues, planned maintenance, or other events might affect your specific Azure resources and subscriptions.
+*   **Purpose:** To keep you informed about the health of the Azure services and regions you use, so you can understand the impact of any Azure-side issues on your applications and plan accordingly.
+*   **Key Components/Information Provided:**
+    1.  **Azure status (Service Issues):** Informs you about Azure service outages or platform issues that are currently affecting or may affect your resources. Provides details on the issue, affected regions/services, impact, and Microsoft's mitigation efforts and ETAs.
+    2.  **Planned maintenance:** Notifies you in advance about upcoming maintenance activities that might impact the availability of your resources. Allows you to prepare or schedule your own maintenance.
+    3.  **Health advisories:** Provides information about issues that require your action to avoid service interruption (e.g., service retirements, breaking changes, quota issues).
+    4.  **Security advisories:** Notifies you about security-related events or vulnerabilities that may impact your services.
+    5.  **Health history:** A record of past health events.
+*   **Personalization:** Shows information relevant to the specific services and regions you are using.
+*   **Alerting:** You can configure Service Health alerts to be notified via email, SMS, webhook, or ITSM tools when your resources are affected by an Azure health event.
+*   **Access:** Available in the Azure portal.
+*   **Difference from Azure Monitor:** Service Health informs about Azure platform issues. Azure Monitor helps you understand the health and performance of *your own applications and resources* running on Azure.
+*   **Use Case Scenario:** An administrator receives an Azure Service Health alert indicating that there's an ongoing storage issue in the "West Europe" region where some of their VMs are located. They check Service Health in the Azure portal to get more details about the impact and Microsoft's progress in resolving it. This helps them communicate potential disruptions to their users and decide if they need to activate any disaster recovery plans. They also see a "Planned Maintenance" notification for a network upgrade in another region, allowing them to inform relevant teams.
+        `,
+        mnemonicSuggestion: "Service Health: 'Azure's Health Report Card' for YOU. Tells you if Azure itself has issues (outages, maintenance) affecting your stuff."
+      },
+      {
+        id: 'amg-azure-monitor',
+        name: 'Describe Azure Monitor, including Log Analytics, Azure Monitor alerts, and Application Insights',
+        studyGuide: `
+**Azure Monitor:**
+*   **Definition:** A comprehensive monitoring service in Azure that provides a full-stack solution for collecting, analyzing, and acting on telemetry from your cloud and on-premises environments.
+*   **Purpose:** To help you understand how your applications are performing, identify issues affecting them, and proactively respond to critical situations.
+*   **Data Sources:** Collects data from various sources: Azure resources (VMs, App Service, Storage, etc.), applications, operating systems, custom sources.
+*   **Core Capabilities:**
+    *   **Metrics:** Numerical values collected at regular intervals that describe some aspect of a system at a particular time (e.g., CPU percentage, request latency).
+    *   **Logs:** Event logs, performance logs, application traces, security logs. Stored and queried in Log Analytics workspaces.
+    *   **Visualization:** Dashboards, workbooks, charts, Power BI.
+    *   **Alerting:** Proactively notify you or trigger automated actions when specific conditions are met in your telemetry data.
+    *   **Insights:** Provides curated monitoring experiences for specific services (e.g., VM Insights, Container Insights, Application Insights).
+
+**Log Analytics (part of Azure Monitor Logs):**
+*   **Definition:** A tool in the Azure portal used to edit and run log queries against data collected by Azure Monitor Logs, typically stored in a Log Analytics workspace.
+*   **Query Language:** Uses Kusto Query Language (KQL).
+*   **Purpose:** To perform complex analysis, identify trends, correlate data from different sources, and troubleshoot issues by querying log data.
+*   **Use Case Scenario:** An administrator suspects an application is failing due to errors. They use Log Analytics to query application logs and system event logs from the affected VMs to find error messages, correlate events, and pinpoint the root cause.
+
+**Azure Monitor Alerts:**
+*   **Definition:** Automatically notify you or trigger actions when Azure Monitor detects that metrics, logs, or activity log events meet specified conditions.
+*   **Types of Alerts:** Metric alerts, log alerts, activity log alerts, smart detection alerts (from Application Insights).
+*   **Actions:** Send notifications (email, SMS, voice call), trigger Azure Functions, Logic Apps, webhooks, ITSM integration (Action Groups define these actions).
+*   **Use Case Scenario:** A company wants to be notified if the average CPU utilization of their production VMs exceeds 90% for 5 minutes. They create a **metric alert** in Azure Monitor. If the condition is met, an Action Group sends an email to the operations team and triggers an Azure Function to attempt a predefined remediation script.
+
+**Application Insights (an Azure Monitor feature):**
+*   **Definition:** An extensible Application Performance Management (APM) service for developers and DevOps professionals. It helps you monitor live web applications, automatically detect performance anomalies, and diagnose issues.
+*   **Key Features:** Request rates, response times, failure rates, dependency tracking (calls to external services), page view and user telemetry, exception tracking, distributed tracing, availability tests.
+*   **Integration:** Works with various platforms (.NET, Java, Node.js, Python, etc.) by installing an SDK or agent.
+*   **Use Case Scenario:** A development team uses Application Insights for their e-commerce web application. They can see real-time telemetry on how many users are on the site, average page load times, if any server requests are failing, and pinpoint slow database queries that are impacting performance. If an unhandled exception occurs in their code, Application Insights captures the details for debugging.
+        `,
+        mnemonicSuggestion: "Azure Monitor: 'Doctor & Alarm System' for YOUR apps & resources. Collects data (Metrics, Logs), Analyzes (Log Analytics, App Insights), Acts (Alerts)."
+      }
+    ],
     questions: [
       {
         id: 'ps-q1',
@@ -290,11 +1719,11 @@ export const topics: Topic[] = [
         feedback: 'Azure Hybrid Benefit allows you to leverage your existing on-premises licenses with Software Assurance to save money on Azure services like VMs and SQL Database.',
       },
       {
-        id: 'ps-q3',
-        text: 'Which Azure support plan is included at no cost for all Azure customers and primarily covers billing and subscription management issues?',
-        options: ['Developer', 'Standard', 'Professional Direct', 'Basic'],
-        correctAnswerIndex: 3,
-        feedback: 'The Basic support plan is included for all Azure accounts and provides support for billing and subscription management, but not technical support for services.',
+        id: 'amg-q3',
+        text: 'Which Azure service provides personalized recommendations to optimize your Azure resources for cost, security, reliability, performance, and operational excellence?',
+        options: ['Azure Monitor', 'Azure Service Health', 'Azure Advisor', 'Azure Policy'],
+        correctAnswerIndex: 2,
+        feedback: 'Azure Advisor acts as a personalized cloud consultant, providing actionable recommendations to optimize your Azure deployments across various categories.',
       },
     ],
   },
@@ -308,3 +1737,4 @@ export const getSubTopicById = (topic: Topic, subTopicId: string): SubTopic | un
   return topic.subTopics?.find(subtopic => subtopic.id === subTopicId);
 }
 
+      
