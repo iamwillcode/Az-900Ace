@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
@@ -33,9 +34,7 @@ function convertStudyGuideToHtml(markdown: string): string {
   // 1. Convert **bold** to <strong>
   text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   
-  // 2. Convert *italic* to <em> (if used, like in some sub-bullets)
-  // This regex tries to be careful not to match list item markers like "* item"
-  // It looks for *word* not preceded/followed by another * or space (for list markers)
+  // 2. Convert *italic* to <em>
   text = text.replace(/(?<![\w*])\*(?!\s|\*)([^* \n][^*]*?)\*(?![\w*])/g, '<em>$1</em>');
 
 
@@ -46,36 +45,28 @@ function convertStudyGuideToHtml(markdown: string): string {
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
 
-    // Check for list items (e.g., "* item", "  * item", "- item")
-    // Captures leading spaces (for potential future nesting logic, though not used yet) 
-    // and content after the marker.
     const listItemMatch = line.match(/^(\s*)(?:[\*-])\s+(.*)/);
 
     if (listItemMatch) {
-      // const indentSpace = listItemMatch[1]; // Captured leading spaces
-      let itemContent = listItemMatch[2]; // Content of the list item
+      let itemContent = listItemMatch[2]; 
 
       if (!inList) {
         htmlOutput += '<ul>\n';
         inList = true;
       }
-      // itemContent already has <strong> or <em> if they were processed
       htmlOutput += `  <li>${itemContent}</li>\n`;
-    } else { // Not a list item
+    } else { 
       if (inList) {
         htmlOutput += '</ul>\n';
         inList = false;
       }
-      // For non-list lines, if the line is not empty after trimming, wrap in <p>.
-      // Tailwind Prose will handle spacing between <p> tags.
       if (line.trim()) {
-        // line.trim() already has <strong> or <em> if they were processed
         htmlOutput += `<p>${line.trim()}</p>\n`;
       }
     }
   }
 
-  if (inList) { // Close any list that extends to the end of the content
+  if (inList) { 
     htmlOutput += '</ul>\n';
   }
 
@@ -373,14 +364,27 @@ export default function TopicPage() {
 
   const handleGenerateMnemonic = async (context: string, type: 'topic' | 'subtopic', id: string) => {
     const key = `${type}-${id}`;
-    setMnemonicData(prev => ({ ...prev, [key]: { textLoading: true } }));
+    setMnemonicData(prev => ({ 
+      ...prev, 
+      [key]: { textLoading: true, text: undefined, error: undefined } 
+    }));
 
     try {
       const mnemonicResult: GenerateMnemonicOutput = await generateMnemonic({ context });
-      setMnemonicData(prev => ({ ...prev, [key]: { text: mnemonicResult.mnemonicText, textLoading: false } }));
+      setMnemonicData(prev => ({ 
+        ...prev, 
+        [key]: { text: mnemonicResult.mnemonicText, textLoading: false, error: undefined } 
+      }));
     } catch (mnemonicError) {
       console.error("Mnemonic generation error:", mnemonicError);
-      setMnemonicData(prev => ({ ...prev, [key]: { textLoading: false, error: `Failed to generate mnemonic: ${mnemonicError instanceof Error ? mnemonicError.message : String(mnemonicError)}` } }));
+      setMnemonicData(prev => ({ 
+        ...prev, 
+        [key]: { 
+          textLoading: false, 
+          text: undefined,
+          error: `Failed to generate mnemonic: ${mnemonicError instanceof Error ? mnemonicError.message : String(mnemonicError)}` 
+        } 
+      }));
     }
   };
 
@@ -417,6 +421,9 @@ export default function TopicPage() {
     const newTab = value as 'study' | 'quiz';
     setActiveTab(newTab);
     if (newTab === 'quiz' && quizScore !== null) {
+      // If switching to quiz tab and a quiz was already completed, restart it.
+      // This could also be changed to show results again, then offer restart.
+      // For now, direct restart for simplicity.
       handleRestartQuiz();
     }
   }
@@ -430,6 +437,8 @@ export default function TopicPage() {
     );
   }
 
+  // Display quiz results if a quiz has been completed and the active tab is 'quiz'
+  // This logic needed to be outside the main Tabs component to take over the screen
   if (quizScore !== null && activeTab === 'quiz') { 
     return (
       <div className="flex flex-col items-center justify-center text-center py-12">
@@ -461,6 +470,7 @@ export default function TopicPage() {
     );
   }
   
+  // Main layout with Tabs
   return (
     <div className="flex flex-col items-center space-y-6 py-8">
       <h1 className="text-3xl md:text-4xl font-bold text-center text-primary">{topic.name}</h1>
@@ -480,6 +490,8 @@ export default function TopicPage() {
           </Suspense>
         </TabsContent>
         <TabsContent value="quiz" className="mt-6">
+          {/* QuizDisplay is keyed to re-mount and reset its internal state when quizKey changes */}
+          {/* We also ensure quizScore is null to show the quiz, otherwise results are shown above */}
           {quizScore === null ? (
              <Suspense fallback={
                 <div className="flex justify-center items-center h-40">
@@ -490,9 +502,11 @@ export default function TopicPage() {
               <QuizDisplay key={quizKey} topic={topic} onQuizFinished={handleQuizFinished} />
              </Suspense>
           ) : (
+            // This part might be redundant if the above quizScore !== null check correctly shows results
+            // However, keeping a placeholder here in case of complex state interactions.
+            // The primary result display is handled by the block outside the Tabs.
             <div className="text-center p-8">
-                <p className="text-lg text-muted-foreground">Quiz already completed. Results are shown above.</p>
-                 <p className="text-xl font-semibold">Your Score: <span className="text-accent">{quizScore}</span> / {topic.questions.length}</p>
+                <p className="text-lg text-muted-foreground">Quiz completed. Results are shown. Select "Study Material" or restart.</p>
                 <Button onClick={handleRestartQuiz} variant="outline" className="mt-4">
                     <ArrowLeft className="mr-2 h-4 w-4" /> Restart Quiz
                 </Button>
