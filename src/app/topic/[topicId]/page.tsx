@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
@@ -14,18 +13,75 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { generateMnemonic, type GenerateMnemonicOutput } from '@/ai/flows/generate-mnemonic-flow';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ArrowLeft, ArrowRight, CheckSquare, Home, Lightbulb, Loader2, Sparkles, Star, Medal, Target, TrendingUp } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckSquare, Home, Lightbulb, Loader2, Sparkles, Star } from 'lucide-react';
 import Link from 'next/link';
-import { useGamificationStats, type GamificationStats } from '@/hooks/useGamificationStats';
+import { useGamificationStats } from '@/hooks/useGamificationStats';
 import { useToast } from "@/hooks/use-toast";
-import type { Badge } from '@/lib/gamification';
-
 
 interface MnemonicDataState {
   text?: string;
   textLoading?: boolean;
   error?: string;
 }
+
+// Helper function to convert basic markdown to HTML
+function convertStudyGuideToHtml(markdown: string): string {
+  if (!markdown) return "";
+
+  let text = markdown.trim();
+
+  // 1. Convert **bold** to <strong>
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  
+  // 2. Convert *italic* to <em> (if used, like in some sub-bullets)
+  // This regex tries to be careful not to match list item markers like "* item"
+  // It looks for *word* not preceded/followed by another * or space (for list markers)
+  text = text.replace(/(?<![\w*])\*(?!\s|\*)([^* \n][^*]*?)\*(?![\w*])/g, '<em>$1</em>');
+
+
+  const lines = text.split('\n');
+  let htmlOutput = "";
+  let inList = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+
+    // Check for list items (e.g., "* item", "  * item", "- item")
+    // Captures leading spaces (for potential future nesting logic, though not used yet) 
+    // and content after the marker.
+    const listItemMatch = line.match(/^(\s*)(?:[\*-])\s+(.*)/);
+
+    if (listItemMatch) {
+      // const indentSpace = listItemMatch[1]; // Captured leading spaces
+      let itemContent = listItemMatch[2]; // Content of the list item
+
+      if (!inList) {
+        htmlOutput += '<ul>\n';
+        inList = true;
+      }
+      // itemContent already has <strong> or <em> if they were processed
+      htmlOutput += `  <li>${itemContent}</li>\n`;
+    } else { // Not a list item
+      if (inList) {
+        htmlOutput += '</ul>\n';
+        inList = false;
+      }
+      // For non-list lines, if the line is not empty after trimming, wrap in <p>.
+      // Tailwind Prose will handle spacing between <p> tags.
+      if (line.trim()) {
+        // line.trim() already has <strong> or <em> if they were processed
+        htmlOutput += `<p>${line.trim()}</p>\n`;
+      }
+    }
+  }
+
+  if (inList) { // Close any list that extends to the end of the content
+    htmlOutput += '</ul>\n';
+  }
+
+  return htmlOutput;
+}
+
 
 interface StudyGuideDisplayProps {
   topic: Topic;
@@ -48,9 +104,10 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
       <CardContent className="space-y-6">
         <div>
           <h3 className="text-xl font-semibold mb-2 text-primary">Core Concepts</h3>
-          <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none whitespace-pre-wrap bg-muted/30 p-4 rounded-md">
-            {topic.studyGuide.trim()}
-          </div>
+          <div 
+            className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none bg-muted/30 p-4 rounded-md"
+            dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(topic.studyGuide) }}
+          />
         </div>
 
         <Card className="bg-card border shadow-inner">
@@ -80,9 +137,10 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
                 </div>
             )}
             {currentTopicMnemonic.text && (
-              <div className="text-foreground/90 whitespace-pre-wrap bg-muted/20 p-3 rounded-md shadow-inner font-mono text-sm">
-                {currentTopicMnemonic.text}
-              </div>
+              <div 
+                className="prose prose-sm max-w-none text-foreground/90 bg-muted/20 p-3 rounded-md shadow-inner font-mono"
+                dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(currentTopicMnemonic.text) }}
+              />
             )}
             
             {!currentTopicMnemonic.text && !currentTopicMnemonic.textLoading && (
@@ -108,9 +166,10 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
                   <AccordionItem value={subTopic.id} key={subTopic.id}>
                     <AccordionTrigger className="text-lg hover:text-accent font-medium">{subTopic.name}</AccordionTrigger>
                     <AccordionContent className="space-y-4 pt-2">
-                      <div className="prose prose-sm sm:prose lg:prose-lg max-w-none whitespace-pre-wrap bg-muted/20 p-3 rounded-md">
-                        {subTopic.studyGuide.trim()}
-                      </div>
+                      <div 
+                        className="prose prose-sm sm:prose lg:prose-lg max-w-none bg-muted/20 p-3 rounded-md"
+                        dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(subTopic.studyGuide) }}
+                      />
                       <Card className="bg-card border-border/70 shadow-sm mt-3">
                         <CardHeader className="pb-2 pt-3">
                            <CardTitle className="text-md flex items-center">
@@ -137,9 +196,10 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
                               </div>
                           )}
                           {currentSubtopicMnemonic.text && (
-                            <div className="text-foreground/80 whitespace-pre-wrap text-sm bg-muted/10 p-2 rounded-md font-mono">
-                              {currentSubtopicMnemonic.text}
-                            </div>
+                            <div 
+                              className="prose prose-xs max-w-none text-foreground/80 bg-muted/10 p-2 rounded-md font-mono"
+                              dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(currentSubtopicMnemonic.text) }}
+                            />
                           )}
                           
                           {!currentSubtopicMnemonic.text && !currentSubtopicMnemonic.textLoading && (
@@ -326,7 +386,7 @@ export default function TopicPage() {
 
   const handleQuizFinished = (finalScore: number, correctAnswers: number) => {
     setQuizScore(finalScore);
-    recordQuizCompleted(); // Record that a quiz was completed
+    recordQuizCompleted(); 
 
     const pointsEarned = awardPoints(correctAnswers);
     toast({
@@ -335,7 +395,6 @@ export default function TopicPage() {
       action: <Star className="text-yellow-500" />,
     });
     
-    // Check for new badges
     const newlyAwardedBadges = checkAndAwardNewBadges(finalScore, topic?.questions.length);
     newlyAwardedBadges.forEach(badge => {
       toast({
@@ -345,7 +404,6 @@ export default function TopicPage() {
       });
     });
 
-    // Dispatch a custom event to notify Navbar or other components about the update
     window.dispatchEvent(new CustomEvent('gamificationUpdate'));
   };
 
@@ -445,3 +503,4 @@ export default function TopicPage() {
     </div>
   );
 }
+
