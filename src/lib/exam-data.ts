@@ -314,7 +314,7 @@ export const exams: Exam[] = [
         correctAnswerIndex: 1,
         feedback: 'Cloud platforms provide built-in governance tools like tagging, policies, and role-based access control (RBAC) to simplify compliance and management.',
       },
-      // You will need to add 20 more questions here to reach the 50 question target for this exam.
+      // Note: You will need to add 20 more questions to this exam to reach 50.
     ],
   },
   {
@@ -323,171 +323,81 @@ export const exams: Exam[] = [
     description: 'Assess your knowledge of Azure\'s core architectural components, compute, networking, and storage services. Target: 50 questions.',
     questions: [
       {
-        id: 'aas-exam-q31',
-        text: 'Which cloud service model gives you full control over the operating system and applications?',
-        options: ['SaaS', 'PaaS', 'IaaS', 'Serverless'],
+        id: 'aas-exam-q1',
+        text: 'Which Azure service provides a managed environment for running containerized applications with orchestration capabilities?',
+        options: ['Azure Container Instances (ACI)', 'Azure Virtual Machines', 'Azure Kubernetes Service (AKS)', 'Azure App Service'],
         correctAnswerIndex: 2,
-        feedback: 'Infrastructure as a Service (IaaS) allows customers to manage operating systems, applications, and configurations while the cloud provider manages the underlying infrastructure.',
+        feedback: 'Azure Kubernetes Service (AKS) is a managed container orchestration service based on the open-source Kubernetes system, ideal for complex, scalable containerized applications.',
       },
       {
-        id: 'aas-exam-q32',
-        text: 'Which of the following is an example of Software as a Service (SaaS)?',
-        options: ['Azure Virtual Machines', 'Azure App Services', 'Microsoft 365 (e.g., Word Online)', 'Azure Kubernetes Service'],
-        correctAnswerIndex: 2,
-        feedback: 'SaaS delivers fully functional software applications over the internet, such as Microsoft 365, where users don\'t manage the infrastructure or platform.',
-      },
-      {
-        id: 'aas-exam-q33',
-        text: 'In which cloud service model does the cloud provider manage the infrastructure and platform, allowing developers to deploy applications without managing the underlying environment?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'Serverless'],
-        correctAnswerIndex: 1,
-        feedback: 'Platform as a Service (PaaS) abstracts infrastructure management and provides a platform for developing, running, and managing applications.',
-      },
-      {
-        id: 'aas-exam-q34',
-        text: 'Which cloud service type is best suited for deploying custom applications without managing virtual machines or networks?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'On-premises'],
-        correctAnswerIndex: 1,
-        feedback: 'PaaS services like Azure App Service allow developers to deploy and manage applications without worrying about the underlying infrastructure.',
-      },
-      {
-        id: 'aas-exam-q35',
-        text: 'Which of the following best describes a use case for IaaS?',
+        id: 'aas-exam-q2',
+        text: 'What is the primary purpose of Azure Availability Zones?',
         options: [
-          'Hosting a website using a managed web app service',
-          'Running a virtual machine to test software in a controlled environment',
-          'Using a cloud-based email service',
-          'Developing a mobile app backend using a serverless function',
+          'To provide data backup across regions',
+          'To protect applications from datacenter-level failures within a region',
+          'To offer lower latency to users in different countries',
+          'To group resources for billing purposes',
         ],
         correctAnswerIndex: 1,
-        feedback: 'IaaS is ideal when you need full control over your environment, such as testing, development, or hosting workloads on virtual machines.',
+        feedback: 'Availability Zones are physically separate locations within an Azure region, each with independent power, cooling, and networking, protecting applications from datacenter-level failures.',
       },
       {
-        id: 'aas-exam-q36',
-        text: 'Which cloud service model offers the least amount of administrative overhead for the customer?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'Hybrid'],
+        id: 'aas-exam-q3',
+        text: 'Which Azure storage service is best suited for storing unstructured data such as images, videos, and documents?',
+        options: ['Azure Files', 'Azure Disk Storage', 'Azure Blob Storage', 'Azure Table Storage'],
         correctAnswerIndex: 2,
-        feedback: 'In SaaS, the cloud provider manages everything — infrastructure, platform, and application — leaving users to focus only on usage.',
+        feedback: 'Azure Blob Storage is designed for storing massive amounts of unstructured data like text or binary data (objects), including images, videos, and documents.',
       },
       {
-        id: 'aas-exam-q37',
-        text: 'Which cloud service model would be most appropriate for a business that wants to run enterprise resource planning (ERP) software without managing servers?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'Private cloud'],
+        id: 'aas-exam-q4',
+        text: 'What is the function of an Azure Resource Group?',
+        options: ['To provide a bill for Azure services', 'A container that holds related resources for an Azure solution', 'A geographical area containing datacenters', 'A tool for migrating on-premises servers'],
+        correctAnswerIndex: 1,
+        feedback: 'An Azure Resource Group is a container that holds related resources for an Azure solution, allowing them to be managed as a single unit.',
+      },
+      {
+        id: 'aas-exam-q5',
+        text: 'Which Azure networking service provides a private, dedicated connection between your on-premises network and Azure?',
+        options: ['Azure VPN Gateway', 'Azure Virtual Network Peering', 'Azure ExpressRoute', 'Azure DNS'],
         correctAnswerIndex: 2,
-        feedback: 'SaaS ERP solutions like Dynamics 365 Business Central are hosted and maintained by the provider, reducing operational complexity.',
+        feedback: 'Azure ExpressRoute allows you to extend your on-premises networks into the Microsoft cloud over a private connection facilitated by a connectivity provider, not over the public internet.',
       },
       {
-        id: 'aas-exam-q38',
-        text: 'Which cloud service type allows developers to deploy code without provisioning or managing servers?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'Serverless'],
+        id: 'aas-exam-q6',
+        text: 'Which Azure compute option is best for running a large number of identical, stateless virtual machines that can scale automatically?',
+        options: ['Azure Virtual Machines', 'Azure Container Instances', 'Azure Functions', 'Azure Virtual Machine Scale Sets'],
         correctAnswerIndex: 3,
-        feedback: 'Serverless computing allows developers to upload and run code without managing the underlying infrastructure or runtime environment.',
+        feedback: 'Azure Virtual Machine Scale Sets (VMSS) allow you to create and manage a group of load-balanced VMs that can automatically increase or decrease in response to demand.',
       },
       {
-        id: 'aas-exam-q39',
-        text: 'Which of the following best describes a use case for serverless computing?',
-        options: [
-          'Running a large relational database',
-          'Deploying a long-running background service',
-          'Executing event-driven functions triggered by HTTP requests',
-          'Managing a cluster of virtual machines',
-        ],
+        id: 'aas-exam-q7',
+        text: 'What is the main difference between Azure Blob Storage Hot tier and Archive tier?',
+        options: ['Hot tier is for smaller files, Archive is for larger files.', 'Hot tier has higher storage costs and lower access costs; Archive has the lowest storage costs but high retrieval costs and latency.', 'Hot tier is for structured data, Archive is for unstructured data.', 'Hot tier data is replicated across regions, Archive tier is not.'],
+        correctAnswerIndex: 1,
+        feedback: 'The Hot tier is optimized for frequently accessed data with lower access costs, while the Archive tier is for rarely accessed data with the lowest storage cost but potentially hours of retrieval latency and higher retrieval costs.',
+      },
+      {
+        id: 'aas-exam-q8',
+        text: 'Which Azure service provides managed file shares accessible via SMB and NFS protocols?',
+        options: ['Azure Blob Storage', 'Azure Disk Storage', 'Azure Files', 'Azure Queue Storage'],
         correctAnswerIndex: 2,
-        feedback: 'Serverless functions are ideal for short-lived, event-driven tasks such as processing form submissions, image resizing, or triggering workflows.',
+        feedback: 'Azure Files provides fully managed file shares in the cloud that are accessible via the Server Message Block (SMB) protocol and Network File System (NFS) protocol.',
       },
-      {
-        id: 'aas-exam-q40',
-        text: 'Which cloud service type is best for organizations that want to migrate existing applications with minimal changes?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'Serverless'],
-        correctAnswerIndex: 0,
-        feedback: 'IaaS supports lift-and-shift migrations, where applications are moved to the cloud with little to no modification.',
-      },
-      {
-        id: 'aas-exam-q41',
-        text: 'Which cloud service model allows users to configure middleware components such as databases and application servers?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'Serverless'],
-        correctAnswerIndex: 0,
-        feedback: 'With IaaS, users have full access to the operating system and can install and configure middleware components themselves.',
-      },
-      {
-        id: 'aas-exam-q42',
-        text: 'Which cloud service type is best for a company that wants to develop and host a web application quickly without managing infrastructure?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'On-premises'],
-        correctAnswerIndex: 1,
-        feedback: 'PaaS platforms like Azure Web Apps allow developers to deploy and scale applications without worrying about VMs, storage, or networking.',
-      },
-      {
-        id: 'aas-exam-q43',
-        text: 'Which cloud service model includes automatic scaling and patching of the operating system?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'Bare metal'],
-        correctAnswerIndex: 1,
-        feedback: 'In PaaS, the cloud provider manages the underlying OS, including updates and scaling, so developers can focus on their apps.',
-      },
-      {
-        id: 'aas-exam-q44',
-        text: 'Which of the following is a benefit of using SaaS?',
-        options: [
-          'Full control over application configuration',
-          'Reduced maintenance and support costs',
-          'Customizable infrastructure',
-          'Ability to install third-party software',
-        ],
-        correctAnswerIndex: 1,
-        feedback: 'SaaS reduces the burden of software maintenance and support since the provider handles all aspects of the application lifecycle.',
-      },
-      {
-        id: 'aas-exam-q45',
-        text: 'Which cloud service model is best suited for businesses that want to use productivity tools like email, collaboration, and file sharing without managing the software or hardware?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'Serverless'],
+       {
+        id: 'aas-exam-q9',
+        text: 'What is the purpose of an Azure Private Endpoint?',
+        options: ['To assign a public IP address to a PaaS service for internet access.', 'To enable secure communication between two Azure Virtual Networks.', 'To connect to Azure PaaS services using a private IP address from your VNet, keeping traffic off the public internet.', 'To filter network traffic to and from Azure resources.'],
         correctAnswerIndex: 2,
-        feedback: 'SaaS provides ready-to-use applications delivered over the internet, such as Microsoft Teams, Outlook.com, or Google Workspace.',
+        feedback: 'Azure Private Endpoint uses a private IP address from your VNet to connect to Azure PaaS services (like Azure Storage or SQL Database) privately and securely, ensuring traffic does not traverse the public internet.',
       },
       {
-        id: 'aas-exam-q46',
-        text: 'Which cloud service model typically requires the least amount of manual configuration by the user?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'Hybrid cloud'],
+        id: 'aas-exam-q10',
+        text: 'If you want to ensure that VMs are spread across different hardware racks and network switches within a single Azure datacenter to protect against localized hardware failures, what should you use?',
+        options: ['Availability Zones', 'Region Pairs', 'Availability Sets', 'Resource Groups'],
         correctAnswerIndex: 2,
-        feedback: 'SaaS applications are pre-configured and ready to use, requiring minimal setup from the end-user.',
+        feedback: 'Availability Sets spread your VMs across multiple fault domains (different hardware, power, network) and update domains within a single datacenter, protecting against localized hardware failures or planned maintenance.',
       },
-      {
-        id: 'aas-exam-q47',
-        text: 'Which of the following is a primary difference between PaaS and SaaS?',
-        options: [
-          'PaaS is used for infrastructure, SaaS is used for networking',
-          'PaaS allows customization of applications, SaaS does not',
-          'PaaS requires managing the OS, SaaS does not',
-          'PaaS is free, SaaS requires a subscription',
-        ],
-        correctAnswerIndex: 1,
-        feedback: 'PaaS enables developers to build and customize applications, whereas SaaS provides fixed-functionality applications managed entirely by the provider.',
-      },
-      {
-        id: 'aas-exam-q48',
-        text: 'Which cloud service model is best described as "code + execution environment"?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'Serverless'],
-        correctAnswerIndex: 3,
-        feedback: 'Serverless computing allows developers to write and deploy code that runs in response to events, with the platform handling execution automatically.',
-      },
-      {
-        id: 'aas-exam-q49',
-        text: 'Which cloud service model is most suitable for DevOps teams building continuous integration/continuous deployment (CI/CD) pipelines?',
-        options: ['IaaS', 'PaaS', 'SaaS', 'Serverless'],
-        correctAnswerIndex: 1,
-        feedback: 'PaaS offers integrated tools and environments that streamline CI/CD workflows, making it easier for DevOps teams to automate deployments.',
-      },
-      {
-        id: 'aas-exam-q50',
-        text: 'Which of the following is a disadvantage of using SaaS compared to PaaS or IaaS?',
-        options: [
-          'High upfront cost',
-          'Limited ability to customize applications',
-          'Requires managing infrastructure',
-          'Increased latency',
-        ],
-        correctAnswerIndex: 1,
-        feedback: 'SaaS applications are generally not customizable beyond basic settings, limiting flexibility compared to PaaS or IaaS models.',
-      },
-      // You will need to add 30 more questions here to reach the 50 question target for this exam.
+      // Note: You will need to add 40 more questions here to reach 50.
     ],
   },
   {
@@ -570,7 +480,7 @@ export const exams: Exam[] = [
         correctAnswerIndex: 2,
         feedback: 'Defense-in-depth employs multiple, layered security controls so that if one layer is bypassed, others are in place to protect assets.',
       },
-      // You will need to add 40 more questions here to reach the 50 question target for this exam.
+      // Note: You will need to add 40 more questions here to reach 50.
     ],
   },
   {
@@ -583,7 +493,7 @@ export const exams: Exam[] = [
         text: 'Which Azure tool helps estimate the ongoing costs of Azure services you plan to deploy?',
         options: ['TCO Calculator', 'Azure Advisor', 'Azure Pricing Calculator', 'Azure Cost Management'],
         correctAnswerIndex: 2,
-        feedback: 'The Azure Pricing Calculator is used to estimate the costs of specific Azure services for new or planned deployments.',
+        feedback: 'The Azure Pricing Calculator is used to estimate the costs of Azure services you intend to use for new or planned deployments.',
       },
       {
         id: 'amg-exam-q2',
@@ -653,7 +563,7 @@ export const exams: Exam[] = [
         correctAnswerIndex: 1,
         feedback: 'Tags are key-value pairs applied to Azure resources for organization, cost tracking, automation, and operational management.',
       },
-      // You will need to add 40 more questions here to reach the 50 question target for this exam.
+      // Note: You will need to add 40 more questions here to reach 50.
     ],
   },
 ];
@@ -661,5 +571,3 @@ export const exams: Exam[] = [
 export const getExamById = (id: string): Exam | undefined => {
   return exams.find((exam) => exam.id === id);
 };
-
-    
