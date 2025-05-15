@@ -3,7 +3,7 @@
 import { Logo } from '@/components/azure-ace/Logo';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Home, Award, Star } from 'lucide-react';
+import { Home, ListChecks, Star } from 'lucide-react'; // Changed Award to ListChecks for exams
 import { useGamificationStats } from '@/hooks/useGamificationStats';
 import { useEffect } from 'react';
 
@@ -11,20 +11,13 @@ export function Navbar() {
   const { totalPoints, isLoading, refreshStats } = useGamificationStats();
 
   useEffect(() => {
-    // Refresh stats when component mounts or when navigating,
-    // in case localStorage was updated elsewhere (though less likely in this simple app)
-    // More importantly, ensures Navbar displays the latest points if a quiz was just finished.
     refreshStats();
 
     const handleStorageChange = () => {
       refreshStats();
     };
-    // Custom event to listen for point changes from TopicPage
     window.addEventListener('gamificationUpdate', handleStorageChange);
-    
-    // Standard storage event (less reliable for same-tab updates)
     window.addEventListener('storage', handleStorageChange);
-
 
     return () => {
       window.removeEventListener('gamificationUpdate', handleStorageChange);
@@ -50,8 +43,16 @@ export function Navbar() {
               Dashboard
             </Link>
           </Button>
+          <Button variant="ghost" asChild>
+            <Link href="/exam">
+              <ListChecks className="mr-2 h-5 w-5" />
+              Exams
+            </Link>
+          </Button>
         </div>
       </div>
     </nav>
   );
 }
+
+    

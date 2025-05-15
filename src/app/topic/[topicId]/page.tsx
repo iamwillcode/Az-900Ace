@@ -3,7 +3,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo, Suspense } from 'react';
-import type { Topic } from '@/lib/azure-data';
+import type { Topic, SubTopic } from '@/lib/azure-data'; // Added SubTopic
 import { getTopicById } from '@/lib/azure-data';
 import { QuestionDisplay } from '@/components/azure-ace/QuestionDisplay';
 import { FeedbackDisplay } from '@/components/azure-ace/FeedbackDisplay';
@@ -12,18 +12,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { generateMnemonic, type GenerateMnemonicOutput } from '@/ai/flows/generate-mnemonic-flow';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ArrowLeft, ArrowRight, CheckSquare, Home, Lightbulb, Loader2, Sparkles, Star } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckSquare, Home, Lightbulb, Loader2, Sparkles, Star, FileText } from 'lucide-react'; // Added FileText
 import Link from 'next/link';
 import { useGamificationStats } from '@/hooks/useGamificationStats';
 import { useToast } from "@/hooks/use-toast";
-
-interface MnemonicDataState {
-  text?: string;
-  textLoading?: boolean;
-  error?: string;
-}
 
 // Helper function to convert basic markdown to HTML
 function convertStudyGuideToHtml(markdown: string): string {
@@ -37,6 +30,8 @@ function convertStudyGuideToHtml(markdown: string): string {
   // 2. Convert *italic* to <em>
   text = text.replace(/(?<![\w*])\*(?!\s|\*)([^* \n][^*]*?)\*(?![\w*])/g, '<em>$1</em>');
 
+  // Convert backticks `code` to <code>
+  text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
 
   const lines = text.split('\n');
   let htmlOutput = "";
@@ -45,13 +40,29 @@ function convertStudyGuideToHtml(markdown: string): string {
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
 
+    // Handle headings: #, ##, ###
+    const headingMatch = line.match(/^(#+)\s+(.*)/);
+    if (headingMatch) {
+        if (inList) {
+            htmlOutput += '</ul>\n';
+            inList = false;
+        }
+        const level = headingMatch[1].length;
+        const content = headingMatch[2];
+        if (level >= 1 && level <= 6) { // HTML supports h1 to h6
+            htmlOutput += `<h${level} class="mt-4 mb-2 font-semibold text-lg">${content}</h${level}>\n`;
+            continue;
+        }
+    }
+
+
     const listItemMatch = line.match(/^(\s*)(?:[\*-])\s+(.*)/);
 
     if (listItemMatch) {
       let itemContent = listItemMatch[2]; 
 
       if (!inList) {
-        htmlOutput += '<ul>\n';
+        htmlOutput += '<ul class="list-disc pl-5 space-y-1 my-2">\n';
         inList = true;
       }
       htmlOutput += `  <li>${itemContent}</li>\n`;
@@ -61,13 +72,27 @@ function convertStudyGuideToHtml(markdown: string): string {
         inList = false;
       }
       if (line.trim()) {
-        htmlOutput += `<p>${line.trim()}</p>\n`;
+        // Avoid wrapping already structured tree-like mnemonics in <p>
+        const isMnemonicLine = line.match(/^\s*(?:├──|└──|│)/);
+        if (isMnemonicLine) {
+            htmlOutput += `${line}\n`;
+        } else {
+            htmlOutput += `<p class="my-2">${line.trim()}</p>\n`;
+        }
+      } else if (!inList && htmlOutput.trim() && !htmlOutput.endsWith('\n\n') && !htmlOutput.endsWith('</p>\n')) {
+        // Add an empty paragraph for spacing if it's a blank line and not in a list, to respect markdown-like spacing
+        // htmlOutput += '<p>&nbsp;</p>\n'; 
       }
     }
   }
 
   if (inList) { 
     htmlOutput += '</ul>\n';
+  }
+  
+  // For structured mnemonics, ensure pre-wrap styling if not already handled by prose
+  if (text.includes('├──') || text.includes('└──')) {
+      return `<div class="whitespace-pre-wrap font-mono">${htmlOutput}</div>`;
   }
 
   return htmlOutput;
@@ -76,13 +101,9 @@ function convertStudyGuideToHtml(markdown: string): string {
 
 interface StudyGuideDisplayProps {
   topic: Topic;
-  onGenerateMnemonic: (context: string, type: 'topic' | 'subtopic', id: string) => void;
-  mnemonicData: Record<string, MnemonicDataState>;
 }
 
-function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGuideDisplayProps) {
-  const currentTopicMnemonic = mnemonicData[`topic-${topic.id}`] || {};
-  
+function StudyGuideDisplay({ topic }: StudyGuideDisplayProps) {
   return (
     <Card className="w-full max-w-3xl mx-auto shadow-lg">
       <CardHeader>
@@ -94,73 +115,45 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <h3 className="text-xl font-semibold mb-2 text-primary">Core Concepts</h3>
+          <h3 className="text-xl font-semibold mb-2 text-primary flex items-center">
+            <FileText className="mr-2 h-5 w-5" /> Core Concepts
+          </h3>
           <div 
             className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none bg-muted/30 p-4 rounded-md"
             dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(topic.studyGuide) }}
           />
         </div>
 
-        <Card className="bg-card border shadow-inner">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center">
-              <Lightbulb className="h-5 w-5 mr-2 text-yellow-500" />
-              Textual Mnemonic Aid
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {topic.mnemonicSuggestion && !currentTopicMnemonic.text && !currentTopicMnemonic.textLoading && (
-              <Alert variant="default" className="bg-accent/10 border-accent/30">
-                <Sparkles className="h-4 w-4 text-accent" />
-                <AlertTitle>Mnemonic Idea</AlertTitle>
-                <AlertDescription>{topic.mnemonicSuggestion}</AlertDescription>
-              </Alert>
-            )}
-            {currentTopicMnemonic.error && (
-                <Alert variant="destructive">
-                    <AlertTitle>Error Generating Mnemonic</AlertTitle>
-                    <AlertDescription>{currentTopicMnemonic.error}</AlertDescription>
-                </Alert>
-            )}
-            {currentTopicMnemonic.textLoading && (
-                <div className="flex items-center space-x-2 text-muted-foreground">
-                    <Loader2 className="h-5 w-5 animate-spin" /> <span>Generating mnemonic text...</span>
-                </div>
-            )}
-            {currentTopicMnemonic.text && (
+        {topic.mnemonic && (
+          <Card className="bg-card border shadow-inner">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center">
+                <Lightbulb className="h-5 w-5 mr-2 text-yellow-500" />
+                Textual Mnemonic Aid
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               <div 
                 className="prose prose-sm max-w-none text-foreground/90 bg-muted/20 p-3 rounded-md shadow-inner font-mono"
-                dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(currentTopicMnemonic.text) }}
+                dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(topic.mnemonic) }}
               />
-            )}
-            
-            {!currentTopicMnemonic.text && !currentTopicMnemonic.textLoading && (
-              <Button 
-                onClick={() => onGenerateMnemonic(`${topic.name}: ${topic.studyGuide}`, 'topic', topic.id)}
-                disabled={currentTopicMnemonic.textLoading}
-                size="sm"
-                className="bg-primary hover:bg-primary/90"
-              >
-                <Sparkles className="mr-2 h-4 w-4" /> Generate Textual Mnemonic
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         {topic.subTopics && topic.subTopics.length > 0 && (
           <div>
             <h3 className="text-xl font-semibold mb-3 text-primary">Sub-Topics</h3>
             <Accordion type="single" collapsible className="w-full">
-              {topic.subTopics.map((subTopic) => {
-                const currentSubtopicMnemonic = mnemonicData[`subtopic-${subTopic.id}`] || {};
-                return (
-                  <AccordionItem value={subTopic.id} key={subTopic.id}>
-                    <AccordionTrigger className="text-lg hover:text-accent font-medium">{subTopic.name}</AccordionTrigger>
-                    <AccordionContent className="space-y-4 pt-2">
-                      <div 
-                        className="prose prose-sm sm:prose lg:prose-lg max-w-none bg-muted/20 p-3 rounded-md"
-                        dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(subTopic.studyGuide) }}
-                      />
+              {topic.subTopics.map((subTopic) => (
+                <AccordionItem value={subTopic.id} key={subTopic.id}>
+                  <AccordionTrigger className="text-lg hover:text-accent font-medium">{subTopic.name}</AccordionTrigger>
+                  <AccordionContent className="space-y-4 pt-2">
+                    <div 
+                      className="prose prose-sm sm:prose lg:prose-lg max-w-none bg-muted/20 p-3 rounded-md"
+                      dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(subTopic.studyGuide) }}
+                    />
+                    {subTopic.mnemonic && (
                       <Card className="bg-card border-border/70 shadow-sm mt-3">
                         <CardHeader className="pb-2 pt-3">
                            <CardTitle className="text-md flex items-center">
@@ -169,47 +162,16 @@ function StudyGuideDisplay({ topic, onGenerateMnemonic, mnemonicData }: StudyGui
                            </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2 pb-3">
-                          {subTopic.mnemonicSuggestion && !currentSubtopicMnemonic.text && !currentSubtopicMnemonic.textLoading &&(
-                            <Alert variant="default" className="text-xs bg-accent/10 border-accent/30">
-                               <Sparkles className="h-3 w-3 text-accent" />
-                               <AlertDescription className="ml-0 pl-0">{subTopic.mnemonicSuggestion}</AlertDescription>
-                            </Alert>
-                          )}
-                          {currentSubtopicMnemonic.error && (
-                              <Alert variant="destructive" className="text-xs">
-                                  <AlertTitle>Error</AlertTitle>
-                                  <AlertDescription>{currentSubtopicMnemonic.error}</AlertDescription>
-                              </Alert>
-                          )}
-                          {currentSubtopicMnemonic.textLoading && (
-                              <div className="flex items-center space-x-1 text-muted-foreground text-xs">
-                                  <Loader2 className="h-3 w-3 animate-spin" /> <span>Generating text...</span>
-                              </div>
-                          )}
-                          {currentSubtopicMnemonic.text && (
-                            <div 
-                              className="prose prose-xs max-w-none text-foreground/80 bg-muted/10 p-2 rounded-md font-mono"
-                              dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(currentSubtopicMnemonic.text) }}
-                            />
-                          )}
-                          
-                          {!currentSubtopicMnemonic.text && !currentSubtopicMnemonic.textLoading && (
-                            <Button 
-                              onClick={() => onGenerateMnemonic(`${subTopic.name}: ${subTopic.studyGuide}`, 'subtopic', subTopic.id)}
-                              disabled={currentSubtopicMnemonic.textLoading}
-                              size="xs"
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              <Sparkles className="mr-1 h-3 w-3" /> Generate Mnemonic
-                            </Button>
-                          )}
+                          <div 
+                            className="prose prose-xs max-w-none text-foreground/80 bg-muted/10 p-2 rounded-md font-mono"
+                            dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(subTopic.mnemonic) }}
+                          />
                         </CardContent>
                       </Card>
-                    </AccordionContent>
-                  </AccordionItem>
-                )
-              })}
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
             </Accordion>
           </div>
         )}
@@ -256,7 +218,7 @@ function QuizDisplay({ topic, onQuizFinished }: QuizDisplayProps) {
   const handleSubmitAnswer = () => {
     if (selectedOption === null) return;
     setIsSubmitted(true);
-    if (selectedOption === currentQuestion.correctAnswerIndex) {
+    if (currentQuestion && selectedOption === currentQuestion.correctAnswerIndex) {
       setScore(score + 1);
       setCorrectAnswersCount(prev => prev + 1);
     }
@@ -273,19 +235,29 @@ function QuizDisplay({ topic, onQuizFinished }: QuizDisplayProps) {
   };
   
   const progressPercentage = useMemo(() => {
-    if (topic.questions.length === 0) return 0;
+    if (!topic || topic.questions.length === 0) return 0;
     const questionsCompleted = isSubmitted ? currentQuestionIndex + 1 : currentQuestionIndex;
     return (questionsCompleted / topic.questions.length) * 100;
-  }, [currentQuestionIndex, isSubmitted, topic.questions.length]);
+  }, [currentQuestionIndex, isSubmitted, topic]);
 
-  if (topic.questions.length === 0) {
+  if (!topic || topic.questions.length === 0) {
     return (
       <Alert>
         <AlertTitle>No Questions Available</AlertTitle>
-        <AlertDescription>This topic currently does not have any quiz questions.</AlertDescription>
+        <AlertDescription>This topic currently does not have any quiz questions. Please check back later or contact support if you believe this is an error.</AlertDescription>
       </Alert>
     );
   }
+  
+  if (!currentQuestion) {
+     return (
+      <Alert variant="destructive">
+        <AlertTitle>Error Loading Question</AlertTitle>
+        <AlertDescription>Could not load the current question. Please try refreshing the page or restarting the quiz.</AlertDescription>
+      </Alert>
+    );
+  }
+
 
   return (
     <div className="flex flex-col items-center space-y-8 w-full max-w-2xl mx-auto">
@@ -344,7 +316,6 @@ export default function TopicPage() {
   const [topic, setTopic] = useState<Topic | null>(null);
   const [quizScore, setQuizScore] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'study' | 'quiz'>('study');
-  const [mnemonicData, setMnemonicData] = useState<Record<string, MnemonicDataState>>({});
   const [quizKey, setQuizKey] = useState(0); 
 
   useEffect(() => {
@@ -354,7 +325,6 @@ export default function TopicPage() {
         setTopic(foundTopic);
         setQuizScore(null); 
         setActiveTab('study');
-        setMnemonicData({});
         setQuizKey(prevKey => prevKey + 1); 
       } else {
         router.push('/');
@@ -362,31 +332,6 @@ export default function TopicPage() {
     }
   }, [topicId, router]);
 
-  const handleGenerateMnemonic = async (context: string, type: 'topic' | 'subtopic', id: string) => {
-    const key = `${type}-${id}`;
-    setMnemonicData(prev => ({ 
-      ...prev, 
-      [key]: { textLoading: true, text: undefined, error: undefined } 
-    }));
-
-    try {
-      const mnemonicResult: GenerateMnemonicOutput = await generateMnemonic({ context });
-      setMnemonicData(prev => ({ 
-        ...prev, 
-        [key]: { text: mnemonicResult.mnemonicText, textLoading: false, error: undefined } 
-      }));
-    } catch (mnemonicError) {
-      console.error("Mnemonic generation error:", mnemonicError);
-      setMnemonicData(prev => ({ 
-        ...prev, 
-        [key]: { 
-          textLoading: false, 
-          text: undefined,
-          error: `Failed to generate mnemonic: ${mnemonicError instanceof Error ? mnemonicError.message : String(mnemonicError)}` 
-        } 
-      }));
-    }
-  };
 
   const handleQuizFinished = (finalScore: number, correctAnswers: number) => {
     setQuizScore(finalScore);
@@ -421,9 +366,6 @@ export default function TopicPage() {
     const newTab = value as 'study' | 'quiz';
     setActiveTab(newTab);
     if (newTab === 'quiz' && quizScore !== null) {
-      // If switching to quiz tab and a quiz was already completed, restart it.
-      // This could also be changed to show results again, then offer restart.
-      // For now, direct restart for simplicity.
       handleRestartQuiz();
     }
   }
@@ -437,8 +379,6 @@ export default function TopicPage() {
     );
   }
 
-  // Display quiz results if a quiz has been completed and the active tab is 'quiz'
-  // This logic needed to be outside the main Tabs component to take over the screen
   if (quizScore !== null && activeTab === 'quiz') { 
     return (
       <div className="flex flex-col items-center justify-center text-center py-12">
@@ -470,7 +410,6 @@ export default function TopicPage() {
     );
   }
   
-  // Main layout with Tabs
   return (
     <div className="flex flex-col items-center space-y-6 py-8">
       <h1 className="text-3xl md:text-4xl font-bold text-center text-primary">{topic.name}</h1>
@@ -486,12 +425,10 @@ export default function TopicPage() {
               <span>Loading study guide...</span>
             </div>
           }>
-            <StudyGuideDisplay topic={topic} onGenerateMnemonic={handleGenerateMnemonic} mnemonicData={mnemonicData} />
+            <StudyGuideDisplay topic={topic} />
           </Suspense>
         </TabsContent>
         <TabsContent value="quiz" className="mt-6">
-          {/* QuizDisplay is keyed to re-mount and reset its internal state when quizKey changes */}
-          {/* We also ensure quizScore is null to show the quiz, otherwise results are shown above */}
           {quizScore === null ? (
              <Suspense fallback={
                 <div className="flex justify-center items-center h-40">
@@ -502,9 +439,6 @@ export default function TopicPage() {
               <QuizDisplay key={quizKey} topic={topic} onQuizFinished={handleQuizFinished} />
              </Suspense>
           ) : (
-            // This part might be redundant if the above quizScore !== null check correctly shows results
-            // However, keeping a placeholder here in case of complex state interactions.
-            // The primary result display is handled by the block outside the Tabs.
             <div className="text-center p-8">
                 <p className="text-lg text-muted-foreground">Quiz completed. Results are shown. Select "Study Material" or restart.</p>
                 <Button onClick={handleRestartQuiz} variant="outline" className="mt-4">
@@ -518,3 +452,4 @@ export default function TopicPage() {
   );
 }
 
+    

@@ -1,5 +1,5 @@
 
-// Flows will be imported for their side effects in this file.
-import './flows/generate-mnemonic-flow';
+// This file is no longer needed and can be deleted.
+// AI functionality has been removed from the application.
 
-
+    
