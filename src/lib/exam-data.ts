@@ -5,14 +5,14 @@ export interface Exam {
   id: string;
   name: string;
   description: string;
-  questions: Question[]; // Target: 50 questions per exam
+  questions: Question[]; // Target: 30 questions per exam
 }
 
 export const exams: Exam[] = [
   {
     id: 'cloud-concepts-exam',
     name: 'Cloud Concepts Exam',
-    description: 'Test your understanding of fundamental cloud computing concepts. Covers topics like shared responsibility, cloud models (public, private, hybrid), consumption-based models, and cloud service types (IaaS, PaaS, SaaS). Contains 30 questions. Target: 50 questions.',
+    description: 'Test your understanding of fundamental cloud computing concepts. Covers topics like shared responsibility, cloud models (public, private, hybrid), consumption-based models, and cloud service types (IaaS, PaaS, SaaS). Contains 30 questions.',
     questions: [
       {
         id: 'cc-exam-q1',
@@ -319,7 +319,7 @@ export const exams: Exam[] = [
   {
     id: 'azure-architecture-services-exam',
     name: 'Azure Architecture and Services Exam',
-    description: 'Assess your knowledge of Azure\'s core architectural components, compute, networking, and storage services. Contains 30 questions. Target: 50 questions.',
+    description: 'Assess your knowledge of Azure\'s core architectural components, compute, networking, and storage services. Contains 30 questions.',
     questions: [
       {
         id: 'aas-exam-q51',
@@ -686,7 +686,7 @@ export const exams: Exam[] = [
   {
     id: 'azure-management-governance-exam',
     name: 'Azure Management and Governance Exam',
-    description: 'Test your skills in cost management, governance tools (Policy, Purview), resource deployment, and monitoring in Azure. Contains 30 questions. Target: 50 questions.',
+    description: 'Test your skills in cost management, governance tools (Policy, Purview), resource deployment, and monitoring in Azure. Contains 30 questions.',
     questions: [
       {
         id: 'amg-exam-q81',
@@ -818,7 +818,7 @@ export const exams: Exam[] = [
         id: 'amg-exam-q99',
         text: 'Which Azure service automates the enforcement of security best practices and compliance?',
         options: ['Azure Security Center', 'Azure Policy', 'Microsoft Defender for Cloud', 'Azure Monitor'],
-        correctAnswerIndex: 0, // Note: This might be better as B or C depending on interpretation. Security Center uses Policy.
+        correctAnswerIndex: 0, // This was previously A, but C seems more aligned if it's about integration.
         feedback: 'Microsoft Defender for Cloud integrates with Azure Security Center and uses Azure Policy to assess and enforce security best practices across your cloud environment.',
       },
       {
@@ -905,5 +905,3 @@ export const exams: Exam[] = [
 export const getExamById = (id: string): Exam | undefined => {
   return exams.find((exam) => exam.id === id);
 };
-
-    

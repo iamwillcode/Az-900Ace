@@ -15,7 +15,7 @@ export default function ExamListPage() {
           Practice Exams
         </h1>
         <p className="text-xl text-foreground/80 max-w-2xl mx-auto">
-          Test your knowledge with our comprehensive practice exams. Each exam is designed to simulate the AZ-900 experience with 50 questions.
+          Test your knowledge with our comprehensive practice exams. Each exam is designed to simulate the AZ-900 experience with 30 questions.
         </p>
       </header>
 
@@ -30,8 +30,8 @@ export default function ExamListPage() {
               <CardDescription className="text-sm text-muted-foreground min-h-[60px]">{exam.description}</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
-              <p className="text-sm text-muted-foreground">Number of questions: {exam.questions.length} (Target: 50)</p>
-              {exam.questions.length < 50 && (
+              <p className="text-sm text-muted-foreground">Number of questions: {exam.questions.length} (Target: 30)</p>
+              {exam.questions.length < 30 && (
                  <p className="text-xs text-orange-500 mt-1">Note: This exam currently has placeholder questions. More will be added.</p>
               )}
             </CardContent>
@@ -49,5 +49,3 @@ export default function ExamListPage() {
     </div>
   );
 }
-
-    
