@@ -25,7 +25,7 @@ export interface Topic {
   studyGuide: string; // Concise breakdown for quick understanding for the main topic
   mnemonic: string; // Actual structured mnemonic for the main topic
   subTopics?: SubTopic[];
-  questions: Question[]; // Target: 30 questions
+  questions: Question[]; // Target: 25 questions
 }
 
 export const topics: Topic[] = [
@@ -449,7 +449,56 @@ Cloud pricing is generally consumption-based, but Azure offers various models to
         correctAnswerIndex: 2,
         feedback: 'IaaS (Infrastructure as a Service) provides the highest level of flexibility and management control over IT resources, including virtual machines, storage, and networking.',
       },
-      // Add 27 more questions for this topic
+      {
+        id: 'cc-q4',
+        text: 'What is the primary advantage of the consumption-based model in cloud computing?',
+        options: ['Fixed monthly costs', 'Paying only for what you use', 'Free access to all services', 'Long-term contracts with discounts'],
+        correctAnswerIndex: 1,
+        feedback: 'The consumption-based model, also known as pay-as-you-go, means you only pay for the IT resources you actually consume, leading to cost efficiency.',
+      },
+      {
+        id: 'cc-q5',
+        text: 'Which cloud model involves resources being used exclusively by a single business or organization?',
+        options: ['Public Cloud', 'Private Cloud', 'Hybrid Cloud', 'Community Cloud'],
+        correctAnswerIndex: 1,
+        feedback: 'A Private Cloud provides computing resources that are used exclusively by one business or organization, offering more control and security.',
+      },
+      {
+        id: 'cc-q6',
+        text: 'Microsoft 365 (formerly Office 365) is an example of which cloud service type?',
+        options: ['IaaS', 'PaaS', 'SaaS', 'FaaS'],
+        correctAnswerIndex: 2,
+        feedback: 'Microsoft 365 is a Software as a Service (SaaS) offering, providing ready-to-use applications like Outlook, Word, and SharePoint over the internet.',
+      },
+      {
+        id: 'cc-q7',
+        text: 'What does "scalability" in the cloud primarily refer to?',
+        options: ['The ability to recover quickly from failures', 'The ability to adjust resources to meet demand', 'The ability to access resources from anywhere', 'The ability to secure data effectively'],
+        correctAnswerIndex: 1,
+        feedback: 'Scalability refers to the ability of a system to handle increasing (or decreasing) amounts of load by adding or removing resources as needed.',
+      },
+      {
+        id: 'cc-q8',
+        text: 'Which of the following is a key characteristic of serverless computing?',
+        options: ['Requires manual server provisioning', 'Long-running dedicated servers', 'Abstracts server management from the developer', 'Billed per server instance per hour'],
+        correctAnswerIndex: 2,
+        feedback: 'Serverless computing abstracts the server infrastructure away from the developer, allowing them to focus on code. The cloud provider manages the servers.',
+      },
+      {
+        id: 'cc-q9',
+        text: 'A company wants to migrate an existing on-premises application to Azure with minimal changes, requiring full control over the operating system. Which cloud service model is most appropriate?',
+        options: ['SaaS', 'PaaS', 'IaaS', 'FaaS'],
+        correctAnswerIndex: 2,
+        feedback: 'IaaS is most appropriate for "lift-and-shift" migrations where full control over the OS and environment is needed, mirroring an on-premises setup.',
+      },
+      {
+        id: 'cc-q10',
+        text: 'What is a common use case for a public cloud model?',
+        options: ['Hosting highly sensitive government data requiring maximum control', 'Applications with very stable and predictable workloads not needing scalability', 'Development and test environments', 'Organizations with heavy existing on-premises investments they want to exclusively use'],
+        correctAnswerIndex: 2,
+        feedback: 'Public clouds are often used for development and test environments due to their flexibility, scalability, and pay-as-you-go pricing, allowing quick setup and teardown.',
+      },
+      // Add 15 more questions to reach 25
     ],
   },
   {
@@ -1162,14 +1211,14 @@ Azure provides tools and services to help migrate on-premises workloads and data
     ],
     questions: [
        {
-        id: 'cas-q1',
+        id: 'aas-q1', // Corrected ID prefix
         text: 'Which Azure service provides a managed environment for running containerized applications with orchestration capabilities?',
         options: ['Azure Container Instances (ACI)', 'Azure Virtual Machines', 'Azure Kubernetes Service (AKS)', 'Azure App Service'],
         correctAnswerIndex: 2,
         feedback: 'Azure Kubernetes Service (AKS) is a managed container orchestration service based on the open-source Kubernetes system, ideal for complex, scalable containerized applications.',
       },
       {
-        id: 'cas-q2',
+        id: 'aas-q2', // Corrected ID prefix
         text: 'What is the primary purpose of Azure Availability Zones?',
         options: [
           'To provide data backup across regions',
@@ -1178,7 +1227,7 @@ Azure provides tools and services to help migrate on-premises workloads and data
           'To group resources for billing purposes',
         ],
         correctAnswerIndex: 1,
-        feedback: 'Availability Zones are physically separate datacenters within an Azure region that protect applications and data from datacenter failures, ensuring high availability within the region.',
+        feedback: 'Availability Zones are physically separate locations within an Azure region, each with independent power, cooling, and networking, protecting applications from datacenter-level failures.',
       },
        {
         id: 'aas-q3',
@@ -1186,8 +1235,57 @@ Azure provides tools and services to help migrate on-premises workloads and data
         options: ['Azure Files', 'Azure Disk Storage', 'Azure Blob Storage', 'Azure Table Storage'],
         correctAnswerIndex: 2,
         feedback: 'Azure Blob Storage is designed for storing massive amounts of unstructured data like text or binary data (objects), including images, videos, and documents.',
-      }
-      // Add 27 more questions for this topic
+      },
+      {
+        id: 'aas-q4',
+        text: 'What is the function of an Azure Resource Group?',
+        options: ['To provide a bill for Azure services', 'A container that holds related resources for an Azure solution', 'A geographical area containing datacenters', 'A tool for migrating on-premises servers'],
+        correctAnswerIndex: 1,
+        feedback: 'An Azure Resource Group is a container that holds related resources for an Azure solution, allowing them to be managed as a single unit.',
+      },
+      {
+        id: 'aas-q5',
+        text: 'Which Azure networking service provides a private, dedicated connection between your on-premises network and Azure?',
+        options: ['Azure VPN Gateway', 'Azure Virtual Network Peering', 'Azure ExpressRoute', 'Azure DNS'],
+        correctAnswerIndex: 2,
+        feedback: 'Azure ExpressRoute allows you to extend your on-premises networks into the Microsoft cloud over a private connection facilitated by a connectivity provider, not over the public internet.',
+      },
+      {
+        id: 'aas-q6',
+        text: 'Which Azure compute option is best for running a large number of identical, stateless virtual machines that can scale automatically?',
+        options: ['Azure Virtual Machines', 'Azure Container Instances', 'Azure Functions', 'Azure Virtual Machine Scale Sets'],
+        correctAnswerIndex: 3,
+        feedback: 'Azure Virtual Machine Scale Sets (VMSS) allow you to create and manage a group of load-balanced VMs that can automatically increase or decrease in response to demand.',
+      },
+      {
+        id: 'aas-q7',
+        text: 'What is the main difference between Azure Blob Storage Hot tier and Archive tier?',
+        options: ['Hot tier is for smaller files, Archive is for larger files.', 'Hot tier has higher storage costs and lower access costs; Archive has the lowest storage costs but high retrieval costs and latency.', 'Hot tier is for structured data, Archive is for unstructured data.', 'Hot tier data is replicated across regions, Archive tier is not.'],
+        correctAnswerIndex: 1,
+        feedback: 'The Hot tier is optimized for frequently accessed data with lower access costs, while the Archive tier is for rarely accessed data with the lowest storage cost but potentially hours of retrieval latency and higher retrieval costs.',
+      },
+      {
+        id: 'aas-q8',
+        text: 'Which Azure service provides managed file shares accessible via SMB and NFS protocols?',
+        options: ['Azure Blob Storage', 'Azure Disk Storage', 'Azure Files', 'Azure Queue Storage'],
+        correctAnswerIndex: 2,
+        feedback: 'Azure Files provides fully managed file shares in the cloud that are accessible via the Server Message Block (SMB) protocol and Network File System (NFS) protocol.',
+      },
+       {
+        id: 'aas-q9',
+        text: 'What is the purpose of an Azure Private Endpoint?',
+        options: ['To assign a public IP address to a PaaS service for internet access.', 'To enable secure communication between two Azure Virtual Networks.', 'To connect to Azure PaaS services using a private IP address from your VNet, keeping traffic off the public internet.', 'To filter network traffic to and from Azure resources.'],
+        correctAnswerIndex: 2,
+        feedback: 'Azure Private Endpoint uses a private IP address from your VNet to connect to Azure PaaS services (like Azure Storage or SQL Database) privately and securely, ensuring traffic does not traverse the public internet.',
+      },
+      {
+        id: 'aas-q10',
+        text: 'If you want to ensure that VMs are spread across different hardware racks and network switches within a single Azure datacenter to protect against localized hardware failures, what should you use?',
+        options: ['Availability Zones', 'Region Pairs', 'Availability Sets', 'Resource Groups'],
+        correctAnswerIndex: 2,
+        feedback: 'Availability Sets spread your VMs across multiple fault domains (different hardware, power, network) and update domains within a single datacenter, protecting against localized hardware failures or planned maintenance.',
+      },
+      // Add 15 more questions to reach 25
     ],
   },
   {
@@ -1460,14 +1558,14 @@ Microsoft Entra External Identities allow organizations to securely interact wit
     ],
     questions: [
       {
-        id: 'sct-q1',
+        id: 'aias-q1', // Corrected ID prefix
         text: 'Which Azure service provides cloud-based identity and access management for users, applications, and services?',
         options: ['Azure Firewall', 'Microsoft Entra ID', 'Azure Key Vault', 'Azure Policy'],
         correctAnswerIndex: 1,
         feedback: 'Microsoft Entra ID (formerly Azure Active Directory) is Microsoft’s cloud-based identity and access management (IAM) service.',
       },
       {
-        id: 'sct-q2',
+        id: 'aias-q2', // Corrected ID prefix
         text: 'What security principle advocates for granting users only the permissions essential to perform their job duties?',
         options: ['Defense in Depth', 'Zero Trust', 'Principle of Least Privilege', 'Shared Responsibility'],
         correctAnswerIndex: 2,
@@ -1480,7 +1578,56 @@ Microsoft Entra External Identities allow organizations to securely interact wit
         correctAnswerIndex: 2,
         feedback: 'Microsoft Entra Conditional Access uses "if-then" statements (signals and decisions) to enforce organizational policies and control access to applications and resources.',
       },
-      // Add 27 more questions for this topic
+      {
+        id: 'aias-q4',
+        text: 'In Azure RBAC, what defines the set of resources that a role assignment applies to?',
+        options: ['Security Principal', 'Role Definition', 'Scope', 'Condition'],
+        correctAnswerIndex: 2,
+        feedback: 'Scope in Azure RBAC defines the set of resources (e.g., Management Group, Subscription, Resource Group, or individual Resource) to which the permissions in a role assignment apply.',
+      },
+      {
+        id: 'aias-q5',
+        text: 'What is the primary purpose of Microsoft Entra B2B collaboration?',
+        options: ['To allow customers to sign up for your applications using social identities.', 'To enable guest users from other organizations to collaborate on your Azure resources.', 'To provide managed domain services like domain join for Azure VMs.', 'To enforce multi-factor authentication for all users.'],
+        correctAnswerIndex: 1,
+        feedback: 'Microsoft Entra B2B (Business-to-Business) collaboration allows you to securely share your company\'s applications and services with guest users from any other organization, while they maintain control over their own credentials.',
+      },
+      {
+        id: 'aias-q6',
+        text: 'Which security model is based on the principle of "never trust, always verify"?',
+        options: ['Defense in Depth', 'Shared Responsibility', 'Zero Trust', 'Least Privilege'],
+        correctAnswerIndex: 2,
+        feedback: 'The Zero Trust security model operates on the principle of "never trust, always verify," requiring verification for every access request, regardless of its origin.',
+      },
+      {
+        id: 'aias-q7',
+        text: 'What functionality does Microsoft Defender for Cloud provide as a Cloud Security Posture Management (CSPM) tool?',
+        options: ['Advanced threat detection for specific workloads.', 'Automated deployment of security agents.', 'Security recommendations, vulnerability assessments, and Secure Score.', 'Network traffic filtering and DDoS protection.'],
+        correctAnswerIndex: 2,
+        feedback: 'As a CSPM tool, Microsoft Defender for Cloud helps strengthen your security posture by providing security recommendations, identifying misconfigurations, assessing vulnerabilities, and offering a Secure Score.',
+      },
+      {
+        id: 'aias-q8',
+        text: 'What is one of the core principles of the Defense in Depth security strategy?',
+        options: ['Relying on a single strong security control.', 'Employing multiple layers of security controls.', 'Granting full access by default.', 'Trusting all traffic within the network perimeter.'],
+        correctAnswerIndex: 1,
+        feedback: 'Defense in Depth is a strategy that employs multiple layers of security controls. If one layer is breached, other layers are in place to protect assets.',
+      },
+      {
+        id: 'aias-q9',
+        text: 'Which Microsoft Entra service is designed to help you manage customer identities for your public-facing applications?',
+        options: ['Microsoft Entra ID P1', 'Microsoft Entra B2B', 'Microsoft Entra Domain Services', 'Azure AD B2C'],
+        correctAnswerIndex: 3,
+        feedback: 'Azure AD B2C (Business-to-Consumer) is a customer identity and access management (CIAM) solution for building customer-facing applications.',
+      },
+      {
+        id: 'aias-q10',
+        text: 'Which of these is an example of a "possession factor" in Multi-Factor Authentication (MFA)?',
+        options: ['A password', 'A fingerprint scan', 'A code from an authenticator app on a phone', 'A security question'],
+        correctAnswerIndex: 2,
+        feedback: 'A possession factor in MFA is something you have, like a physical token or an authenticator app on a trusted device (e.g., your phone) that generates one-time codes or receives push notifications.',
+      },
+      // Add 15 more questions to reach 25
     ],
   },
   {
@@ -1967,14 +2114,14 @@ Azure provides two key tools for estimating costs:
     ],
     questions: [
       {
-        id: 'ps-q1',
+        id: 'amg-q1', // Corrected ID prefix
         text: 'Which Azure tool helps you estimate the future costs of services you plan to deploy?',
         options: ['Azure Cost Management', 'TCO Calculator', 'Azure Pricing Calculator', 'Azure Advisor'],
         correctAnswerIndex: 2,
         feedback: 'The Azure Pricing Calculator is used to estimate the costs of Azure services you intend to use for new solutions.',
       },
       {
-        id: 'ps-q2',
+        id: 'amg-q2', // Corrected ID prefix
         text: 'What is the primary purpose of applying tags to Azure resources?',
         options: ['To increase resource performance', 'To organize resources and track costs', 'To automatically secure resources', 'To provide network isolation'],
         correctAnswerIndex: 1,
@@ -1987,7 +2134,56 @@ Azure provides two key tools for estimating costs:
         correctAnswerIndex: 2,
         feedback: 'Azure Policy helps enforce organizational standards and assess compliance at-scale by applying rules and effects to your Azure resources.',
       },
-      // Add 27 more questions for this topic
+      {
+        id: 'amg-q4',
+        text: 'Which Azure service provides personalized recommendations to optimize your Azure resources for cost, security, reliability, performance, and operational excellence?',
+        options: ['Azure Monitor', 'Azure Service Health', 'Azure Advisor', 'Microsoft Purview'],
+        correctAnswerIndex: 2,
+        feedback: 'Azure Advisor acts as a personalized cloud consultant, analyzing your resource configuration and usage to provide actionable recommendations across multiple categories.',
+      },
+      {
+        id: 'amg-q5',
+        text: 'What type of resource lock prevents authorized users from deleting or updating a resource?',
+        options: ['CanNotDelete lock', 'ReadOnly lock', 'Modify lock', 'Audit lock'],
+        correctAnswerIndex: 1,
+        feedback: 'A ReadOnly lock prevents authorized users from deleting or updating a resource. They can only read it.',
+      },
+      {
+        id: 'amg-q6',
+        text: 'What is the primary purpose of Azure Arc?',
+        options: ['To provide a backup solution for Azure resources.', 'To extend Azure management and services to hybrid and multicloud environments.', 'To analyze and optimize Azure costs.', 'To automate the deployment of ARM templates.'],
+        correctAnswerIndex: 1,
+        feedback: 'Azure Arc extends Azure management capabilities to servers, Kubernetes clusters, and data services located on-premises, at the edge, or in other clouds.',
+      },
+      {
+        id: 'amg-q7',
+        text: 'Which Azure tool allows you to interactively manage Azure resources using Bash or PowerShell from within a browser?',
+        options: ['Azure portal', 'Azure CLI (local install)', 'Azure PowerShell (local install)', 'Azure Cloud Shell'],
+        correctAnswerIndex: 3,
+        feedback: 'Azure Cloud Shell is a browser-accessible shell with pre-configured Azure CLI and Azure PowerShell for managing Azure resources.',
+      },
+      {
+        id: 'amg-q8',
+        text: 'What is the main benefit of using Infrastructure as Code (IaC)?',
+        options: ['It eliminates the need for monitoring.', 'It provides a graphical interface for resource management.', 'It enables consistent, repeatable, and automated infrastructure deployments.', 'It is only applicable to on-premises environments.'],
+        correctAnswerIndex: 2,
+        feedback: 'Infrastructure as Code (IaC) allows you to define and manage your infrastructure through code, leading to consistent, repeatable, and automated deployments, reducing manual errors and configuration drift.',
+      },
+      {
+        id: 'amg-q9',
+        text: 'Which component of Azure Monitor is specifically designed for collecting, analyzing, and acting on telemetry from web applications?',
+        options: ['Log Analytics', 'Azure Monitor Alerts', 'Application Insights', 'Azure Service Health'],
+        correctAnswerIndex: 2,
+        feedback: 'Application Insights is an Application Performance Management (APM) service within Azure Monitor that helps you monitor live web applications, detect performance anomalies, and diagnose issues.',
+      },
+      {
+        id: 'amg-q10',
+        text: 'If you want to be notified about Azure platform outages or planned maintenance that might affect your specific resources, which service should you use?',
+        options: ['Azure Advisor', 'Azure Monitor', 'Azure Policy', 'Azure Service Health'],
+        correctAnswerIndex: 3,
+        feedback: 'Azure Service Health provides personalized alerts and guidance when Azure service issues, planned maintenance, or health advisories affect your resources.',
+      },
+      // Add 15 more questions to reach 25
     ],
   },
 ];
@@ -1999,5 +2195,3 @@ export const getTopicById = (id: string): Topic | undefined => {
 export const getSubTopicById = (topic: Topic, subTopicId: string): SubTopic | undefined => {
   return topic.subTopics?.find(subtopic => subtopic.id === subTopicId);
 }
-
-    
