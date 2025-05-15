@@ -252,7 +252,7 @@ Cloud pricing is generally consumption-based, but Azure offers various models to
 *   **Use Case Scenario:** An e-learning platform experiences low traffic during nights and high traffic during exam periods. Cloud scalability allows them to automatically add more web server instances during peak exam times to ensure smooth performance for students and then scale back down during off-peak hours to save costs.
         `,
         mnemonic: `✨ Cloud Benefits (Part 1)
-├──  uptime High Availability (Always On 🏪)
+├──  ↑ Up High Availability (Always On 🏪)
 │   └── 🔄 Redundancy, Failover
 └── ⚖️ Scalability (Grows with Demand 💪↔️🤏)
     ├── ↔️ Scale Out/In (More/Less servers)
@@ -283,7 +283,7 @@ Cloud pricing is generally consumption-based, but Azure offers various models to
 *   **Use Case Scenario:** A financial analytics company runs complex simulations. Performance predictability from Azure's high-performance computing (HPC) instances allows them to estimate job completion times accurately. Cost predictability, using Azure Reservations for their baseline compute needs, helps them manage their budget effectively.
         `,
         mnemonic: `✨ Cloud Benefits (Part 2)
-├──  dependable Reliability (Works Correctly ✅)
+├──  ✓ Reliable Reliability (Works Correctly ✅)
 │   └── 💾 Data Integrity, Consistent Ops
 └── 🔮 Predictability (No Surprises!)
     ├── 🚀 Performance (Steady Speed)
@@ -354,7 +354,7 @@ Cloud pricing is generally consumption-based, but Azure offers various models to
         mnemonic: `📦 IaaS (Infrastructure)
 ├── 🧱 Basic Building Blocks (VMs, Storage, Network)
 ├── 💪 Most Control (You manage OS & up)
-├──  एग्जांपल Azure VMs, VNet
+├──  e.g. Azure VMs, VNet
 └── 🏡 Analogy: Renting empty land & tools`
       },
       {
@@ -372,7 +372,7 @@ Cloud pricing is generally consumption-based, but Azure offers various models to
         mnemonic: `🛠️ PaaS (Platform)
 ├── 🖼️ Environment for Apps (Build, Deploy, Manage)
 ├── 👩‍💻 Focus on Code (Provider manages OS, servers)
-├── EXAMPLE Azure App Service, Azure SQL DB
+├── e.g. Azure App Service, Azure SQL DB
 └── 🏭 Analogy: Renting a fully equipped workshop`
       },
       {
@@ -390,7 +390,7 @@ Cloud pricing is generally consumption-based, but Azure offers various models to
         mnemonic: `🛋️ SaaS (Software)
 ├── ✅ Ready-to-Use Apps (Email, CRM)
 ├── 🧘‍♂️ Least Management (Provider handles almost everything)
-├── EXAMPLE Microsoft 365, Dynamics 365
+├── e.g. Microsoft 365, Dynamics 365
 └── 🏢 Analogy: Renting a fully furnished apartment`
       },
       {
@@ -498,7 +498,6 @@ Cloud pricing is generally consumption-based, but Azure offers various models to
         correctAnswerIndex: 2,
         feedback: 'Public clouds are often used for development and test environments due to their flexibility, scalability, and pay-as-you-go pricing, allowing quick setup and teardown.',
       },
-      // Add 15 more questions to reach 25
     ],
   },
   {
@@ -891,11 +890,11 @@ Azure offers various ways to host your applications, each suited for different n
 *   **Use Case Scenario:** A company has one VNet for shared services (like domain controllers) and another VNet for a specific project. VNet peering allows the project VNet to access the shared services securely and privately.
 
 **Azure DNS:**
-*   **Purpose:** A hosting service for DNS domains, providing name resolution using Microsoft Azure infrastructure. You can manage your DNS records for your domains (e.g., \`www.contoso.com\`).
+*   **Purpose:** A hosting service for DNS domains, providing name resolution using Microsoft Azure infrastructure. You can manage your DNS records for your domains (e.g., \\\`www.contoso.com\\\`).
 *   **Types:**
     *   **Public DNS Zones:** For internet-facing domain resolution.
     *   **Private DNS Zones:** For name resolution within a VNet (or across peered VNets) without needing custom DNS servers.
-*   **Use Case Scenario:** Hosting the DNS records for your company's public website (\`yourcompany.com\`). Or, using Azure Private DNS to resolve names of VMs within your VNet by their hostname (e.g., \`webvm1.internal.contoso.com\`).
+*   **Use Case Scenario:** Hosting the DNS records for your company's public website (\\\`yourcompany.com\\\`). Or, using Azure Private DNS to resolve names of VMs within your VNet by their hostname (e.g., \\\`webvm1.internal.contoso.com\\\`).
 
 **Azure VPN Gateway:**
 *   **Purpose:** Sends encrypted traffic between an Azure VNet and an on-premises location over the public internet (Site-to-Site VPN), or between a VNet and individual client computers (Point-to-Site VPN).
@@ -908,7 +907,7 @@ Azure offers various ways to host your applications, each suited for different n
         `,
         mnemonic: `🌐 Virtual Networking
 ├── 🛡️ VNet (Your private Azure network)
-├──  subdivide Subnets (Segments within VNet)
+├──  ➗ Subnets (Segments within VNet)
 ├── 🤝 Peering (Connects VNets privately)
 ├── 🗺️ Azure DNS (Public/Private name resolution)
 ├── 🔒 VPN Gateway (Encrypted tunnel over Internet)
@@ -1211,14 +1210,14 @@ Azure provides tools and services to help migrate on-premises workloads and data
     ],
     questions: [
        {
-        id: 'aas-q1', // Corrected ID prefix
+        id: 'aas-q1', 
         text: 'Which Azure service provides a managed environment for running containerized applications with orchestration capabilities?',
         options: ['Azure Container Instances (ACI)', 'Azure Virtual Machines', 'Azure Kubernetes Service (AKS)', 'Azure App Service'],
         correctAnswerIndex: 2,
         feedback: 'Azure Kubernetes Service (AKS) is a managed container orchestration service based on the open-source Kubernetes system, ideal for complex, scalable containerized applications.',
       },
       {
-        id: 'aas-q2', // Corrected ID prefix
+        id: 'aas-q2', 
         text: 'What is the primary purpose of Azure Availability Zones?',
         options: [
           'To provide data backup across regions',
@@ -1285,7 +1284,54 @@ Azure provides tools and services to help migrate on-premises workloads and data
         correctAnswerIndex: 2,
         feedback: 'Availability Sets spread your VMs across multiple fault domains (different hardware, power, network) and update domains within a single datacenter, protecting against localized hardware failures or planned maintenance.',
       },
-      // Add 15 more questions to reach 25
+      {
+        id: 'new-q-105',
+        text: 'Which of the following is a benefit of using Azure Availability Zones?',
+        options: [
+          'Lower latency between regions',
+          'Protection against regional outages',
+          'Reduced cost for storage services',
+          'Faster internet connectivity'
+        ],
+        correctAnswerIndex: 1,
+        feedback: 'Availability Zones provide high availability by replicating data across physically separate locations within an Azure region, protecting against zone-level failures.'
+      },
+      {
+        id: 'new-q-107',
+        text: 'Which Azure service enables secure remote access to virtual machines without exposing them to the public internet?',
+        options: [
+          'Azure Load Balancer',
+          'Azure Bastion',
+          'Azure Application Gateway',
+          'Azure Firewall'
+        ],
+        correctAnswerIndex: 1,
+        feedback: 'Azure Bastion provides secure RDP/SSH connectivity directly from the Azure portal without requiring public IP addresses on VMs.'
+      },
+      {
+        id: 'new-q-117',
+        text: 'Which Azure service provides a global traffic load balancer that routes users to the nearest endpoint?',
+        options: [
+          'Azure Front Door',
+          'Azure Application Gateway',
+          'Azure Traffic Manager',
+          'Azure Load Balancer'
+        ],
+        correctAnswerIndex: 0,
+        feedback: 'Azure Front Door is a global HTTP load balancer that improves performance and availability by routing users to the closest and most responsive endpoint.'
+      },
+      {
+        id: 'new-q-118',
+        text: 'Which Azure service helps you manage DNS domains and resolve hostnames?',
+        options: [
+          'Azure DNS',
+          'Azure Private Link',
+          'Azure ExpressRoute',
+          'Azure Virtual Network'
+        ],
+        correctAnswerIndex: 0,
+        feedback: 'Azure DNS hosts domain names and resolves queries using Microsoft’s global network of DNS servers.'
+      }
     ],
   },
   {
@@ -1558,14 +1604,14 @@ Microsoft Entra External Identities allow organizations to securely interact wit
     ],
     questions: [
       {
-        id: 'aias-q1', // Corrected ID prefix
+        id: 'aias-q1',
         text: 'Which Azure service provides cloud-based identity and access management for users, applications, and services?',
         options: ['Azure Firewall', 'Microsoft Entra ID', 'Azure Key Vault', 'Azure Policy'],
         correctAnswerIndex: 1,
         feedback: 'Microsoft Entra ID (formerly Azure Active Directory) is Microsoft’s cloud-based identity and access management (IAM) service.',
       },
       {
-        id: 'aias-q2', // Corrected ID prefix
+        id: 'aias-q2',
         text: 'What security principle advocates for granting users only the permissions essential to perform their job duties?',
         options: ['Defense in Depth', 'Zero Trust', 'Principle of Least Privilege', 'Shared Responsibility'],
         correctAnswerIndex: 2,
@@ -1627,7 +1673,42 @@ Microsoft Entra External Identities allow organizations to securely interact wit
         correctAnswerIndex: 2,
         feedback: 'A possession factor in MFA is something you have, like a physical token or an authenticator app on a trusted device (e.g., your phone) that generates one-time codes or receives push notifications.',
       },
-      // Add 15 more questions to reach 25
+      {
+        id: 'new-q-108',
+        text: 'Which Azure tool would you use to assess the security posture of your cloud environment?',
+        options: [
+          'Azure Security Center', // Note: Now Microsoft Defender for Cloud
+          'Azure Monitor',
+          'Azure Advisor',
+          'Azure Sentinel'
+        ],
+        correctAnswerIndex: 0, // Or 0, as Security Center is part of Defender for Cloud now. Let's stick to the option provided.
+        feedback: 'Microsoft Defender for Cloud (formerly Azure Security Center) assesses your environment and provides actionable security recommendations.'
+      },
+      {
+        id: 'new-q-112',
+        text: 'Which Azure service allows you to store and manage secrets, keys, and certificates securely?',
+        options: [
+          'Azure Key Vault',
+          'Azure Security Center',
+          'Microsoft Entra ID',
+          'Azure Monitor'
+        ],
+        correctAnswerIndex: 0,
+        feedback: 'Azure Key Vault securely stores and manages cryptographic keys, secrets, and certificates used by cloud applications.'
+      },
+      {
+        id: 'new-q-115',
+        text: 'Which of the following is a core benefit of using Microsoft Defender for Cloud?',
+        options: [
+          'Free cloud storage',
+          'Enhanced threat protection and security posture management',
+          'Unlimited virtual machine licenses',
+          'Automatic code deployment'
+        ],
+        correctAnswerIndex: 1,
+        feedback: 'Microsoft Defender for Cloud offers advanced threat detection, vulnerability scanning, and policy enforcement to improve cloud security.'
+      }
     ],
   },
   {
@@ -1757,26 +1838,26 @@ Azure provides two key tools for estimating costs:
         name: 'Describe the purpose of tags',
         studyGuide: `
 **Tags:**
-*   **Definition:** Metadata elements that you apply to your Azure resources. A tag consists of a name-value pair (e.g., \`Environment:Production\`, \`CostCenter:Marketing\`, \`Owner:JohnDoe\`).
+*   **Definition:** Metadata elements that you apply to your Azure resources. A tag consists of a name-value pair (e.g., \\\`Environment:Production\\\`, \\\`CostCenter:Marketing\\\`, \\\`Owner:JohnDoe\\\`).
 *   **Purpose:**
     1.  **Resource Organization:** Logically organize resources across subscriptions, especially in complex environments.
     2.  **Cost Management and Billing:** Track Azure costs by filtering and grouping resources based on tags. This is crucial for departmental chargebacks or project-based cost accounting.
-    3.  **Automation:** Use tags in automation scripts (e.g., to shut down all VMs tagged with \`Environment:Dev\` outside of business hours).
-    4.  **Security:** Identify resources based on their sensitivity level or compliance requirements (e.g., \`Compliance:PCI\`).
+    3.  **Automation:** Use tags in automation scripts (e.g., to shut down all VMs tagged with \\\`Environment:Dev\\\` outside of business hours).
+    4.  **Security:** Identify resources based on their sensitivity level or compliance requirements (e.g., \\\`Compliance:PCI\\\`).
     5.  **Operational Management:** Group resources for operational tasks, like identifying all resources related to a specific application for monitoring or patching.
-    6.  **Policy Enforcement:** Azure Policy can enforce tagging requirements (e.g., requiring all resources to have an \`Owner\` tag).
+    6.  **Policy Enforcement:** Azure Policy can enforce tagging requirements (e.g., requiring all resources to have an \\\`Owner\\\` tag).
 *   **Characteristics:**
     *   Applied to resource groups or individual resources.
     *   Resources inherit tags from their resource group at creation time, but these can be overridden or added to.
     *   A resource can have up to 50 tags.
     *   Tag names are case-insensitive, but tag values are case-sensitive.
 *   **Use Case Scenario:** An enterprise uses tags extensively:
-    *   \`CostCenter:HR\`, \`CostCenter:Finance\` for billing.
-    *   \`Environment:Production\`, \`Environment:Development\`, \`Environment:Test\` to differentiate workloads and apply different policies or automation scripts.
-    *   \`ApplicationName:ERP_System\`, \`ApplicationName:CRM_Portal\` to group resources belonging to specific applications.
-    *   \`Owner:user@company.com\` to identify who is responsible for a resource.
-    *   \`ProjectID:AlphaUpgrade\` for temporary project resource tracking.
-    When the finance team reviews the Azure bill, they can use Azure Cost Management to filter costs by the \`CostCenter\` tag to see how much each department is spending.
+    *   \\\`CostCenter:HR\\\`, \\\`CostCenter:Finance\\\` for billing.
+    *   \\\`Environment:Production\\\`, \\\`Environment:Development\\\`, \\\`Environment:Test\\\` to differentiate workloads and apply different policies or automation scripts.
+    *   \\\`ApplicationName:ERP_System\\\`, \\\`ApplicationName:CRM_Portal\\\` to group resources belonging to specific applications.
+    *   \\\`Owner:user@company.com\\\` to identify who is responsible for a resource.
+    *   \\\`ProjectID:AlphaUpgrade\\\` for temporary project resource tracking.
+    When the finance team reviews the Azure bill, they can use Azure Cost Management to filter costs by the \\\`CostCenter\\\` tag to see how much each department is spending.
         `,
         mnemonic: `🏷️ Tags (Name:Value labels for resources)
 ├── 📂 Organization
@@ -1898,21 +1979,21 @@ Azure provides two key tools for estimating costs:
 *   **Definition:** An interactive, authenticated, browser-accessible shell for managing Azure resources. It provides the flexibility of choosing the shell experience that best suits the way you work, either Bash (with Azure CLI) or PowerShell (with Azure PowerShell module).
 *   **Key Features:**
     *   **Browser-based:** Accessible from anywhere via the Azure portal or directly (shell.azure.com).
-    *   **Pre-configured:** Comes with popular command-line tools and language support pre-installed (Azure CLI, Azure PowerShell, Git, text editors like \`code\`, \`vim\`, \`nano\`).
+    *   **Pre-configured:** Comes with popular command-line tools and language support pre-installed (Azure CLI, Azure PowerShell, Git, text editors like \\\`code\\\`, \\\`vim\\\`, \\\`nano\\\`).
     *   **Authenticated:** Automatically authenticates with your Azure account.
-    *   **Persistent Storage:** Uses an Azure Files share in your subscription to persist files across sessions (your \`$HOME\` directory).
+    *   **Persistent Storage:** Uses an Azure Files share in your subscription to persist files across sessions (your \\\`$HOME\\\` directory).
     *   **Choice of Shell:** Switch between Bash and PowerShell environments.
 *   **Purpose:** To provide a convenient, ready-to-use command-line environment for managing Azure resources without needing to install tools locally.
 *   **Use Case Scenario:** An administrator needs to quickly run a script to create multiple storage accounts. They open Azure Cloud Shell from the Azure portal, choose their preferred shell (e.g., Bash with Azure CLI), and execute the script directly in the browser. Any scripts or files they create are saved to their linked Azure Files share for future use.
 
 **Azure Command-Line Interface (CLI):**
-*   **Definition:** A cross-platform (Windows, Linux, macOS) command-line tool for managing Azure resources. It uses a \`az\` command structure.
-*   **Key Features:** Scriptable, designed for automation, output often in JSON (good for querying with \`jq\`).
+*   **Definition:** A cross-platform (Windows, Linux, macOS) command-line tool for managing Azure resources. It uses a \\\`az\\\` command structure.
+*   **Key Features:** Scriptable, designed for automation, output often in JSON (good for querying with \\\`jq\\\`).
 *   **Shell Environment:** Primarily used in Bash or similar command-line shells.
 *   **Use Case Scenario:** A DevOps engineer wants to automate the deployment of an entire application environment (VMs, VNets, storage). They write a Bash script using Azure CLI commands to create and configure all the necessary resources.
 
 **Azure PowerShell:**
-*   **Definition:** A set of cmdlets for managing Azure resources directly from PowerShell. It uses a Verb-Noun command structure (e.g., \`Get-AzVM\`, \`New-AzResourceGroup\`).
+*   **Definition:** A set of cmdlets for managing Azure resources directly from PowerShell. It uses a Verb-Noun command structure (e.g., \\\`Get-AzVM\\\`, \\\`New-AzResourceGroup\\\`).
 *   **Key Features:** Object-based (PowerShell cmdlets return objects), integrates well with existing PowerShell scripting and Windows environments.
 *   **Shell Environment:** Runs in PowerShell.
 *   **Use Case Scenario:** A Windows administrator who is proficient in PowerShell needs to manage Azure VMs and automate tasks like retrieving VM status or applying configurations. They use Azure PowerShell cmdlets within their PowerShell scripts.
@@ -1922,8 +2003,8 @@ Azure provides two key tools for estimating costs:
         mnemonic: `⌨️ Command-Line Tools
 ├── ☁️ Azure Cloud Shell (Browser-based Bash/PowerShell)
 │   ├── Pre-configured, Authenticated, Persistent Storage
-├── 🐍 Azure CLI (\`az ...\` commands, cross-platform, for Bash)
-└── 🅿️ Azure PowerShell (\`Verb-AzNoun\` cmdlets, for PowerShell)`
+├── 🐍 Azure CLI (\\\`az ...\\\` commands, cross-platform, for Bash)
+└── 🅿️ Azure PowerShell (\\\`Verb-AzNoun\\\` cmdlets, for PowerShell)`
       },
       {
         id: 'amg-azure-arc',
@@ -2114,14 +2195,14 @@ Azure provides two key tools for estimating costs:
     ],
     questions: [
       {
-        id: 'amg-q1', // Corrected ID prefix
+        id: 'amg-q1',
         text: 'Which Azure tool helps you estimate the future costs of services you plan to deploy?',
         options: ['Azure Cost Management', 'TCO Calculator', 'Azure Pricing Calculator', 'Azure Advisor'],
         correctAnswerIndex: 2,
         feedback: 'The Azure Pricing Calculator is used to estimate the costs of Azure services you intend to use for new solutions.',
       },
       {
-        id: 'amg-q2', // Corrected ID prefix
+        id: 'amg-q2',
         text: 'What is the primary purpose of applying tags to Azure resources?',
         options: ['To increase resource performance', 'To organize resources and track costs', 'To automatically secure resources', 'To provide network isolation'],
         correctAnswerIndex: 1,
@@ -2183,7 +2264,162 @@ Azure provides two key tools for estimating costs:
         correctAnswerIndex: 3,
         feedback: 'Azure Service Health provides personalized alerts and guidance when Azure service issues, planned maintenance, or health advisories affect your resources.',
       },
-      // Add 15 more questions to reach 25
+      {
+        id: 'new-q-101',
+        text: 'Which Azure service provides a unified interface for managing cloud resources?',
+        options: [
+          'Azure CLI',
+          'Azure PowerShell',
+          'Azure Portal',
+          'Azure Monitor'
+        ],
+        correctAnswerIndex: 2,
+        feedback: 'The Azure Portal is a web-based console that provides a centralized user interface for managing and monitoring all Azure resources.'
+      },
+      {
+        id: 'new-q-102',
+        text: 'Which Azure feature allows you to automate the deployment of consistent environments using templates?',
+        options: [
+          'Azure DevOps',
+          'Azure Resource Manager (ARM) Templates',
+          'Azure Policy',
+          'Microsoft Entra ID'
+        ],
+        correctAnswerIndex: 1,
+        feedback: 'ARM templates are JSON-based files used to define and deploy Azure resources in a consistent and repeatable way.'
+      },
+      {
+        id: 'new-q-103',
+        text: 'Which of the following best describes the purpose of Azure Backup?',
+        options: [
+          'To protect virtual machines from malware',
+          'To monitor application performance',
+          'To create backups of data and applications in Azure',
+          'To enforce access control policies'
+        ],
+        correctAnswerIndex: 2,
+        feedback: 'Azure Backup provides cloud-based backup and restore capabilities for data and applications, protecting against accidental deletion or corruption.'
+      },
+      {
+        id: 'new-q-104',
+        text: 'Which Azure service helps ensure that your cloud resources meet compliance standards such as ISO or GDPR?',
+        options: [
+          'Azure Advisor',
+          'Microsoft Defender for Cloud',
+          'Azure Cost Management',
+          'Azure Monitor'
+        ],
+        correctAnswerIndex: 1,
+        feedback: 'Microsoft Defender for Cloud includes built-in compliance dashboards and security recommendations aligned with industry standards like ISO, NIST, and GDPR.'
+      },
+      {
+        id: 'new-q-106',
+        text: 'Which cloud pricing model allows customers to pay a discounted rate for long-term resource usage?',
+        options: [
+          'Pay-as-you-go',
+          'Free tier',
+          'Reserved Instances',
+          'Consumption-based'
+        ],
+        correctAnswerIndex: 2,
+        feedback: 'Azure Reserved Instances allow customers to commit to long-term usage in exchange for significant cost savings compared to on-demand pricing.'
+      },
+      {
+        id: 'new-q-109',
+        text: 'Which of the following is a key benefit of using the Azure Total Cost of Ownership (TCO) Calculator?',
+        options: [
+          'It estimates how much you will spend monthly on Azure',
+          'It compares the cost of running workloads on-premises versus in the cloud',
+          'It applies governance policies to your subscriptions',
+          'It identifies unused resources for cost optimization'
+        ],
+        correctAnswerIndex: 1,
+        feedback: 'The TCO Calculator helps organizations compare the financial benefits of moving to Azure versus maintaining on-premises infrastructure.'
+      },
+      {
+        id: 'new-q-110',
+        text: 'Which Azure service provides intelligent insights into application performance and usage?',
+        options: [
+          'Application Insights',
+          'Azure Monitor',
+          'Log Analytics',
+          'Azure Advisor'
+        ],
+        correctAnswerIndex: 0,
+        feedback: 'Application Insights monitors live web applications and provides analytics about performance, usage, and exceptions.'
+      },
+      {
+        id: 'new-q-111',
+        text: 'Which of the following best describes "governance" in cloud computing?',
+        options: [
+          'Ensuring applications run fast',
+          'Managing costs through automation',
+          'Controlling who can access what resources and how they are configured',
+          'Increasing network bandwidth'
+        ],
+        correctAnswerIndex: 2,
+        feedback: 'Governance involves defining and enforcing policies, roles, and controls to manage access, configuration, and compliance of cloud resources.'
+      },
+      {
+        id: 'new-q-113',
+        text: 'Which Azure service helps you identify and remediate non-compliant resources?',
+        options: [
+          'Azure Monitor',
+          'Azure Advisor',
+          'Azure Policy',
+          'Azure Cost Management'
+        ],
+        correctAnswerIndex: 2,
+        feedback: 'Azure Policy evaluates resources for compliance with organizational rules and can automatically remediate non-compliant configurations.'
+      },
+      {
+        id: 'new-q-114',
+        text: 'Which Azure service provides a single pane of glass for monitoring logs, metrics, and alerts across multiple sources?',
+        options: [
+          'Azure Monitor',
+          'Log Analytics',
+          'Azure Advisor',
+          'Azure Security Center'
+        ],
+        correctAnswerIndex: 0,
+        feedback: 'Azure Monitor collects and analyzes telemetry data from both cloud and on-premises environments, providing a centralized view of performance and health.'
+      },
+      {
+        id: 'new-q-116',
+        text: 'Which Azure service is best suited for automating repetitive tasks across resources?',
+        options: [
+          'Azure Automation',
+          'Azure Logic Apps',
+          'Azure Functions',
+          'Azure DevOps'
+        ],
+        correctAnswerIndex: 0,
+        feedback: 'Azure Automation allows you to create, manage, and schedule automated workflows to reduce manual operations.'
+      },
+      {
+        id: 'new-q-119',
+        text: 'Which of the following is a primary benefit of using Azure Policy?',
+        options: [
+          'Reducing compute costs',
+          'Automating resource deployment',
+          'Enforcing organizational compliance and governance',
+          'Monitoring application logs'
+        ],
+        correctAnswerIndex: 2,
+        feedback: 'Azure Policy ensures that resources comply with organizational standards by evaluating and enforcing rules across your Azure environment.'
+      },
+      {
+        id: 'new-q-120',
+        text: 'Which of the following best describes the purpose of resource locks in Azure?',
+        options: [
+          'To restrict network access to resources',
+          'To prevent unauthorized access to data',
+          'To prevent accidental deletion or modification of critical resources',
+          'To apply cost tracking tags'
+        ],
+        correctAnswerIndex: 2,
+        feedback: 'Resource locks help protect important resources from accidental changes or deletions by locking them at the resource group or individual resource level.'
+      }
     ],
   },
 ];
@@ -2195,3 +2431,15 @@ export const getTopicById = (id: string): Topic | undefined => {
 export const getSubTopicById = (topic: Topic, subTopicId: string): SubTopic | undefined => {
   return topic.subTopics?.find(subtopic => subtopic.id === subTopicId);
 }
+
+// Example of adding more questions manually:
+// const cloudConcepts = topics.find(t => t.id === 'cloud-concepts');
+// if (cloudConcepts) {
+//   cloudConcepts.questions.push({
+//       id: 'cc-q11',
+//       text: 'What is OpEx in the context of cloud computing?',
+//       options: ['Operational Expenditure', 'Optimal Expansion', 'Operational Excellence', 'Overseas Expansion'],
+//       correctAnswerIndex: 0,
+//       feedback: 'OpEx (Operational Expenditure) refers to ongoing costs for running a business, like service subscriptions, which is typical for cloud services.',
+//   });
+// }
