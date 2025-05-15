@@ -314,7 +314,7 @@ export const exams: Exam[] = [
         correctAnswerIndex: 1,
         feedback: 'Cloud platforms provide built-in governance tools like tagging, policies, and role-based access control (RBAC) to simplify compliance and management.',
       },
-      // TODO: Add 20 more questions for Cloud Concepts Exam to reach 50
+      // You will need to add 20 more questions here to reach the 50 question target for this exam.
     ],
   },
   {
@@ -487,7 +487,7 @@ export const exams: Exam[] = [
         correctAnswerIndex: 1,
         feedback: 'SaaS applications are generally not customizable beyond basic settings, limiting flexibility compared to PaaS or IaaS models.',
       },
-      // TODO: Add 30 more questions for Azure Architecture and Services Exam
+      // You will need to add 30 more questions here to reach the 50 question target for this exam.
     ],
   },
   {
@@ -495,7 +495,6 @@ export const exams: Exam[] = [
     name: 'Azure Identity, Access, and Security Exam',
     description: 'Challenge your knowledge on directory services, authentication, external identities, access control, and security models in Azure. Target: 50 questions.',
     questions: [
-      // Placeholder questions -
       {
         id: 'aias-exam-q1',
         text: 'What is the primary function of Microsoft Entra ID?',
@@ -515,7 +514,6 @@ export const exams: Exam[] = [
         correctAnswerIndex: 2,
         feedback: 'Multi-Factor Authentication (MFA) adds a layer of security by requiring users to provide two or more verification factors.',
       },
-      // Add more questions here, up to 10 for now
       {
         id: 'aias-exam-q3',
         text: 'What does Azure RBAC stand for?',
@@ -572,7 +570,7 @@ export const exams: Exam[] = [
         correctAnswerIndex: 2,
         feedback: 'Defense-in-depth employs multiple, layered security controls so that if one layer is bypassed, others are in place to protect assets.',
       },
-      // TODO: Add 40 more questions for Azure Identity, Access, and Security Exam
+      // You will need to add 40 more questions here to reach the 50 question target for this exam.
     ],
   },
   {
@@ -580,7 +578,6 @@ export const exams: Exam[] = [
     name: 'Azure Management and Governance Exam',
     description: 'Test your skills in cost management, governance tools (Policy, Purview), resource deployment, and monitoring in Azure. Target: 50 questions.',
     questions: [
-      // Placeholder questions -
       {
         id: 'amg-exam-q1',
         text: 'Which Azure tool helps estimate the ongoing costs of Azure services you plan to deploy?',
@@ -600,7 +597,6 @@ export const exams: Exam[] = [
         correctAnswerIndex: 1,
         feedback: 'Azure Policy helps you create, assign, and manage policies to enforce rules and ensure your Azure resources stay compliant with corporate standards and SLAs.',
       },
-      // Add more questions here, up to 10 for now
       {
         id: 'amg-exam-q3',
         text: 'A ReadOnly resource lock in Azure prevents what?',
@@ -657,7 +653,7 @@ export const exams: Exam[] = [
         correctAnswerIndex: 1,
         feedback: 'Tags are key-value pairs applied to Azure resources for organization, cost tracking, automation, and operational management.',
       },
-      // TODO: Add 40 more questions for Azure Management and Governance Exam
+      // You will need to add 40 more questions here to reach the 50 question target for this exam.
     ],
   },
 ];
@@ -665,6 +661,5 @@ export const exams: Exam[] = [
 export const getExamById = (id: string): Exam | undefined => {
   return exams.find((exam) => exam.id === id);
 };
-
 
     
