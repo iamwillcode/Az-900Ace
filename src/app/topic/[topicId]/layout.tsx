@@ -1,3 +1,4 @@
+
 import { Navbar } from '@/components/azure-ace/Navbar';
 
 export default function TopicQuizLayout({
@@ -12,7 +13,7 @@ export default function TopicQuizLayout({
         {children}
       </main>
       <footer className="text-center py-6 bg-card border-t">
-        <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} AzureAce. Keep Learning!</p>
+        <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Az-900 Ace by: Free Will. Keep Learning!</p>
       </footer>
     </div>
   );

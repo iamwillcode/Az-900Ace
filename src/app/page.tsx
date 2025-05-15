@@ -19,7 +19,7 @@ export default function Home() {
       <main className="flex-grow container mx-auto px-4 py-8">
         <header className="mb-12 text-center">
           <h1 className="text-5xl font-extrabold tracking-tight text-primary mb-4">
-            Welcome to AzureAce!
+            Welcome to Az-900 Ace!
           </h1>
           <p className="text-xl text-foreground/80 max-w-2xl mx-auto">
             Your ultimate companion for mastering the AZ-900 Microsoft Azure Fundamentals exam.
@@ -66,7 +66,7 @@ export default function Home() {
         </div>
       </main>
       <footer className="text-center py-6 bg-card border-t">
-        <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} AzureAce. Conquer the Cloud!</p>
+        <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Az-900 Ace by: Free Will. Conquer the Cloud!</p>
       </footer>
     </div>
   );

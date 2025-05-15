@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'AzureAce', // Updated title
-  description: 'Study for the Microsoft Azure Fundamentals AZ-900 exam', // Updated description
+  title: 'Az-900 Ace by: Free Will', // Updated title
+  description: 'Study for the Microsoft Azure Fundamentals AZ-900 exam', 
 };
 
 export default function RootLayout({

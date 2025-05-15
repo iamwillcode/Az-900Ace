@@ -13,10 +13,8 @@ export default function ExamLayout({
         {children}
       </main>
       <footer className="text-center py-6 bg-card border-t">
-        <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} AzureAce. Test Your Knowledge!</p>
+        <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Az-900 Ace by: Free Will. Test Your Knowledge!</p>
       </footer>
     </div>
   );
 }
-
-    
