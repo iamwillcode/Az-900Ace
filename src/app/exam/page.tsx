@@ -1,13 +1,26 @@
 
 'use client';
 
+import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
-import { exams } from '@/lib/exam-data';
+import { exams, getExamById, type Exam } from '@/lib/exam-data';
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, ListChecks } from 'lucide-react';
+import { ArrowRight, ListChecks, PlayCircle } from 'lucide-react';
 
 export default function ExamListPage() {
+  const [lastVisitedExam, setLastVisitedExam] = useState<Exam | null>(null);
+
+  useEffect(() => {
+    const lastExamId = localStorage.getItem('lastVisitedExamId');
+    if (lastExamId) {
+      const exam = getExamById(lastExamId);
+      if (exam) {
+        setLastVisitedExam(exam);
+      }
+    }
+  }, []);
+
   return (
     <div className="space-y-12">
       <header className="text-center">
@@ -18,6 +31,17 @@ export default function ExamListPage() {
           Test your knowledge with our comprehensive practice exams. Each exam is designed to simulate the AZ-900 experience with 30 questions.
         </p>
       </header>
+
+      {lastVisitedExam && (
+        <div className="flex justify-center mb-8">
+          <Button asChild variant="outline" size="lg" className="bg-secondary hover:bg-secondary/80 border-secondary-foreground/30">
+            <Link href={`/exam/${lastVisitedExam.id}`}>
+              <PlayCircle className="mr-2 h-5 w-5" />
+              Continue Last Exam: {lastVisitedExam.name}
+            </Link>
+          </Button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {exams.map((exam) => (

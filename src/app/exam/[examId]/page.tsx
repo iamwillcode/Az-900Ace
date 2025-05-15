@@ -139,13 +139,11 @@ export default function ExamPage() {
   const router = useRouter();
   const examId = params.examId as string;
   const { toast } = useToast();
-  // Note: Badges for exams might need different logic or new badge types.
-  // For now, using existing point/badge logic for simplicity.
   const { awardPoints, checkAndAwardNewBadges, recordQuizCompleted } = useGamificationStats();
 
   const [exam, setExam] = useState<Exam | null>(null);
   const [examScore, setExamScore] = useState<number | null>(null);
-  const [examKey, setExamKey] = useState(0); // To force re-mount of QuizDisplay
+  const [examKey, setExamKey] = useState(0); 
 
   useEffect(() => {
     if (examId) {
@@ -153,16 +151,19 @@ export default function ExamPage() {
       if (foundExam) {
         setExam(foundExam);
         setExamScore(null); 
-        setExamKey(prevKey => prevKey + 1); 
+        setExamKey(prevKey => prevKey + 1);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('lastVisitedExamId', examId);
+        }
       } else {
-        router.push('/exam'); // Redirect to exam list if exam not found
+        router.push('/exam'); 
       }
     }
   }, [examId, router]);
 
   const handleExamFinished = (finalScore: number, correctAnswers: number) => {
     setExamScore(finalScore);
-    recordQuizCompleted(); // Counting exams as "quizzes completed" for now
+    recordQuizCompleted(); 
 
     const pointsEarned = awardPoints(correctAnswers);
     toast({
@@ -171,7 +172,6 @@ export default function ExamPage() {
       action: <Star className="text-yellow-500" />,
     });
     
-    // Check for badges (using quiz logic for now)
     const newlyAwardedBadges = checkAndAwardNewBadges(finalScore, exam?.questions.length);
     newlyAwardedBadges.forEach(badge => {
       toast({
@@ -248,5 +248,3 @@ export default function ExamPage() {
     </div>
   );
 }
-
-    

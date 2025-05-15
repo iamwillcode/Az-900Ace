@@ -3,7 +3,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo, Suspense } from 'react';
-import type { Topic, SubTopic } from '@/lib/azure-data'; // Added SubTopic
+import type { Topic, SubTopic } from '@/lib/azure-data'; 
 import { getTopicById } from '@/lib/azure-data';
 import { QuestionDisplay } from '@/components/azure-ace/QuestionDisplay';
 import { FeedbackDisplay } from '@/components/azure-ace/FeedbackDisplay';
@@ -13,24 +13,19 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ArrowLeft, ArrowRight, CheckSquare, Home, Lightbulb, Loader2, Sparkles, Star, FileText } from 'lucide-react'; // Added FileText
+import { ArrowLeft, ArrowRight, CheckSquare, Home, Lightbulb, Loader2, Star, FileText } from 'lucide-react'; 
 import Link from 'next/link';
 import { useGamificationStats } from '@/hooks/useGamificationStats';
 import { useToast } from "@/hooks/use-toast";
 
-// Helper function to convert basic markdown to HTML
+
 function convertStudyGuideToHtml(markdown: string): string {
   if (!markdown) return "";
 
   let text = markdown.trim();
 
-  // 1. Convert **bold** to <strong>
   text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  
-  // 2. Convert *italic* to <em>
   text = text.replace(/(?<![\w*])\*(?!\s|\*)([^* \n][^*]*?)\*(?![\w*])/g, '<em>$1</em>');
-
-  // Convert backticks `code` to <code>
   text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
 
   const lines = text.split('\n');
@@ -40,7 +35,6 @@ function convertStudyGuideToHtml(markdown: string): string {
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
 
-    // Handle headings: #, ##, ###
     const headingMatch = line.match(/^(#+)\s+(.*)/);
     if (headingMatch) {
         if (inList) {
@@ -49,12 +43,11 @@ function convertStudyGuideToHtml(markdown: string): string {
         }
         const level = headingMatch[1].length;
         const content = headingMatch[2];
-        if (level >= 1 && level <= 6) { // HTML supports h1 to h6
+        if (level >= 1 && level <= 6) { 
             htmlOutput += `<h${level} class="mt-4 mb-2 font-semibold text-lg">${content}</h${level}>\n`;
             continue;
         }
     }
-
 
     const listItemMatch = line.match(/^(\s*)(?:[\*-])\s+(.*)/);
 
@@ -72,16 +65,29 @@ function convertStudyGuideToHtml(markdown: string): string {
         inList = false;
       }
       if (line.trim()) {
-        // Avoid wrapping already structured tree-like mnemonics in <p>
-        const isMnemonicLine = line.match(/^\s*(?:├──|└──|│)/);
+        const isMnemonicLine = line.match(/^\s*(?:├──|└──|│|└─|├─)/); // Added more mnemonic markers
         if (isMnemonicLine) {
+            // For mnemonics, ensure pre-wrap for structure if not already handled
+            if (!htmlOutput.endsWith('<div class="whitespace-pre-wrap font-mono text-sm bg-muted/20 p-3 rounded-md shadow-inner">\n')) {
+                 if (htmlOutput.endsWith('</div>\n')) { // if previous was a mnemonic block, continue it
+                    htmlOutput = htmlOutput.slice(0, -7); // remove closing div
+                 } else {
+                    htmlOutput += '<div class="whitespace-pre-wrap font-mono text-sm bg-muted/20 p-3 rounded-md shadow-inner">\n';
+                 }
+            }
             htmlOutput += `${line}\n`;
         } else {
+             // End mnemonic block if current line is not part of it
+            if (htmlOutput.includes('<div class="whitespace-pre-wrap font-mono text-sm bg-muted/20 p-3 rounded-md shadow-inner">') && !htmlOutput.endsWith('</div>\n')) {
+                 htmlOutput += '</div>\n';
+            }
             htmlOutput += `<p class="my-2">${line.trim()}</p>\n`;
         }
       } else if (!inList && htmlOutput.trim() && !htmlOutput.endsWith('\n\n') && !htmlOutput.endsWith('</p>\n')) {
-        // Add an empty paragraph for spacing if it's a blank line and not in a list, to respect markdown-like spacing
-        // htmlOutput += '<p>&nbsp;</p>\n'; 
+        // End mnemonic block if it's a blank line and not in a list
+        if (htmlOutput.includes('<div class="whitespace-pre-wrap font-mono text-sm bg-muted/20 p-3 rounded-md shadow-inner">') && !htmlOutput.endsWith('</div>\n')) {
+            htmlOutput += '</div>\n';
+        }
       }
     }
   }
@@ -89,12 +95,11 @@ function convertStudyGuideToHtml(markdown: string): string {
   if (inList) { 
     htmlOutput += '</ul>\n';
   }
-  
-  // For structured mnemonics, ensure pre-wrap styling if not already handled by prose
-  if (text.includes('├──') || text.includes('└──')) {
-      return `<div class="whitespace-pre-wrap font-mono">${htmlOutput}</div>`;
+   // Ensure any open mnemonic div is closed at the end
+  if (htmlOutput.includes('<div class="whitespace-pre-wrap font-mono text-sm bg-muted/20 p-3 rounded-md shadow-inner">') && !htmlOutput.endsWith('</div>\n')) {
+    htmlOutput += '</div>\n';
   }
-
+  
   return htmlOutput;
 }
 
@@ -134,7 +139,7 @@ function StudyGuideDisplay({ topic }: StudyGuideDisplayProps) {
             </CardHeader>
             <CardContent>
               <div 
-                className="prose prose-sm max-w-none text-foreground/90 bg-muted/20 p-3 rounded-md shadow-inner font-mono"
+                className="prose prose-sm max-w-none text-foreground/90 bg-muted/20 p-3 rounded-md shadow-inner font-mono text-sm" // Ensure font-mono and text-sm for consistency
                 dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(topic.mnemonic) }}
               />
             </CardContent>
@@ -163,7 +168,7 @@ function StudyGuideDisplay({ topic }: StudyGuideDisplayProps) {
                         </CardHeader>
                         <CardContent className="space-y-2 pb-3">
                           <div 
-                            className="prose prose-xs max-w-none text-foreground/80 bg-muted/10 p-2 rounded-md font-mono"
+                            className="prose prose-xs max-w-none text-foreground/80 bg-muted/10 p-2 rounded-md font-mono text-sm" // Ensure font-mono and text-sm
                             dangerouslySetInnerHTML={{ __html: convertStudyGuideToHtml(subTopic.mnemonic) }}
                           />
                         </CardContent>
@@ -325,7 +330,10 @@ export default function TopicPage() {
         setTopic(foundTopic);
         setQuizScore(null); 
         setActiveTab('study');
-        setQuizKey(prevKey => prevKey + 1); 
+        setQuizKey(prevKey => prevKey + 1);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('lastVisitedTopicId', topicId);
+        }
       } else {
         router.push('/');
       }
@@ -366,7 +374,10 @@ export default function TopicPage() {
     const newTab = value as 'study' | 'quiz';
     setActiveTab(newTab);
     if (newTab === 'quiz' && quizScore !== null) {
-      handleRestartQuiz();
+      // If switching to quiz tab and quiz was already completed,
+      // we don't automatically restart. User must click restart.
+      // Or, if we want to auto-restart:
+      // handleRestartQuiz();
     }
   }
 
@@ -429,7 +440,7 @@ export default function TopicPage() {
           </Suspense>
         </TabsContent>
         <TabsContent value="quiz" className="mt-6">
-          {quizScore === null ? (
+          {quizScore === null && activeTab === 'quiz' ? (
              <Suspense fallback={
                 <div className="flex justify-center items-center h-40">
                   <Loader2 className="h-6 w-6 animate-spin text-primary mr-2" /> 
@@ -439,17 +450,29 @@ export default function TopicPage() {
               <QuizDisplay key={quizKey} topic={topic} onQuizFinished={handleQuizFinished} />
              </Suspense>
           ) : (
-            <div className="text-center p-8">
-                <p className="text-lg text-muted-foreground">Quiz completed. Results are shown. Select "Study Material" or restart.</p>
-                <Button onClick={handleRestartQuiz} variant="outline" className="mt-4">
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Restart Quiz
-                </Button>
-            </div>
+             activeTab === 'quiz' && quizScore !== null ? 
+             // This state is handled by the card above, but for safety / alternative flows:
+             <div className="text-center p-8">
+                <p className="text-lg text-muted-foreground">Quiz results are shown above. Click "Restart Quiz" or navigate to "Study Material".</p>
+             </div>
+             : (activeTab === 'quiz' && // If quiz tab is active, but no score means it's ready to start
+                <Suspense fallback={
+                  <div className="flex justify-center items-center h-40">
+                    <Loader2 className="h-6 w-6 animate-spin text-primary mr-2" /> 
+                    <span>Loading quiz...</span>
+                  </div>
+                }>
+                <QuizDisplay key={quizKey} topic={topic} onQuizFinished={handleQuizFinished} />
+                </Suspense>
+             )
+          )}
+          {activeTab !== 'quiz' && ( // Placeholder if not on quiz tab for some reason but content empty
+             <div className="text-center p-8">
+                <p className="text-lg text-muted-foreground">Select the 'Quiz' tab to start.</p>
+             </div>
           )}
         </TabsContent>
       </Tabs>
     </div>
   );
 }
-
-    
