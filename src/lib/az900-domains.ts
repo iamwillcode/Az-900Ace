@@ -12,26 +12,26 @@ export const domains: Domain[] = [
   {
     id: 1,
     title: "Describe cloud concepts",
-    percentage: "25-30%",
+    percentage: "25–30%",
     color: "bg-blue-600",
     iconColor: "text-blue-600",
-    description: "Core cloud computing concepts, models, and Azure architectural components"
+    description: "Cloud computing fundamentals, shared responsibility model, cloud models (public, private, hybrid), and service types (IaaS, PaaS, SaaS)"
   },
   {
     id: 2,
     title: "Describe Azure architecture and services",
-    percentage: "35-40%",
+    percentage: "35–40%",
     color: "bg-green-600", 
     iconColor: "text-green-600",
-    description: "Azure core architectural components, compute, networking, storage services"
+    description: "Core architectural components, compute services, networking services, storage services, and identity services"
   },
   {
     id: 3,
     title: "Describe Azure management and governance",
-    percentage: "30-35%",
+    percentage: "30–35%",
     color: "bg-purple-600",
     iconColor: "text-purple-600", 
-    description: "Cost management, governance features, and resource management tools"
+    description: "Cost management, governance features, compliance tools, and monitoring services"
   }
 ];
 

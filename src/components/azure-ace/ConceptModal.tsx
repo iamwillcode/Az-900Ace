@@ -31,11 +31,11 @@ export const ConceptModal: React.FC<ConceptModalProps> = ({
               <DialogTitle className="text-2xl font-bold text-blue-600 mb-2">
                 {selectedConcept.title}
               </DialogTitle>
-              <DialogDescription>
-                <Badge variant="secondary" className="mb-4">
+              <div className="mb-4">
+                <Badge variant="secondary">
                   AZ-900 Concept
                 </Badge>
-              </DialogDescription>
+              </div>
             </div>
             <div className="flex items-center space-x-2">
               <Button
@@ -56,33 +56,44 @@ export const ConceptModal: React.FC<ConceptModalProps> = ({
         <div className="space-y-6">
           {/* Main Explanation */}
           <div>
-            <h3 className="font-semibold text-lg mb-3 text-gray-800">Explanation</h3>
-            <p className="text-gray-700 leading-relaxed">
+            <div className="text-gray-700 leading-relaxed whitespace-pre-line">
               {selectedConcept.explanation}
-            </p>
-          </div>
-
-          {/* Memory Aid */}
-          {selectedConcept.mnemonic && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="font-semibold text-lg mb-2 text-blue-800 flex items-center">
-                🧠 Memory Aid
-              </h3>
-              <p className="text-blue-700 font-medium">
-                {selectedConcept.mnemonic}
-              </p>
             </div>
-          )}
+          </div>
 
           {/* Examples */}
           {selectedConcept.examples && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <h3 className="font-semibold text-lg mb-2 text-green-800 flex items-center">
-                💡 Examples
-              </h3>
-              <p className="text-green-700">
+              <div className="text-green-700 whitespace-pre-line">
                 {selectedConcept.examples}
-              </p>
+              </div>
+            </div>
+          )}
+
+          {/* Use Case */}
+          {selectedConcept.useCase && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="text-blue-700 whitespace-pre-line">
+                {selectedConcept.useCase}
+              </div>
+            </div>
+          )}
+
+          {/* Memory Aid */}
+          {selectedConcept.mnemonic && (
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+              <div className="text-purple-700 font-medium whitespace-pre-line">
+                {selectedConcept.mnemonic}
+              </div>
+            </div>
+          )}
+
+          {/* Visual */}
+          {selectedConcept.visual && (
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <pre className="text-gray-700 text-sm font-mono whitespace-pre overflow-x-auto">
+                {selectedConcept.visual}
+              </pre>
             </div>
           )}
 

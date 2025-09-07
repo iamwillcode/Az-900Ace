@@ -308,6 +308,38 @@ export const DomainContent: React.FC<DomainContentProps> = ({
                 >
                   - Azure Functions
                 </ClickableBullet>
+                <ClickableBullet 
+                  conceptKey="azure-virtual-desktop"
+                  onClick={() => handleConceptClick('azure-virtual-desktop')}
+                  isViewed={viewedConcepts.has('azure-virtual-desktop')}
+                  isBookmarked={bookmarkedConcepts.has('azure-virtual-desktop')}
+                  level={1}
+                >
+                  - Azure Virtual Desktop
+                </ClickableBullet>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">Networking services</h4>
+              <ul className="ml-4 space-y-2">
+                <ClickableBullet 
+                  conceptKey="vpn-gateway"
+                  onClick={() => handleConceptClick('vpn-gateway')}
+                  isViewed={viewedConcepts.has('vpn-gateway')}
+                  isBookmarked={bookmarkedConcepts.has('vpn-gateway')}
+                  level={1}
+                >
+                  - VPN Gateway
+                </ClickableBullet>
+                <ClickableBullet 
+                  conceptKey="expressroute"
+                  onClick={() => handleConceptClick('expressroute')}
+                  isViewed={viewedConcepts.has('expressroute')}
+                  isBookmarked={bookmarkedConcepts.has('expressroute')}
+                  level={1}
+                >
+                  - ExpressRoute
+                </ClickableBullet>
               </ul>
             </div>
           </div>
@@ -359,6 +391,90 @@ export const DomainContent: React.FC<DomainContentProps> = ({
                   level={1}
                 >
                   - Storage tiers
+                </ClickableBullet>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-l-4 border-l-green-600">
+        <CardContent className="p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center">
+            <Badge className="bg-green-600 text-white mr-3">2.4</Badge>
+            Describe Azure identity, access, and security
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6 text-sm">
+            <div>
+              <h4 className="font-semibold mb-3">Identity and access management</h4>
+              <ul className="ml-4 space-y-2">
+                <ClickableBullet 
+                  conceptKey="microsoft-entra-id"
+                  onClick={() => handleConceptClick('microsoft-entra-id')}
+                  isViewed={viewedConcepts.has('microsoft-entra-id')}
+                  isBookmarked={bookmarkedConcepts.has('microsoft-entra-id')}
+                  level={1}
+                >
+                  - Microsoft Entra ID
+                </ClickableBullet>
+                <ClickableBullet 
+                  conceptKey="multi-factor-authentication"
+                  onClick={() => handleConceptClick('multi-factor-authentication')}
+                  isViewed={viewedConcepts.has('multi-factor-authentication')}
+                  isBookmarked={bookmarkedConcepts.has('multi-factor-authentication')}
+                  level={1}
+                >
+                  - Multi-Factor Authentication (MFA)
+                </ClickableBullet>
+                <ClickableBullet 
+                  conceptKey="single-sign-on"
+                  onClick={() => handleConceptClick('single-sign-on')}
+                  isViewed={viewedConcepts.has('single-sign-on')}
+                  isBookmarked={bookmarkedConcepts.has('single-sign-on')}
+                  level={1}
+                >
+                  - Single Sign-On (SSO)
+                </ClickableBullet>
+                <ClickableBullet 
+                  conceptKey="conditional-access"
+                  onClick={() => handleConceptClick('conditional-access')}
+                  isViewed={viewedConcepts.has('conditional-access')}
+                  isBookmarked={bookmarkedConcepts.has('conditional-access')}
+                  level={1}
+                >
+                  - Conditional Access
+                </ClickableBullet>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3">Security and defense</h4>
+              <ul className="ml-4 space-y-2">
+                <ClickableBullet 
+                  conceptKey="zero-trust-model"
+                  onClick={() => handleConceptClick('zero-trust-model')}
+                  isViewed={viewedConcepts.has('zero-trust-model')}
+                  isBookmarked={bookmarkedConcepts.has('zero-trust-model')}
+                  level={1}
+                >
+                  - Zero Trust model
+                </ClickableBullet>
+                <ClickableBullet 
+                  conceptKey="defense-in-depth"
+                  onClick={() => handleConceptClick('defense-in-depth')}
+                  isViewed={viewedConcepts.has('defense-in-depth')}
+                  isBookmarked={bookmarkedConcepts.has('defense-in-depth')}
+                  level={1}
+                >
+                  - Defense in depth
+                </ClickableBullet>
+                <ClickableBullet 
+                  conceptKey="microsoft-defender-cloud"
+                  onClick={() => handleConceptClick('microsoft-defender-cloud')}
+                  isViewed={viewedConcepts.has('microsoft-defender-cloud')}
+                  isBookmarked={bookmarkedConcepts.has('microsoft-defender-cloud')}
+                  level={1}
+                >
+                  - Microsoft Defender for Cloud
                 </ClickableBullet>
               </ul>
             </div>
@@ -469,6 +585,49 @@ export const DomainContent: React.FC<DomainContentProps> = ({
                   level={1}
                 >
                   - Azure Blueprints
+                </ClickableBullet>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-l-4 border-l-purple-600">
+        <CardContent className="p-6">
+          <h3 className="text-lg font-semibold mb-4 flex items-center">
+            <Badge className="bg-purple-600 text-white mr-3">3.3</Badge>
+            Describe features and tools for managing and deploying Azure resources
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6 text-sm">
+            <div>
+              <h4 className="font-semibold mb-3">Monitoring and management tools</h4>
+              <ul className="ml-4 space-y-2">
+                <ClickableBullet 
+                  conceptKey="azure-advisor"
+                  onClick={() => handleConceptClick('azure-advisor')}
+                  isViewed={viewedConcepts.has('azure-advisor')}
+                  isBookmarked={bookmarkedConcepts.has('azure-advisor')}
+                  level={1}
+                >
+                  - Azure Advisor
+                </ClickableBullet>
+                <ClickableBullet 
+                  conceptKey="azure-monitor"
+                  onClick={() => handleConceptClick('azure-monitor')}
+                  isViewed={viewedConcepts.has('azure-monitor')}
+                  isBookmarked={bookmarkedConcepts.has('azure-monitor')}
+                  level={1}
+                >
+                  - Azure Monitor
+                </ClickableBullet>
+                <ClickableBullet 
+                  conceptKey="azure-service-health"
+                  onClick={() => handleConceptClick('azure-service-health')}
+                  isViewed={viewedConcepts.has('azure-service-health')}
+                  isBookmarked={bookmarkedConcepts.has('azure-service-health')}
+                  level={1}
+                >
+                  - Azure Service Health
                 </ClickableBullet>
               </ul>
             </div>
