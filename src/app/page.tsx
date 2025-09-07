@@ -1,127 +1,201 @@
 
 'use client';
-import { useEffect, useState, useMemo } from 'react';
-import { topics, getTopicById, type Topic } from '@/lib/azure-data';
-import { TopicCard } from '@/components/azure-ace/TopicCard';
-import { Navbar } from '@/components/azure-ace/Navbar';
-import { useGamificationStats } from '@/hooks/useGamificationStats';
-import { BadgeCard } from '@/components/azure-ace/BadgeCard';
-import { allBadges } from '@/lib/gamification';
-import { Award, Trophy, Search, PlayCircle } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Input } from '@/components/ui/input';
+import { useState } from 'react';
+import { domains, getDomainFromKey } from '@/lib/az900-domains';
+import { conceptExplanations, ConceptExplanation } from '@/lib/az900-concepts';
+import { PersonalHeader } from '@/components/azure-ace/PersonalHeader';
+import { SearchBar } from '@/components/azure-ace/SearchBar';
+import { StudyTimer } from '@/components/azure-ace/StudyTimer';
+import { ProgressTracker } from '@/components/azure-ace/ProgressTracker';
+import { PracticeMode } from '@/components/azure-ace/PracticeMode';
+import { DomainContent } from '@/components/azure-ace/DomainContent';
+import { ConceptModal } from '@/components/azure-ace/ConceptModal';
+import { DomainCard } from '@/components/azure-ace/DomainCard';
+import { useBookmarks } from '@/hooks/useBookmarks';
+import { useSearch } from '@/hooks/useSearch';
+import { useStudyTimer } from '@/hooks/useStudyTimer';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { Info } from 'lucide-react';
 
 export default function Home() {
-  const { earnedBadges, isLoading: gamificationLoading } = useGamificationStats();
-  const earnedBadgeIds = earnedBadges.map(b => b.id);
+  const [selectedDomain, setSelectedDomain] = useState<number | null>(null);
+  const [selectedConcept, setSelectedConcept] = useState<(ConceptExplanation & { key: string }) | null>(null);
+  const [viewedConcepts, setViewedConcepts] = useState<Set<string>>(new Set());
+  const [practiceMode, setPracticeMode] = useState(false);
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [lastVisitedTopic, setLastVisitedTopic] = useState<Topic | null>(null);
+  // Custom hooks
+  const {
+    bookmarkedConcepts,
+    showBookmarks,
+    setShowBookmarks,
+    toggleBookmark,
+    getBookmarkedConcepts
+  } = useBookmarks(getDomainFromKey);
 
-  useEffect(() => {
-    const lastTopicId = localStorage.getItem('lastVisitedTopicId');
-    if (lastTopicId) {
-      const topic = getTopicById(lastTopicId);
-      if (topic) {
-        setLastVisitedTopic(topic);
-      }
-    }
-  }, []);
+  const {
+    searchTerm,
+    setSearchTerm,
+    searchConcepts
+  } = useSearch(getDomainFromKey);
 
-  const filteredTopics = useMemo(() => {
-    if (!searchTerm) {
-      return topics;
-    }
-    return topics.filter(topic =>
-      topic.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      topic.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm]);
+  const {
+    studyTime,
+    isStudying,
+    startStudySession,
+    pauseStudySession,
+    resetStudySession,
+    getCurrentStudyTime,
+    formatTime
+  } = useStudyTimer(selectedConcept, selectedDomain, searchTerm);
+
+  const totalConcepts = Object.keys(conceptExplanations).length;
+
+  // Enhanced getBookmarkedConcepts with actual data
+  const getBookmarkedConceptsWithData = (): Array<ConceptExplanation & { key: string; domain: string }> => {
+    return Array.from(bookmarkedConcepts)
+      .map(key => {
+        const concept = conceptExplanations[key];
+        if (concept) {
+          return {
+            ...concept,
+            key,
+            domain: getDomainFromKey(key)
+          };
+        }
+        return null;
+      })
+      .filter(Boolean) as Array<ConceptExplanation & { key: string; domain: string }>;
+  };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <header className="mb-12 text-center">
-          <h1 className="text-5xl font-extrabold tracking-tight text-primary mb-4">
-            Welcome to Az-900 Ace!
-          </h1>
-          <p className="text-xl text-foreground/80 max-w-2xl mx-auto">
-            Your ultimate companion for mastering the AZ-900 Microsoft Azure Fundamentals exam.
-            Select a topic below to start your learning journey or search for specific content.
-          </p>
-        </header>
+    <div className="max-w-6xl mx-auto p-6 bg-white min-h-screen">
+      <PersonalHeader />
+      
+      {/* Search and Controls */}
+      <SearchBar 
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        showBookmarks={showBookmarks}
+        setShowBookmarks={setShowBookmarks}
+        practiceMode={practiceMode}
+        setPracticeMode={setPracticeMode}
+        bookmarkedConcepts={bookmarkedConcepts}
+        searchConcepts={searchConcepts}
+        getBookmarkedConcepts={getBookmarkedConceptsWithData}
+        setSelectedConcept={setSelectedConcept}
+        toggleBookmark={toggleBookmark}
+      />
+      
+      {/* Progress Tracker */}
+      <ProgressTracker 
+        viewedConcepts={viewedConcepts}
+        bookmarkedConcepts={bookmarkedConcepts}
+        totalConcepts={totalConcepts}
+        practiceMode={practiceMode}
+      />
+      
+      {/* Study Timer */}
+      <StudyTimer 
+        studyTime={studyTime}
+        isStudying={isStudying}
+        formatTime={formatTime}
+        getCurrentStudyTime={getCurrentStudyTime}
+        startStudySession={startStudySession}
+        pauseStudySession={pauseStudySession}
+        resetStudySession={resetStudySession}
+      />
+      
+      {/* Practice Mode */}
+      <PracticeMode practiceMode={practiceMode} />
 
-        {/* Search and Continue Section */}
-        <section className="mb-12 flex flex-col sm:flex-row gap-4 items-center justify-center">
-          <div className="relative w-full sm:max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search topics..."
-              className="pl-10 w-full"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          {lastVisitedTopic && (
-            <Button asChild variant="outline" size="lg">
-              <Link href={`/topic/${lastVisitedTopic.id}`}>
-                <PlayCircle className="mr-2 h-5 w-5" />
-                Continue: {lastVisitedTopic.name}
-              </Link>
+      {/* Domain Navigation */}
+      <div className="mb-8">
+        <div className="flex flex-wrap gap-3 mb-6">
+          <Button
+            onClick={() => setSelectedDomain(null)}
+            variant={selectedDomain === null ? "default" : "outline"}
+            className={selectedDomain === null ? 'bg-gray-800 text-white' : ''}
+          >
+            All Domains
+          </Button>
+          {domains.map((domain) => (
+            <Button
+              key={domain.id}
+              onClick={() => setSelectedDomain(domain.id)}
+              variant={selectedDomain === domain.id ? "default" : "outline"}
+              className={selectedDomain === domain.id ? domain.color + ' text-white' : ''}
+            >
+              Domain {domain.id}
             </Button>
-          )}
-        </section>
-
-        {/* Achievements Section */}
-        <section className="mb-16">
-          <div className="flex items-center justify-center mb-6">
-            <Trophy className="h-8 w-8 text-yellow-500 mr-3" />
-            <h2 className="text-3xl font-semibold text-center text-primary">Your Achievements</h2>
-          </div>
-          {gamificationLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {[...Array(3)].map((_, i) => (
-                 <div key={i} className="flex flex-col items-center p-4 border rounded-lg">
-                    <Skeleton className="h-12 w-12 rounded-full mb-2" />
-                    <Skeleton className="h-4 w-3/4 mb-1" />
-                    <Skeleton className="h-3 w-1/2" />
-                 </div>
-              ))}
-            </div>
-          ) : allBadges.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {allBadges.map((badge) => (
-                <BadgeCard key={badge.id} badge={badge} isEarned={earnedBadgeIds.includes(badge.id)} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-center text-muted-foreground">No achievements defined yet. Start learning to earn them!</p>
-          )}
-        </section>
-        
-        {/* Topics Section */}
-         <div className="flex items-center justify-center mb-6">
-             <Award className="h-8 w-8 text-primary mr-3" />
-            <h2 className="text-3xl font-semibold text-center text-primary">Study Topics</h2>
+          ))}
         </div>
-        {filteredTopics.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredTopics.map((topic) => (
-              <TopicCard key={topic.id} topic={topic} />
+        {selectedDomain && (
+          <Card className="bg-blue-50 border-l-4 border-l-blue-400">
+            <CardContent className="p-4">
+              <p className="text-sm text-blue-700 flex items-center">
+                <Info className="h-4 w-4 mr-2" />
+                Click on any item with details badge to see comprehensive explanations and memory aids!
+              </p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* Domain Overview or Specific Domain */}
+      {selectedDomain === null ? (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">AZ-900 Exam Domains</h2>
+          <div className="grid gap-6">
+            {domains.map((domain) => (
+              <DomainCard 
+                key={domain.id}
+                domain={domain}
+                onDomainSelect={setSelectedDomain}
+              />
             ))}
           </div>
-        ) : (
-          <p className="text-center text-muted-foreground text-lg">
-            No topics found matching your search criteria.
-          </p>
-        )}
-      </main>
-      <footer className="text-center py-6 bg-card border-t">
-        <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Az-900 Ace by: Free Will. Conquer the Cloud!</p>
+        </div>
+      ) : (
+        <div>
+          <div className="mb-6">
+            <h2 className={`text-2xl font-bold mb-2 ${domains[selectedDomain - 1].iconColor}`}>
+              Domain {selectedDomain}: {domains[selectedDomain - 1].title}
+            </h2>
+            <Button
+              onClick={() => setSelectedDomain(null)}
+              variant="outline"
+              size="sm"
+            >
+              ← Back to all domains
+            </Button>
+          </div>
+          <DomainContent 
+            selectedDomain={selectedDomain}
+            setSelectedDomain={setSelectedDomain}
+            setSelectedConcept={setSelectedConcept}
+            setViewedConcepts={setViewedConcepts}
+            viewedConcepts={viewedConcepts}
+            bookmarkedConcepts={bookmarkedConcepts}
+          />
+        </div>
+      )}
+
+      <ConceptModal 
+        selectedConcept={selectedConcept}
+        onClose={() => setSelectedConcept(null)}
+        bookmarkedConcepts={bookmarkedConcepts}
+        toggleBookmark={toggleBookmark}
+      />
+
+      {/* Footer */}
+      <footer className="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
+        <p>
+          This study app is designed to help you prepare for the Microsoft Azure Fundamentals AZ-900 certification exam.
+          Always refer to the official Microsoft Learn materials and exam objectives for the most up-to-date information.
+        </p>
+        <p className="mt-2">Made with <span className="text-blue-600">❤️</span> by Free Will • Not affiliated with Microsoft</p>
       </footer>
     </div>
   );
