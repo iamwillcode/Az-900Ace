@@ -180,16 +180,22 @@
       
       "ClickableBullet": {
         "structure": {
-          "container": "inline-flex items-center cursor-pointer transition-colors duration-200",
+          "container": "flex items-center justify-between group cursor-pointer hover:bg-blue-50 hover:text-blue-700 rounded px-3 py-2 transition-all duration-200 hover:shadow-sm",
           "states": {
             "default": "text-gray-700 hover:text-blue-600",
-            "viewed": "text-blue-600",
+            "viewed": "bg-green-50 border-l-2 border-green-400 pl-4",
             "bookmarked": "text-yellow-600"
           },
-          "indicators": {
-            "viewed": "✅",
-            "bookmarked": "🔖",
-            "both": "✅🔖"
+          "hoverTooltips": {
+            "container": "flex items-center space-x-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity",
+            "studiedBadge": "text-green-600 border-green-300 bg-green-50 with Check icon",
+            "savedBadge": "text-yellow-600 border-yellow-300 bg-yellow-50 with Bookmark icon", 
+            "detailsBadge": "text-blue-500 border-blue-300 bg-blue-50 with Info icon"
+          },
+          "tooltipText": {
+            "studied": "Studied (shown when isViewed=true)",
+            "saved": "Saved (shown when isBookmarked=true)",
+            "details": "Details (always shown when isClickable=true)"
           }
         },
         "props": {
@@ -197,7 +203,14 @@
           "onClick": "function",
           "isViewed": "boolean", 
           "isBookmarked": "boolean",
-          "level": "0 | 1 (optional)"
+          "level": "0 | 1 (optional)",
+          "isClickable": "boolean (default: true)"
+        },
+        "implementation": {
+          "component": "li element with flex layout",
+          "hoverEffect": "Shows badges on hover with opacity transition",
+          "icons": "Lucide React icons: Check, Bookmark, Info",
+          "badgeComponent": "Radix UI Badge with variant='outline'"
         }
       },
       
@@ -313,7 +326,10 @@
         "Session tracking", 
         "Bookmark management",
         "Search with relevance scoring",
-        "Concept cross-referencing"
+        "Concept cross-referencing",
+        "Gamification system with badges and points",
+        "Study session timer with formatting",
+        "LocalStorage data persistence"
       ],
       
       "responsive": [
@@ -322,6 +338,44 @@
         "Desktop enhancement",
         "Touch-friendly interactions"
       ]
+    },
+
+    "gamificationSystem": {
+      "badgeTypes": {
+        "BADGE_FIRST_QUIZ": {
+          "name": "First Quiz Taker", 
+          "description": "Completed your first quiz!",
+          "icon": "Medal (Lucide)",
+          "criteria": "Complete any quiz"
+        },
+        "BADGE_PERFECT_SCORE": {
+          "name": "Perfectionist",
+          "description": "Achieved a perfect score on a quiz", 
+          "icon": "Target (Lucide)",
+          "criteria": "Score 100% on any quiz"
+        },
+        "BADGE_POINT_EXPLORER": {
+          "name": "Point Explorer",
+          "description": "Earned your first 100 points",
+          "icon": "TrendingUp (Lucide)", 
+          "criteria": "Accumulate 100 points"
+        }
+      },
+      "pointSystem": {
+        "perCorrectAnswer": 10,
+        "localStorage": "azureAce_totalPoints_v1",
+        "tracking": "Real-time point accumulation with automatic badge checking"
+      },
+      "localStorage": {
+        "points": "azureAce_totalPoints_v1",
+        "badges": "azureAce_earnedBadges_v1", 
+        "quizzes": "azureAce_quizzesCompleted_v1"
+      },
+      "implementation": {
+        "hook": "useGamificationStats",
+        "functions": ["awardPoints", "checkAndAwardNewBadges", "recordQuizCompleted"],
+        "stateManagement": "React hooks with localStorage persistence"
+      }
     },
     
     "techStack": {
@@ -338,8 +392,19 @@
       "src/app/": "Next.js app router pages",
       "src/components/ui/": "Reusable UI components (buttons, cards, modals)",
       "src/components/[app-name]/": "App-specific components",
-      "src/lib/": "Data files and utility functions", 
-      "src/hooks/": "Custom React hooks",
+      "src/lib/": {
+        "[exam]-domains.ts": "Domain structure with percentages, colors, and descriptions",
+        "[exam]-concepts.ts": "Complete concept explanations with 5-section format",
+        "gamification.ts": "Badge system with points, localStorage persistence, and 3 badge types (First Quiz, Perfect Score, Point Explorer)",
+        "utils.ts": "Utility functions and helpers"
+      }, 
+      "src/hooks/": {
+        "useStudyTimer.ts": "Study session timer with start/pause/reset functionality and time formatting",
+        "useBookmarks.ts": "Bookmark management with localStorage persistence and concept retrieval", 
+        "useSearch.ts": "Advanced search with relevance scoring across title/explanation/examples/mnemonic",
+        "useGamificationStats.ts": "Points and badges system for quiz completion with 3 badge types",
+        "use-toast.ts": "Toast notifications for user feedback"
+      },
       "src/app/globals.css": "Global styles and Tailwind imports",
       "src/app/favicon.ico": "App favicon",
       "src/app/layout.tsx": "Root layout with metadata"
