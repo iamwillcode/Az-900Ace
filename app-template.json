@@ -1,0 +1,432 @@
+{
+  "appTemplate": {
+    "metadata": {
+      "templateName": "Azure Study App Template",
+      "version": "1.0.0",
+      "description": "Complete template for replicating the AZ-900 study app design, layout, and functionality",
+      "originalApp": "AZ-900 Azure Fundamentals Study App",
+      "author": "Free Will",
+      "created": "2025-01-09"
+    },
+    
+    "designSystem": {
+      "colorScheme": {
+        "primary": {
+          "blue600": "#2563eb",
+          "blue700": "#1d4ed8",
+          "blue50": "#eff6ff",
+          "blue200": "#bfdbfe"
+        },
+        "secondary": {
+          "green600": "#16a34a",
+          "green700": "#15803d",
+          "purple600": "#9333ea",
+          "purple700": "#7c2d12"
+        },
+        "neutrals": {
+          "gray50": "#f9fafb",
+          "gray100": "#f3f4f6",
+          "gray600": "#4b5563",
+          "gray700": "#374151",
+          "gray800": "#1f2937"
+        },
+        "semantic": {
+          "success": "#10b981",
+          "warning": "#f59e0b",
+          "error": "#ef4444",
+          "info": "#3b82f6"
+        }
+      },
+      
+      "typography": {
+        "fontFamily": "Inter, system-ui, sans-serif",
+        "headings": {
+          "h1": "text-4xl font-bold text-gray-800",
+          "h2": "text-2xl font-bold text-blue-600",
+          "h3": "text-lg font-semibold",
+          "h4": "font-semibold mb-3"
+        },
+        "body": {
+          "small": "text-xs text-gray-600",
+          "regular": "text-sm",
+          "large": "text-lg"
+        }
+      },
+      
+      "spacing": {
+        "containerPadding": "p-6",
+        "sectionGap": "space-y-8",
+        "itemGap": "space-y-2",
+        "margins": {
+          "small": "mb-3",
+          "medium": "mb-6",
+          "large": "mb-8"
+        }
+      },
+      
+      "borderRadius": {
+        "small": "rounded-lg",
+        "medium": "rounded-xl",
+        "large": "rounded-2xl",
+        "full": "rounded-full"
+      },
+      
+      "shadows": {
+        "card": "shadow-lg",
+        "hover": "hover:shadow-xl",
+        "button": "shadow-md"
+      }
+    },
+    
+    "layout": {
+      "structure": {
+        "type": "domain-based-navigation",
+        "container": "max-w-6xl mx-auto p-6",
+        "header": {
+          "component": "PersonalHeader",
+          "position": "top",
+          "styling": "text-center mb-8"
+        },
+        "navigation": {
+          "type": "domain-cards",
+          "layout": "grid grid-cols-1 md:grid-cols-3 gap-6",
+          "interactive": true
+        },
+        "content": {
+          "type": "modal-based",
+          "maxWidth": "max-w-2xl",
+          "scrollable": true
+        }
+      },
+      
+      "responsiveBreakpoints": {
+        "mobile": "md:grid-cols-1",
+        "tablet": "md:grid-cols-2", 
+        "desktop": "md:grid-cols-3"
+      },
+      
+      "animations": {
+        "transitions": "transition-all duration-200",
+        "hover": "hover:scale-105",
+        "focus": "focus:ring-2 focus:ring-blue-500"
+      }
+    },
+    
+    "components": {
+      "PersonalHeader": {
+        "structure": {
+          "mainTitle": "text-4xl font-bold text-gray-800 mb-3",
+          "examBadge": "text-lg px-4 py-1 bg-blue-600 text-white rounded",
+          "domainIcons": "w-14 h-14 rounded-lg flex items-center justify-center text-white text-xl shadow-lg",
+          "personalMessage": "bg-blue-50 border-blue-200 p-6 text-sm leading-relaxed",
+          "contactInfo": "flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4"
+        },
+        "customizable": {
+          "appTitle": "Microsoft Azure Fundamentals",
+          "examNumber": "AZ-900",
+          "authorName": "Free Will",
+          "email": "will_automate@icloud.com",
+          "whatsappLink": "https://chat.whatsapp.com/L7qni5s3b1KJhGpIYacZVZ?mode=ems_email_t",
+          "officialLink": "https://docs.microsoft.com/en-us/certifications/exams/",
+          "disclaimer": "This app has no affiliations with Microsoft"
+        }
+      },
+      
+      "DomainCard": {
+        "structure": {
+          "container": "border-l-4 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer",
+          "header": "flex items-center justify-between mb-4",
+          "title": "text-xl font-bold text-gray-800",
+          "percentage": "text-sm font-medium px-3 py-1 rounded-full",
+          "description": "text-gray-600 text-sm leading-relaxed",
+          "footer": "flex items-center justify-between pt-4 border-t border-gray-100"
+        },
+        "variants": {
+          "domain1": {
+            "borderColor": "border-l-blue-600",
+            "iconColor": "text-blue-600", 
+            "bgColor": "bg-blue-600"
+          },
+          "domain2": {
+            "borderColor": "border-l-green-600",
+            "iconColor": "text-green-600",
+            "bgColor": "bg-green-600"
+          },
+          "domain3": {
+            "borderColor": "border-l-purple-600", 
+            "iconColor": "text-purple-600",
+            "bgColor": "bg-purple-600"
+          }
+        }
+      },
+      
+      "DomainContent": {
+        "structure": {
+          "container": "space-y-8",
+          "sectionCard": "border-l-4 p-6",
+          "sectionHeader": "text-lg font-semibold mb-4 flex items-center",
+          "sectionBadge": "text-white mr-3 px-2 py-1 rounded",
+          "contentGrid": "grid md:grid-cols-2 gap-6 text-sm",
+          "subHeader": "font-semibold mb-3",
+          "listContainer": "ml-4 space-y-2",
+          "navigationButton": "font-bold py-3 px-6 rounded-lg shadow-lg text-white"
+        },
+        "hierarchy": {
+          "sectionHeaders": "h4 className='font-semibold mb-3' with ClickableBullet",
+          "subItems": "ClickableBullet with level={1}",
+          "graySubItems": "text-xs text-gray-600 mb-2"
+        }
+      },
+      
+      "ClickableBullet": {
+        "structure": {
+          "container": "inline-flex items-center cursor-pointer transition-colors duration-200",
+          "states": {
+            "default": "text-gray-700 hover:text-blue-600",
+            "viewed": "text-blue-600",
+            "bookmarked": "text-yellow-600"
+          },
+          "indicators": {
+            "viewed": "✅",
+            "bookmarked": "🔖",
+            "both": "✅🔖"
+          }
+        },
+        "props": {
+          "conceptKey": "string",
+          "onClick": "function",
+          "isViewed": "boolean", 
+          "isBookmarked": "boolean",
+          "level": "0 | 1 (optional)"
+        }
+      },
+      
+      "ConceptModal": {
+        "structure": {
+          "container": "max-w-2xl max-h-[80vh] overflow-y-auto",
+          "header": "flex items-start justify-between",
+          "title": "text-2xl font-bold text-blue-600 mb-2",
+          "badge": "variant='secondary' mb-4",
+          "actions": "flex items-center space-x-2",
+          "content": "space-y-6",
+          "sections": {
+            "explanation": "text-gray-700 leading-relaxed whitespace-pre-line",
+            "examples": "bg-green-50 border border-green-200 rounded-lg p-4 text-green-700",
+            "useCase": "bg-blue-50 border border-blue-200 rounded-lg p-4 text-blue-700", 
+            "mnemonic": "bg-purple-50 border border-purple-200 rounded-lg p-4 text-purple-700",
+            "visual": "bg-gray-50 border border-gray-200 rounded-lg p-4 text-gray-700 text-sm font-mono whitespace-pre overflow-x-auto"
+          },
+          "studyTips": "bg-purple-50 border border-purple-200 rounded-lg p-4",
+          "footer": "flex justify-end space-x-3 pt-4 border-t"
+        }
+      },
+      
+      "StudyTimer": {
+        "structure": {
+          "container": "bg-white rounded-xl shadow-lg p-6 mb-6",
+          "display": "text-3xl font-mono font-bold text-center text-gray-800 mb-4",
+          "controls": "flex justify-center space-x-4",
+          "stats": "grid grid-cols-2 gap-4 mt-4 text-sm text-gray-600"
+        }
+      },
+      
+      "ProgressTracker": {
+        "structure": {
+          "container": "bg-white rounded-xl shadow-lg p-6 mb-6",
+          "progressBar": "w-full bg-gray-200 rounded-full h-2 mb-4",
+          "progressFill": "bg-blue-600 h-2 rounded-full transition-all duration-300",
+          "stats": "grid grid-cols-3 gap-4 text-center",
+          "statItem": "bg-gray-50 rounded-lg p-3"
+        }
+      },
+      
+      "PracticeMode": {
+        "structure": {
+          "container": "bg-white rounded-xl shadow-lg p-6 mb-6", 
+          "header": "flex items-center justify-between mb-4",
+          "questionCard": "bg-gray-50 rounded-lg p-4 mb-4",
+          "options": "space-y-2",
+          "controls": "flex justify-between mt-4"
+        }
+      },
+      
+      "SearchBar": {
+        "structure": {
+          "container": "bg-white rounded-xl shadow-lg p-4 mb-6",
+          "input": "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500",
+          "results": "mt-4 max-h-60 overflow-y-auto",
+          "resultItem": "p-3 hover:bg-gray-50 cursor-pointer rounded-lg transition-colors"
+        }
+      }
+    },
+    
+    "dataStructure": {
+      "domains": {
+        "interface": {
+          "id": "number",
+          "title": "string",
+          "percentage": "string", 
+          "color": "string (bg-color)",
+          "iconColor": "string (text-color)",
+          "description": "string"
+        },
+        "example": {
+          "id": 1,
+          "title": "Describe cloud concepts",
+          "percentage": "25–30%",
+          "color": "bg-blue-600",
+          "iconColor": "text-blue-600", 
+          "description": "Cloud computing fundamentals, shared responsibility model, cloud models, and service types"
+        }
+      },
+      
+      "concepts": {
+        "interface": {
+          "title": "string",
+          "explanation": "string (📚 prefix)",
+          "examples": "string (💡 prefix)",
+          "useCase": "string (🏢 prefix)", 
+          "mnemonic": "string (🧠 prefix)",
+          "visual": "string (🎨 prefix with ASCII art)"
+        },
+        "keyNaming": "kebab-case (e.g., 'cloud-computing', 'shared-responsibility-model')",
+        "emojiFormat": "Each section must start with designated emoji"
+      }
+    },
+    
+    "features": {
+      "core": [
+        "Domain-based navigation",
+        "Interactive concept learning",
+        "5-section concept format (📚💡🏢🧠🎨)",
+        "Progress tracking",
+        "Bookmarking system",
+        "Study timer",
+        "Practice mode",
+        "Advanced search",
+        "Modal-based content display"
+      ],
+      
+      "interactive": [
+        "Clickable bullets with state indicators",
+        "Progress visualization",
+        "Session tracking", 
+        "Bookmark management",
+        "Search with relevance scoring",
+        "Concept cross-referencing"
+      ],
+      
+      "responsive": [
+        "Mobile-first design",
+        "Tablet optimization",
+        "Desktop enhancement",
+        "Touch-friendly interactions"
+      ]
+    },
+    
+    "techStack": {
+      "framework": "Next.js 15 with App Router",
+      "styling": "Tailwind CSS",
+      "language": "TypeScript",
+      "components": "Radix UI primitives",
+      "icons": "Lucide React",
+      "stateManagement": "React hooks + localStorage",
+      "deployment": "Vercel/Netlify ready"
+    },
+    
+    "fileStructure": {
+      "src/app/": "Next.js app router pages",
+      "src/components/ui/": "Reusable UI components (buttons, cards, modals)",
+      "src/components/[app-name]/": "App-specific components",
+      "src/lib/": "Data files and utility functions", 
+      "src/hooks/": "Custom React hooks",
+      "src/app/globals.css": "Global styles and Tailwind imports",
+      "src/app/favicon.ico": "App favicon",
+      "src/app/layout.tsx": "Root layout with metadata"
+    },
+    
+    "customizationGuide": {
+      "rebrandingSteps": [
+        "1. Update metadata in app-template.json",
+        "2. Replace domain data in lib/[exam]-domains.ts", 
+        "3. Replace concept data in lib/[exam]-concepts.ts",
+        "4. Update PersonalHeader component with new branding",
+        "5. Update color scheme in design system",
+        "6. Replace favicon with new one",
+        "7. Update layout.tsx metadata",
+        "8. Test all components and interactions"
+      ],
+      
+      "colorCustomization": {
+        "primaryColors": "Update blue-600/700 for main brand color",
+        "domainColors": "Assign unique colors to each domain/section",
+        "semanticColors": "Maintain success/warning/error consistency"
+      },
+      
+      "contentAdaptation": {
+        "domains": "Define your subject areas with percentages",
+        "concepts": "Create 5-section explanations for each topic",
+        "hierarchy": "Maintain section > subsection > concept structure",
+        "interactivity": "Keep clickable elements and progress tracking"
+      }
+    },
+    
+    "deploymentConfig": {
+      "nextConfig": {
+        "typescript": "ignoreBuildErrors: true",
+        "eslint": "ignoreDuringBuilds: true", 
+        "images": "remotePatterns configuration"
+      },
+      "packageJson": {
+        "dependencies": [
+          "next", "react", "react-dom", "typescript",
+          "@radix-ui/react-*", "lucide-react", 
+          "tailwindcss", "clsx", "tailwind-merge"
+        ]
+      }
+    },
+    
+    "bestPractices": {
+      "performance": [
+        "Use Next.js Image optimization",
+        "Implement lazy loading for modals",
+        "Minimize bundle size with tree shaking",
+        "Use React.memo for expensive components"
+      ],
+      
+      "accessibility": [
+        "Maintain proper heading hierarchy",
+        "Ensure keyboard navigation",
+        "Use semantic HTML elements", 
+        "Provide alt text for visual elements"
+      ],
+      
+      "usability": [
+        "Clear visual hierarchy",
+        "Consistent interaction patterns",
+        "Responsive design patterns",
+        "Intuitive navigation flow"
+      ]
+    },
+    
+    "exampleRebrand": {
+      "examName": "AWS Cloud Practitioner",
+      "examCode": "CLF-C01", 
+      "domains": [
+        {
+          "id": 1,
+          "title": "Cloud Concepts",
+          "percentage": "26%",
+          "color": "bg-orange-600",
+          "iconColor": "text-orange-600",
+          "description": "AWS Cloud value proposition, economics, and architecture principles"
+        }
+      ],
+      "authorInfo": {
+        "name": "Your Name",
+        "email": "your-email@domain.com",
+        "supportLink": "your-whatsapp-or-discord-link"
+      }
+    }
+  }
+}
