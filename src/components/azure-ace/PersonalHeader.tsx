@@ -51,24 +51,24 @@ export const PersonalHeader: React.FC = () => {
               <p className="flex items-center">
                 If you have any issues with the app, you can email me at{' '}
                 <a 
-                  href="mailto:freewill@example.com" 
+                  href="mailto:will_automate@icloud.com" 
                   className="text-blue-600 hover:text-blue-800 underline inline-flex items-center ml-1"
                 >
                   <Mail className="h-4 w-4 mr-1" />
-                  freewill@example.com
+                  will_automate@icloud.com
                 </a>
               </p>
               <div className="flex items-center">
-                <span className="text-gray-600 mr-2">or join our</span>
+                <span className="text-gray-600 mr-2">send a message to the WhatsApp support group</span>
                 <a 
-                  href="#" 
+                  href="https://chat.whatsapp.com/L7qni5s3b1KJhGpIYacZVZ?mode=ems_email_t" 
                   className="inline-flex items-center px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium"
                   target="_blank" 
                   rel="noopener noreferrer"
-                  title="Join Study Support Group"
+                  title="Join WhatsApp Support Group"
                 >
                   <MessageCircle className="h-4 w-4 mr-1" />
-                  Study Group
+                  WhatsApp Group
                 </a>
               </div>
             </div>
